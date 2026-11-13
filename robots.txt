@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /leads.html
+Disallow: /api/
 
 Sitemap: https://artklimov77.github.io/riks-s/sitemap.xml

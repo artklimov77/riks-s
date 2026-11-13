@@ -6,6 +6,25 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const fmt = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
+  /* ---------- источник трафика (UTM / реферал), держим в localStorage ---------- */
+  const SRC = (() => {
+    try {
+      const q = new URLSearchParams(location.search), utm = {};
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(k => { if (q.get(k)) utm[k] = q.get(k); });
+      let saved = {}; try { saved = JSON.parse(localStorage.getItem('riks_src') || '{}'); } catch (e) {}
+      if (Object.keys(utm).length) saved = { utm, ref: document.referrer || '', first: saved.first || location.pathname };
+      else if (!saved.utm && document.referrer && !document.referrer.includes(location.host)) saved = { ref: document.referrer, first: saved.first || location.pathname };
+      try { localStorage.setItem('riks_src', JSON.stringify(saved)); } catch (e) {}
+      return saved;
+    } catch (e) { return {}; }
+  })();
+  const srcLabel = () => {
+    const u = SRC.utm || {};
+    if (u.utm_source) return u.utm_source + (u.utm_campaign ? ' / ' + u.utm_campaign : '');
+    if (SRC.ref) { try { return 'реферал: ' + new URL(SRC.ref).hostname; } catch (e) { return 'реферал'; } }
+    return 'прямой / сайт';
+  };
+
   /* ---------- хедер + мобильное меню ---------- */
   const hdr = $('#hdr');
   if (hdr) {
@@ -173,12 +192,27 @@
   $$('input[inputmode="tel"]').forEach(ph => ph.addEventListener('input', () => formatPhone(ph)));
 
   $$('form.form').forEach(form => {
-    form.addEventListener('submit', e => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       const ph = form.querySelector('input[inputmode="tel"]');
       if (ph && ph.value.replace(/\D/g, '').length < 11) { ph.style.borderColor = '#C8102E'; ph.focus(); return; }
+      const dropTxt = $('#dropTxt')?.textContent || '';
+      const data = {
+        name: (form.querySelector('[name=name]')?.value || '').trim(),
+        phone: ph ? ph.value : '',
+        service: $$('.opt.on', form).map(o => o.textContent.trim()).join(', '),
+        detail: dropTxt.includes('Проект:') ? dropTxt.replace('✓', '').trim() : '',
+        page: location.pathname.replace(/^\//, '') || 'index.html',
+        source: srcLabel(),
+        utm: SRC.utm || {},
+        ref: SRC.ref || '',
+        ts: new Date().toISOString()
+      };
       form.classList.add('done');
       const cartEl = $('#cart'); if (cartEl) cartEl.classList.remove('show');
+      try {
+        await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      } catch (err) { /* бэкенд недоступен (локально/оффлайн) — UX не блокируем */ }
     });
   });
 
