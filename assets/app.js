@@ -181,4 +181,47 @@
       const cartEl = $('#cart'); if (cartEl) cartEl.classList.remove('show');
     });
   });
+
+  /* ---------- фильтр галереи ---------- */
+  const galFilter = $('.gal-filter');
+  if (galFilter) {
+    const figs = $$('.gal figure');
+    galFilter.addEventListener('click', e => {
+      const b = e.target.closest('.fb'); if (!b) return;
+      $$('.fb', galFilter).forEach(x => x.classList.toggle('on', x === b));
+      const cat = b.dataset.cat;
+      figs.forEach(f => f.classList.toggle('hide', cat !== 'all' && f.dataset.cat !== cat));
+    });
+  }
+
+  /* ---------- лайтбокс для галерей ---------- */
+  const galFigs = $$('.gal figure, .strip figure');
+  if (galFigs.length) {
+    const box = document.createElement('div');
+    box.className = 'lbox';
+    box.innerHTML = '<button class="x" aria-label="Закрыть">✕</button><button class="nav prev" aria-label="Назад">‹</button><img alt=""><button class="nav next" aria-label="Вперёд">›</button><div class="cap"></div>';
+    document.body.appendChild(box);
+    const bImg = box.querySelector('img'), bCap = box.querySelector('.cap');
+    let list = [], idx = 0;
+    const show = i => {
+      idx = (i + list.length) % list.length;
+      const fig = list[idx], im = fig.querySelector('img'), cap = fig.querySelector('figcaption');
+      bImg.src = im.src; bCap.textContent = cap ? cap.textContent : (im.alt || '');
+    };
+    const open = fig => {
+      list = $$('figure', fig.parentElement).filter(f => !f.classList.contains('hide'));
+      show(list.indexOf(fig)); box.classList.add('open');
+    };
+    galFigs.forEach(f => f.addEventListener('click', () => open(f)));
+    box.querySelector('.next').onclick = e => { e.stopPropagation(); show(idx + 1); };
+    box.querySelector('.prev').onclick = e => { e.stopPropagation(); show(idx - 1); };
+    box.querySelector('.x').onclick = () => box.classList.remove('open');
+    box.addEventListener('click', e => { if (e.target === box) box.classList.remove('open'); });
+    addEventListener('keydown', e => {
+      if (!box.classList.contains('open')) return;
+      if (e.key === 'Escape') box.classList.remove('open');
+      else if (e.key === 'ArrowRight') show(idx + 1);
+      else if (e.key === 'ArrowLeft') show(idx - 1);
+    });
+  }
 })();
