@@ -434,3 +434,31 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:6px;bac
   .reveal{opacity:1;transform:none}
   .draw{stroke-dashoffset:0}.fade{opacity:1}.mark::before{transform:none}.sign-lit{fill:#FFD000}
 }
+
+/* ---------- gallery ---------- */
+.gal-filter{display:flex;flex-wrap:wrap;gap:6px;margin-top:40px}
+.gal-filter .fb{height:42px;padding:0 16px;border-radius:10px;border:1.5px solid var(--line-2);font-weight:600;font-size:14px;color:var(--muted);transition:all .2s}
+.gal-filter .fb:hover{color:var(--ink);border-color:var(--ink)}
+.gal-filter .fb.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:14px;margin-top:24px}
+.gal figure{position:relative;margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--paper-2);aspect-ratio:4/3;cursor:zoom-in}
+.dark .gal figure{border-color:var(--line-d)}
+.gal img{width:100%;height:100%;object-fit:cover;transition:transform .5s;display:block}
+.gal figure:hover img{transform:scale(1.06)}
+.gal figcaption{position:absolute;left:0;right:0;bottom:0;padding:28px 14px 12px;background:linear-gradient(transparent,rgba(17,18,20,.85));color:#fff;font-size:13px;font-weight:600;opacity:0;transform:translateY(8px);transition:all .25s}
+.gal figure:hover figcaption{opacity:1;transform:none}
+.gal .cat{position:absolute;top:10px;left:10px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:var(--y);color:var(--ink);padding:3px 8px;border-radius:5px;font-weight:600;z-index:1}
+.gal figure.hide{display:none}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:44px}
+
+/* ---------- lightbox ---------- */
+.lbox{position:fixed;inset:0;z-index:100;background:rgba(10,10,12,.93);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}
+.lbox.open{display:flex}
+.lbox img{max-width:92vw;max-height:84vh;border-radius:8px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.lbox button{position:absolute;border:0;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;display:grid;place-items:center;transition:background .2s}
+.lbox button:hover{background:rgba(255,255,255,.24)}
+.lbox .x{top:18px;right:20px;width:46px;height:46px;border-radius:11px;font-size:22px}
+.lbox .nav{top:50%;transform:translateY(-50%);width:54px;height:54px;border-radius:13px;font-size:26px}
+.lbox .prev{left:18px}.lbox .next{right:18px}
+.lbox .cap{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:rgba(255,255,255,.85);font-size:14px;font-weight:600;pointer-events:none}
+@media (max-width:680px){.lbox .nav{width:44px;height:44px;font-size:22px}.lbox .x{width:42px;height:42px}}
