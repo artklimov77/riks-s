@@ -410,6 +410,8 @@
     const revenue=paid.reduce((a,d)=>a+dealTotal(d),0);
     const pipeline=D.filter(d=>d.status!=='paid'&&d.status!=='lost').reduce((a,d)=>a+dealTotal(d),0);
     const avg=paid.length?Math.round(revenue/paid.length):0;
+    const advances=D.filter(d=>d.status!=='paid'&&d.status!=='lost').reduce((a,d)=>a+(Number(d.prepaid)||0),0);
+    const cash=revenue+advances;
 
     const leadsBySrc={}; L.forEach(l=>{const t=srcOf(l.source).t;leadsBySrc[t]=(leadsBySrc[t]||0)+1;});
     const revBySrc={}; paid.forEach(d=>{const t=srcOf(d.source).t;revBySrc[t]=(revBySrc[t]||0)+dealTotal(d);});
@@ -421,6 +423,8 @@
       '<div class="kpi"><b>'+D.length+'</b><span>Сделок</span></div>'+
       '<div class="kpi"><b>'+money(pipeline)+'</b><span>В работе</span></div>'+
       '<div class="kpi"><b>'+money(revenue)+'</b><span>Выручка (оплачено)</span></div>'+
+      '<div class="kpi"><b>'+money(advances)+'</b><span>Получено авансов</span></div>'+
+      '<div class="kpi" title="Выручка + авансы по незакрытым сделкам — реальный кэш в кассе"><b>'+money(cash)+'</b><span>Деньги на руках</span></div>'+
       '<div class="kpi"><b>'+money(avg)+'</b><span>Средний чек</span></div></div>';
 
     const leadBars=Object.entries(leadsBySrc).sort((a,b)=>b[1]-a[1]).map(([t,n])=>{const c=(SRC.find(x=>x.t===t)||{c:'#6b7a8d'}).c;
