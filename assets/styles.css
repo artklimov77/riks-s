@@ -59,7 +59,7 @@ svg{display:block}
 .hdr.scrolled{border-color:var(--line)}
 .hdr .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;height:74px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:22px;letter-spacing:-.03em;line-height:1.05}
-.logo-mark{width:34px;height:34px;background:var(--ink);border-radius:8px;display:grid;place-items:center;color:var(--y);font-size:22px;font-weight:900;line-height:1;flex:0 0 34px}
+.logo-mark{height:42px;width:auto;flex:0 0 auto;display:block;background:none;border-radius:0}
 .logo small{display:block;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:2px}
 .nav{display:flex;gap:28px;font-weight:600;font-size:15px}
 .nav a{position:relative;padding:4px 0}
@@ -364,7 +364,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:6px;bac
 .ftr ul{list-style:none;display:grid;gap:8px;font-size:15px}
 .ftr ul a{color:rgba(255,255,255,.8)}
 .ftr ul a:hover{color:var(--y)}
-.ftr .logo-mark{background:var(--y);color:var(--ink)}
+.ftr .logo-mark{background:none}
 .ftr p.mut{color:var(--muted-d);font-size:15px;margin-top:16px;max-width:320px}
 .ftr-big{margin-top:72px;font-weight:900;font-size:clamp(64px,15vw,230px);letter-spacing:-.06em;line-height:.8;color:var(--ink-3);white-space:nowrap;user-select:none}
 .ftr-big span{color:var(--y)}
