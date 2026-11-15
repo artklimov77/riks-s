@@ -21,23 +21,20 @@
   body{font-family:'Open Sans',system-ui,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.4}
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer;border:none;background:none}
+  input,select,textarea{font-family:inherit}
 
-  /* ---- gate ---- */
   .gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--b-blue),var(--b-blue2));z-index:100}
   .gate .box{background:#fff;border-radius:10px;padding:34px 30px;width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-  .gate .logo{font-weight:700;font-size:22px;color:var(--b-blue-d)}
-  .gate .logo b{color:var(--st-fail)}
+  .gate .logo{font-weight:700;font-size:22px;color:var(--b-blue-d)}.gate .logo b{color:var(--st-fail)}
   .gate p{color:var(--muted);font-size:13px;margin:6px 0 18px}
   .gate input{width:100%;height:46px;border:1.5px solid var(--line2);border-radius:7px;padding:0 14px;font-size:15px;outline:none}
   .gate input:focus{border-color:var(--b-blue)}
   .gate button{width:100%;height:46px;border-radius:7px;background:var(--b-blue);color:#fff;font-weight:600;font-size:15px;margin-top:12px}
   .gate .err{color:var(--st-fail);font-size:13px;min-height:18px;margin-top:10px}
 
-  /* ---- layout ---- */
   .app{display:none;min-height:100vh}
   .topbar{position:sticky;top:0;z-index:40;height:54px;background:linear-gradient(90deg,var(--b-blue),var(--b-blue2));display:flex;align-items:center;gap:16px;padding:0 18px;color:#fff}
   .topbar .brand{font-weight:700;font-size:17px;white-space:nowrap}
-  .topbar .brand b{color:#fff}
   .topbar .search{flex:1;max-width:460px}
   .topbar .search input{width:100%;height:34px;border:none;border-radius:6px;padding:0 14px;font-size:14px;outline:none;background:rgba(255,255,255,.95)}
   .topbar .sp{flex:1}
@@ -49,28 +46,30 @@
   .side{width:220px;flex:0 0 220px;background:var(--panel);border-right:1px solid var(--line);min-height:calc(100vh - 54px);position:sticky;top:54px}
   .side .grp{padding:10px 0;border-bottom:1px solid var(--line)}
   .side .gt{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted2);padding:6px 18px 4px;font-weight:700}
-  .side .nav{display:flex;align-items:center;gap:10px;padding:9px 18px;font-size:14px;color:#404a54;border-left:3px solid transparent}
+  .side .nav{display:flex;align-items:center;gap:10px;padding:9px 18px;font-size:14px;color:#404a54;border-left:3px solid transparent;cursor:pointer}
   .side .nav .ic{width:18px;text-align:center;font-size:15px}
   .side .nav:hover{background:#f5f8fa}
   .side .nav.on{background:#eaf5fd;border-left-color:var(--b-blue);color:var(--b-blue-d);font-weight:600}
   .side .nav .cnt{margin-left:auto;background:var(--st-fail);color:#fff;font-size:11px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 5px}
 
   .main{flex:1;min-width:0;padding:18px 20px 60px}
-  .page-h{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+  .page-h{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
   .page-h h1{font-size:22px;font-weight:700}
   .tabs{display:flex;gap:4px;background:#e2e8ec;border-radius:8px;padding:3px}
   .tabs button{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:600;color:var(--muted)}
   .tabs button.on{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
-  .page-h .refresh{margin-left:auto;font-size:13px;font-weight:600;color:var(--b-blue-d);border:1.5px solid var(--b-blue);border-radius:6px;padding:7px 14px}
+  .btn-pri{background:var(--b-blue);color:#fff;font-weight:600;font-size:13px;border-radius:7px;padding:9px 16px}
+  .btn-pri:hover{background:var(--b-blue-d)}
+  .btn-sec{border:1.5px solid var(--b-blue);color:var(--b-blue-d);font-weight:600;font-size:13px;border-radius:7px;padding:8px 14px}
+  .spacer{margin-left:auto}
 
   .note{background:#fff8e1;border:1px solid #ffe0a3;color:#8a6d00;border-radius:8px;padding:12px 16px;font-size:13px;margin-bottom:14px}
 
-  /* ---- kanban ---- */
   .kanban{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;align-items:flex-start}
-  .col{flex:0 0 250px;width:250px;background:#e7edf1;border-radius:10px;display:flex;flex-direction:column;max-height:calc(100vh - 170px)}
+  .col{flex:0 0 250px;width:250px;background:#e7edf1;border-radius:10px;display:flex;flex-direction:column;max-height:calc(100vh - 200px)}
   .col.drag-over{outline:2px dashed var(--b-blue);outline-offset:-2px}
   .col .ch{padding:10px 12px 8px;border-radius:10px 10px 0 0;color:#fff}
-  .col .ch .cn{font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px}
+  .col .ch .cn{font-weight:700;font-size:13px}
   .col .ch .cm{font-size:11px;opacity:.9;margin-top:2px}
   .col .cards{padding:8px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;min-height:40px}
   .card{background:#fff;border-radius:8px;padding:10px 11px;box-shadow:var(--shadow);cursor:pointer;border-left:3px solid var(--line2)}
@@ -79,25 +78,31 @@
   .card .nm{font-weight:700;font-size:13px}
   .card .ph{font-size:13px;color:var(--b-blue-d);font-weight:600;margin-top:2px}
   .card .sv{font-size:12px;color:var(--muted);margin-top:4px}
+  .card .sum{font-weight:700;font-size:14px;margin-top:6px}
   .card .meta{display:flex;align-items:center;gap:6px;margin-top:7px;flex-wrap:wrap}
   .badge{font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;color:#fff;white-space:nowrap}
   .card .tm{font-size:10px;color:var(--muted2);margin-left:auto}
 
-  /* ---- list ---- */
-  .table{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-  .table table{width:100%;border-collapse:collapse}
+  .table{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:auto}
+  .table table{width:100%;border-collapse:collapse;min-width:640px}
   .table th{background:#f5f8fa;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:11px 14px;border-bottom:1px solid var(--line);font-weight:700}
-  .table td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
+  .table td{padding:10px 14px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
   .table tr:last-child td{border-bottom:none}
   .table tr:hover td{background:#f8fbfd}
   .table .nm{font-weight:700}
   .table .ph{color:var(--b-blue-d);font-weight:600}
   .st-pill{font-size:11px;font-weight:700;padding:4px 9px;border-radius:12px;color:#fff;display:inline-block}
+  .cat-h{font-weight:700;font-size:14px;margin:18px 0 8px;color:var(--b-blue-d)}
+  .inp{height:36px;border:1.5px solid var(--line2);border-radius:6px;padding:0 10px;font-size:13px;outline:none;width:100%;background:#fff}
+  .inp:focus{border-color:var(--b-blue)}
+  td .inp{height:32px}
+  .ic-btn{width:32px;height:32px;border-radius:6px;font-size:15px;color:var(--muted)}
+  .ic-btn:hover{background:#eef2f4}
+  .ic-btn.del:hover{background:#ffe9e9;color:var(--st-fail)}
 
-  /* ---- analytics ---- */
-  .cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+  .cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
   .kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-  .kpi b{display:block;font-size:30px;font-weight:700;letter-spacing:-.02em}
+  .kpi b{display:block;font-size:28px;font-weight:700;letter-spacing:-.02em}
   .kpi span{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
   .chart{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:16px}
   .chart h3{font-size:14px;font-weight:700;margin-bottom:14px}
@@ -106,14 +111,13 @@
   .bar-row .bt{flex:1;background:#eef2f4;border-radius:5px;height:22px;overflow:hidden}
   .bar-row .bf{height:100%;border-radius:5px;display:flex;align-items:center;padding:0 8px;color:#fff;font-size:11px;font-weight:700;min-width:26px}
   .funnel{display:flex;gap:8px;flex-wrap:wrap}
-  .funnel .fstep{flex:1;min-width:90px;text-align:center;padding:14px 8px;border-radius:8px;color:#fff}
-  .funnel .fstep b{display:block;font-size:24px;font-weight:700}
+  .funnel .fstep{flex:1;min-width:84px;text-align:center;padding:14px 8px;border-radius:8px;color:#fff}
+  .funnel .fstep b{display:block;font-size:22px;font-weight:700}
   .funnel .fstep span{font-size:11px;font-weight:600;opacity:.95}
-
   .empty{text-align:center;color:var(--muted);padding:50px 0}
 
-  /* ---- drawer ---- */
-  .scrim{position:fixed;inset:0;background:rgba(20,30,40,.35);z-index:60;display:none}
+  /* drawer + modal */
+  .scrim{position:fixed;inset:0;background:rgba(20,30,40,.4);z-index:60;display:none}
   .scrim.on{display:block}
   .drawer{position:fixed;top:0;right:0;height:100%;width:420px;max-width:92vw;background:#fff;z-index:70;transform:translateX(100%);transition:transform .22s ease;box-shadow:-8px 0 30px rgba(0,0,0,.2);display:flex;flex-direction:column}
   .drawer.on{transform:translateX(0)}
@@ -121,31 +125,38 @@
   .drawer .dh .nm{font-size:19px;font-weight:700}
   .drawer .dh .x{margin-left:auto;font-size:22px;color:var(--muted);line-height:1}
   .drawer .dc{padding:18px 20px;overflow-y:auto;flex:1}
-  .drawer .fld{margin-bottom:14px}
-  .drawer .fld .k{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted2);font-weight:700;margin-bottom:3px}
-  .drawer .fld .v{font-size:14px}
-  .drawer .fld .v a{color:var(--b-blue-d);font-weight:600}
-  .drawer .stages{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
-  .drawer .stages button{font-size:12px;font-weight:600;padding:7px 11px;border-radius:6px;border:1.5px solid var(--line2);color:var(--muted)}
-  .drawer .stages button.on{color:#fff;border-color:transparent}
-  .drawer textarea{width:100%;min-height:80px;border:1.5px solid var(--line2);border-radius:7px;padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical;outline:none}
-  .drawer textarea:focus{border-color:var(--b-blue)}
+  .fld{margin-bottom:13px}
+  .fld .k{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted2);font-weight:700;margin-bottom:4px}
+  .fld .v{font-size:14px}.fld .v a{color:var(--b-blue-d);font-weight:600}
+  .stages{display:flex;flex-wrap:wrap;gap:6px}
+  .stages button{font-size:12px;font-weight:600;padding:7px 11px;border-radius:6px;border:1.5px solid var(--line2);color:var(--muted)}
+  .stages button.on{color:#fff;border-color:transparent}
+  textarea.inp{height:auto;min-height:72px;padding:10px 12px;resize:vertical}
   .drawer .df{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px}
   .drawer .df .call{flex:1;height:44px;border-radius:7px;background:var(--st-done);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;gap:7px}
   .drawer .df .save{flex:1;height:44px;border-radius:7px;background:var(--b-blue);color:#fff;font-weight:700;font-size:14px}
-  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;padding:11px 20px;border-radius:8px;font-size:13px;z-index:90;opacity:0;transition:.2s;pointer-events:none}
-  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
-  @media(max-width:720px){
-    .side{display:none}
-    .topbar .search{max-width:none}
-    .page-h h1{font-size:19px}
-  }
+  .modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.98);width:560px;max-width:94vw;max-height:90vh;background:#fff;border-radius:12px;z-index:80;display:none;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+  .modal.on{display:flex;transform:translate(-50%,-50%) scale(1)}
+  .modal .mh{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center}
+  .modal .mh h2{font-size:18px;font-weight:700}
+  .modal .mh .x{margin-left:auto;font-size:22px;color:var(--muted)}
+  .modal .mb{padding:18px 20px;overflow-y:auto}
+  .modal .mf{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .items-t{width:100%;border-collapse:collapse;margin-top:6px}
+  .items-t th{font-size:10px;text-transform:uppercase;color:var(--muted2);text-align:left;padding:4px 6px;font-weight:700}
+  .items-t td{padding:3px 6px;vertical-align:middle}
+  .items-t .q{width:64px}.items-t .p{width:96px}.items-t .s{width:90px;text-align:right;font-weight:700;white-space:nowrap}
+  .ord-total{text-align:right;font-size:18px;font-weight:700;margin-top:10px}
+
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;padding:11px 20px;border-radius:8px;font-size:13px;z-index:95;opacity:0;transition:.2s;pointer-events:none}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media(max-width:720px){.side{display:none}.topbar .search{max-width:none}.grid2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- GATE -->
 <div class="gate" id="gate">
   <div class="box">
     <div class="logo">Рикс<b>+</b>С · CRM</div>
@@ -156,50 +167,52 @@
   </div>
 </div>
 
-<!-- APP -->
 <div class="app" id="app">
   <div class="topbar">
     <div class="brand">Рикс<b>+</b>С</div>
-    <div class="search"><input id="q" type="search" placeholder="Поиск: имя, телефон, услуга…"></div>
+    <div class="search"><input id="q" type="search" placeholder="Поиск по имени, телефону, услуге…"></div>
     <div class="sp"></div>
     <button class="tb-btn" id="exit">Выход</button>
     <div class="ava">Р</div>
   </div>
-
   <div class="body">
     <aside class="side">
       <div class="grp">
         <div class="gt">CRM</div>
-        <a class="nav on" data-view="kanban"><span class="ic">▦</span> Лиды · Воронка <span class="cnt" id="navCnt" style="display:none"></span></a>
-        <a class="nav" data-view="list"><span class="ic">☰</span> Список</a>
-        <a class="nav" data-view="analytics"><span class="ic">📊</span> Аналитика</a>
+        <div class="nav on" data-view="leads"><span class="ic">▦</span> Лиды · Воронка <span class="cnt" id="navCnt" style="display:none"></span></div>
+        <div class="nav" data-view="leadlist"><span class="ic">☰</span> Лиды · Список</div>
+        <div class="nav" data-view="orders"><span class="ic">📦</span> Заказы</div>
       </div>
       <div class="grp">
-        <div class="gt">Каналы</div>
-        <a class="nav" data-view="channels"><span class="ic">🔌</span> Источники лидов</a>
+        <div class="gt">Каталог</div>
+        <div class="nav" data-view="catalog"><span class="ic">₽</span> Прайс / услуги</div>
+      </div>
+      <div class="grp">
+        <div class="gt">Отчёты</div>
+        <div class="nav" data-view="analytics"><span class="ic">📊</span> Аналитика</div>
+        <div class="nav" data-view="channels"><span class="ic">🔌</span> Источники</div>
       </div>
       <div class="grp">
         <div class="gt">Система</div>
-        <a class="nav" data-view="settings"><span class="ic">⚙️</span> Настройка</a>
+        <div class="nav" data-view="settings"><span class="ic">⚙️</span> Настройка</div>
       </div>
     </aside>
-
     <main class="main" id="main"></main>
   </div>
 </div>
 
-<!-- DRAWER -->
 <div class="scrim" id="scrim"></div>
+
 <div class="drawer" id="drawer">
-  <div class="dh">
-    <div><div class="nm" id="dNm">—</div><div style="color:var(--muted);font-size:13px" id="dSub"></div></div>
-    <button class="x" id="dClose">&times;</button>
-  </div>
+  <div class="dh"><div><div class="nm" id="dNm">—</div><div style="color:var(--muted);font-size:13px" id="dSub"></div></div><button class="x" id="dClose">&times;</button></div>
   <div class="dc" id="dBody"></div>
-  <div class="df">
-    <a class="call" id="dCall">📞 Позвонить</a>
-    <button class="save" id="dSave">Сохранить</button>
-  </div>
+  <div class="df"><a class="call" id="dCall">📞 Позвонить</a><button class="save" id="dSave">Сохранить</button></div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="mh"><h2 id="mTitle">—</h2><button class="x" id="mClose">&times;</button></div>
+  <div class="mb" id="mBody"></div>
+  <div class="mf"><button class="btn-sec" id="mCancel">Отмена</button><button class="btn-pri" id="mSave">Сохранить</button></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -208,293 +221,421 @@
 (() => {
   const $ = s => document.querySelector(s);
   const esc = s => String(s==null?'':s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
-
-  const STAGES = [
-    {k:'new',  t:'Новая',        c:'var(--st-new)',  col:'#55d0e0'},
-    {k:'work', t:'В обработке',  c:'var(--st-work)', col:'#2fc6f6'},
-    {k:'kp',   t:'Замер / КП',   c:'var(--st-kp)',   col:'#ffa900'},
-    {k:'deal', t:'Договор',      c:'var(--st-deal)', col:'#a673e8'},
-    {k:'done', t:'Выполнено',    c:'var(--st-done)', col:'#9dcf00'},
-    {k:'fail', t:'Отказ',        c:'var(--st-fail)', col:'#ff5752'}
-  ];
-  const stageOf = k => STAGES.find(s=>s.k===k) || STAGES[0];
-
-  const SRC = [
-    {re:/avito|авито/i,            t:'Авито',       c:'#0a8f3c'},
-    {re:/vk|вконтакт/i,            t:'ВКонтакте',   c:'#2787f5'},
-    {re:/t\.me|telegram|телеграм/i,t:'Telegram',    c:'#29a9eb'},
-    {re:/yandex|яндекс|карт|maps/i,t:'Яндекс',      c:'#ff3d00'},
-    {re:/2gis|2гис/i,             t:'2ГИС',        c:'#39c936'},
-    {re:/google/i,                t:'Google',      c:'#4285f4'},
-    {re:/реферал|ref|qr/i,        t:'Реферал',     c:'#8e44ad'}
-  ];
-  const srcOf = s => { s=(s||''); for(const x of SRC) if(x.re.test(s)) return x; return {t:'Сайт / прямой',c:'#6b7a8d'}; };
-
-  let LEADS = [], STATUS = {}, VIEW='kanban', Q='', PASS='', curId=null, draftStage='new';
-
-  const idOf = l => l.id || l.ts || (l.phone+'|'+l.ts);
-  const stageKey = l => (STATUS[idOf(l)] && STATUS[idOf(l)].stage) || 'new';
-  const noteOf = l => (STATUS[idOf(l)] && STATUS[idOf(l)].note) || '';
+  const genId = () => (Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8));
+  const money = n => (Number(n)||0).toLocaleString('ru-RU')+' ₽';
   const fmt = ts => { try { return new Date(ts).toLocaleString('ru-RU',{timeZone:'Europe/Moscow',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); } catch(e){ return ts||''; } };
+  const toast = m => { const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),1900); };
 
-  const filtered = () => {
-    const q = Q.trim().toLowerCase();
-    if(!q) return LEADS;
-    return LEADS.filter(l => (l.name+' '+l.phone+' '+l.service+' '+l.detail+' '+l.source).toLowerCase().includes(q));
-  };
+  const LEAD_STAGES=[
+    {k:'new',t:'Новая',col:'#55d0e0'},{k:'work',t:'В обработке',col:'#2fc6f6'},
+    {k:'kp',t:'Замер / КП',col:'#ffa900'},{k:'deal',t:'Договор',col:'#a673e8'},
+    {k:'done',t:'Выполнено',col:'#9dcf00'},{k:'fail',t:'Отказ',col:'#ff5752'}];
+  const ORDER_STAGES=[
+    {k:'new',t:'Новый',col:'#55d0e0'},{k:'prod',t:'В производстве',col:'#2fc6f6'},
+    {k:'ready',t:'Готов',col:'#ffa900'},{k:'done',t:'Выдан / Оплачен',col:'#9dcf00'},
+    {k:'cancel',t:'Отказ',col:'#ff5752'}];
+  const stOf = (arr,k)=>arr.find(s=>s.k===k)||arr[0];
 
-  const toast = m => { const t=$('#toast'); t.textContent=m; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1800); };
+  const SRC=[
+    {re:/avito|авито/i,t:'Авито',c:'#0a8f3c'},{re:/vk|вконтакт/i,t:'ВКонтакте',c:'#2787f5'},
+    {re:/t\.me|telegram|телеграм/i,t:'Telegram',c:'#29a9eb'},{re:/yandex|яндекс|карт|maps/i,t:'Яндекс',c:'#ff3d00'},
+    {re:/2gis|2гис/i,t:'2ГИС',c:'#39c936'},{re:/google/i,t:'Google',c:'#4285f4'},
+    {re:/реферал|ref|qr|повтор/i,t:'Реферал',c:'#8e44ad'},{re:/звон|тел|phone/i,t:'Звонок',c:'#e67e22'}];
+  const srcOf=s=>{s=(s||'');for(const x of SRC)if(x.re.test(s))return x;return {t:'Сайт / прямой',c:'#6b7a8d'};};
+  const SRC_OPTS=['Звонок','Сайт','Авито','ВКонтакте','Telegram','Яндекс Карты','2ГИС','Реферал','Повторный'];
+  const CATS=['Вывески','Неон','Транспорт','Полиграфия','Стенды','Печать','Прочее'];
+  const UNITS=['шт','м²','п.м.','компл.','услуга'];
+
+  let PASS='', DEMO=false, VIEW='leads', Q='';
+  const DATA={leads:[],orders:[],catalog:[]};
+
+  /* ---------- API ---------- */
+  async function api(op,col,extra){
+    if(DEMO) return {ok:true,demo:true};
+    const r=await fetch('/api/db',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(Object.assign({pass:PASS,op,col},extra||{}))});
+    if(r.status===401) throw new Error('auth');
+    return r.json();
+  }
+  async function loadAll(){
+    if(DEMO){ render(); return; }
+    const [l,o,c]=await Promise.all([api('list','leads'),api('list','orders'),api('list','catalog')]);
+    DATA.leads=l.items||[]; DATA.orders=o.items||[]; DATA.catalog=c.items||[];
+    DATA._nostore = (l.note==='storage-not-configured');
+    if(!DATA._nostore && !DATA.catalog.length){
+      const s=await api('seedCatalog','catalog'); if(s.items) DATA.catalog=s.items;
+    }
+    render();
+  }
+  async function save(col,rec){
+    if(DEMO){ toast('Демо: сохранение отключено'); return rec; }
+    const r=await api('save',col,{data:rec});
+    if(r.ok) return r.item||rec;
+    toast(r.note==='storage-not-configured'?'Подключите Upstash Redis в Vercel':'Не сохранилось'); throw new Error('save');
+  }
+  async function remove(col,id){
+    if(DEMO){ toast('Демо: удаление отключено'); return; }
+    const r=await api('delete',col,{id}); if(!r.ok) toast('Не удалилось');
+  }
+
+  const filt = arr => { const q=Q.trim().toLowerCase(); if(!q)return arr;
+    return arr.filter(x=>JSON.stringify(x).toLowerCase().includes(q)); };
 
   /* ---------- render switch ---------- */
-  const render = () => {
-    document.querySelectorAll('.side .nav').forEach(n=>n.classList.toggle('on', n.dataset.view===VIEW));
-    const nu = LEADS.filter(l=>stageKey(l)==='new').length;
-    const navCnt=$('#navCnt'); if(nu){navCnt.style.display='flex';navCnt.textContent=nu;} else navCnt.style.display='none';
-    if(VIEW==='kanban') renderKanban();
-    else if(VIEW==='list') renderList();
-    else if(VIEW==='analytics') renderAnalytics();
-    else if(VIEW==='channels') renderChannels();
-    else if(VIEW==='settings') renderSettings();
-  };
-
-  const head = (title, extra='') =>
-    '<div class="page-h"><h1>'+title+'</h1>'+extra+'<button class="refresh" id="refresh">↻ Обновить</button></div>';
-
-  const storageNote = () => STATUS.__nostore ?
-    '<div class="note">⚠️ Хранилище лидов (Upstash) не подключено — список пуст и стадии не сохраняются. Подключите Storage в Vercel (см. «Настройка»).</div>' : '';
-
-  /* ---------- kanban ---------- */
-  function renderKanban(){
-    const rows = filtered();
-    let cols = '';
-    for(const st of STAGES){
-      const items = rows.filter(l=>stageKey(l)===st.k);
-      cols += '<div class="col" data-stage="'+st.k+'">'+
-        '<div class="ch" style="background:'+st.col+'"><div class="cn">'+st.t+'</div><div class="cm">'+items.length+' лид.</div></div>'+
-        '<div class="cards" data-stage="'+st.k+'">'+
-          items.map(cardHTML).join('')+
-        '</div></div>';
-    }
-    $('#main').innerHTML = head('Лиды · Воронка',
-      '<div class="tabs"><button class="on">Канбан</button><button data-go="list">Список</button></div>') +
-      storageNote() +
-      (rows.length? '<div class="kanban" id="kb">'+cols+'</div>' : '<div class="empty">Пока нет заявок. Как только с сайта придёт форма — она появится здесь.</div>');
-    bindCommon();
-    bindDnD();
+  function render(){
+    document.querySelectorAll('.side .nav').forEach(n=>n.classList.toggle('on',n.dataset.view===VIEW));
+    const nu=DATA.leads.filter(l=>(l.stage||'new')==='new').length;
+    const nc=$('#navCnt'); if(nu){nc.style.display='flex';nc.textContent=nu;}else nc.style.display='none';
+    ({leads:leadsKanban,leadlist:leadList,orders:ordersView,catalog:catalogView,
+      analytics:analyticsView,channels:channelsView,settings:settingsView}[VIEW]||leadsKanban)();
   }
-  function cardHTML(l){
+  const head=(title,right='')=>'<div class="page-h"><h1>'+title+'</h1>'+right+'</div>';
+  const refreshBtn='<button class="btn-sec" id="refresh">↻ Обновить</button>';
+  const storeNote=()=>DATA._nostore?'<div class="note">⚠️ Хранилище (Upstash Redis) не подключено — данные не сохраняются. Включите Storage в Vercel (раздел «Настройка»).</div>':'';
+
+  /* ---------- LEADS kanban ---------- */
+  function leadsKanban(){
+    const rows=filt(DATA.leads);
+    const cols=LEAD_STAGES.map(st=>{
+      const items=rows.filter(l=>(l.stage||'new')===st.k);
+      return '<div class="col" data-stage="'+st.k+'"><div class="ch" style="background:'+st.col+'">'+
+        '<div class="cn">'+st.t+'</div><div class="cm">'+items.length+' лид.</div></div>'+
+        '<div class="cards" data-stage="'+st.k+'">'+items.map(leadCard).join('')+'</div></div>';
+    }).join('');
+    $('#main').innerHTML=head('Лиды · Воронка',
+      '<div class="tabs"><button class="on">Канбан</button><button data-go="leadlist">Список</button></div>'+
+      '<div class="spacer"></div><button class="btn-pri" id="addLead">+ Лид</button>'+refreshBtn)+
+      storeNote()+(rows.length?'<div class="kanban">'+cols+'</div>':'<div class="empty">Пока нет заявок. Нажмите «+ Лид», чтобы добавить вручную, или подождите заявку с сайта.</div>');
+    bindCommon(); bindDnD('leads',LEAD_STAGES);
+    $('#addLead').onclick=()=>editLead(null);
+  }
+  function leadCard(l){
     const s=srcOf(l.source);
-    return '<div class="card" draggable="true" data-id="'+esc(idOf(l))+'" style="border-left-color:'+s.c+'">'+
-      '<div class="nm">'+(esc(l.name)||'Без имени')+'</div>'+
-      '<div class="ph">'+esc(l.phone)+'</div>'+
+    return '<div class="card" draggable="true" data-id="'+esc(l.id)+'" style="border-left-color:'+s.c+'">'+
+      '<div class="nm">'+(esc(l.name)||'Без имени')+'</div><div class="ph">'+esc(l.phone)+'</div>'+
       (l.service?'<div class="sv">'+esc(l.service)+(l.detail?' — '+esc(l.detail):'')+'</div>':'')+
-      '<div class="meta"><span class="badge" style="background:'+s.c+'">'+s.t+'</span><span class="tm">'+fmt(l.ts)+'</span></div>'+
-    '</div>';
+      '<div class="meta"><span class="badge" style="background:'+s.c+'">'+s.t+'</span><span class="tm">'+fmt(l.ts)+'</span></div></div>';
   }
 
-  /* ---------- list ---------- */
-  function renderList(){
-    const rows=filtered();
-    const body = rows.map(l=>{
-      const s=srcOf(l.source), st=stageOf(stageKey(l));
-      return '<tr data-id="'+esc(idOf(l))+'">'+
-        '<td class="nm">'+(esc(l.name)||'—')+'</td>'+
-        '<td class="ph">'+esc(l.phone)+'</td>'+
+  /* ---------- LEADS list ---------- */
+  function leadList(){
+    const rows=filt(DATA.leads);
+    const body=rows.map(l=>{const s=srcOf(l.source),st=stOf(LEAD_STAGES,l.stage||'new');
+      return '<tr data-id="'+esc(l.id)+'"><td class="nm">'+(esc(l.name)||'—')+'</td><td class="ph">'+esc(l.phone)+'</td>'+
         '<td>'+(esc(l.service)||'—')+(l.detail?'<div style="color:var(--muted);font-size:12px">'+esc(l.detail)+'</div>':'')+'</td>'+
         '<td><span class="badge" style="background:'+s.c+'">'+s.t+'</span></td>'+
-        '<td><span class="st-pill" style="background:'+st.c+'">'+st.t+'</span></td>'+
-        '<td style="color:var(--muted);white-space:nowrap">'+fmt(l.ts)+'</td>'+
-      '</tr>';
-    }).join('');
-    $('#main').innerHTML = head('Лиды · Список',
-      '<div class="tabs"><button data-go="kanban">Канбан</button><button class="on">Список</button></div>') +
-      storageNote() +
-      (rows.length? '<div class="table"><table><thead><tr><th>Имя</th><th>Телефон</th><th>Услуга</th><th>Источник</th><th>Стадия</th><th>Когда</th></tr></thead><tbody>'+body+'</tbody></table></div>'
-                  : '<div class="empty">Пока нет заявок.</div>');
-    bindCommon();
-    $('#main').querySelectorAll('tr[data-id]').forEach(tr=>tr.onclick=()=>openDrawer(tr.dataset.id));
+        '<td><span class="st-pill" style="background:'+st.col+'">'+st.t+'</span></td>'+
+        '<td style="color:var(--muted);white-space:nowrap">'+fmt(l.ts)+'</td></tr>';}).join('');
+    $('#main').innerHTML=head('Лиды · Список',
+      '<div class="tabs"><button data-go="leads">Канбан</button><button class="on">Список</button></div>'+
+      '<div class="spacer"></div><button class="btn-pri" id="addLead">+ Лид</button>'+refreshBtn)+storeNote()+
+      (rows.length?'<div class="table"><table><thead><tr><th>Имя</th><th>Телефон</th><th>Услуга</th><th>Источник</th><th>Стадия</th><th>Когда</th></tr></thead><tbody>'+body+'</tbody></table></div>':'<div class="empty">Пока нет заявок.</div>');
+    bindCommon(); $('#addLead').onclick=()=>editLead(null);
+    $('#main').querySelectorAll('tr[data-id]').forEach(tr=>tr.onclick=()=>openLead(tr.dataset.id));
   }
 
-  /* ---------- analytics ---------- */
-  function renderAnalytics(){
-    const rows=LEADS;
-    const total=rows.length;
-    const bySrc={}; rows.forEach(l=>{const t=srcOf(l.source).t; bySrc[t]=(bySrc[t]||0)+1;});
-    const byStage={}; STAGES.forEach(s=>byStage[s.k]=0); rows.forEach(l=>byStage[stageKey(l)]++);
-    const done=byStage.done, maxSrc=Math.max(1,...Object.values(bySrc));
-    const conv = total? Math.round(done/total*100) : 0;
+  /* ---------- ORDERS ---------- */
+  function ordersView(){
+    const rows=filt(DATA.orders);
+    const cols=ORDER_STAGES.map(st=>{
+      const items=rows.filter(o=>(o.status||'new')===st.k);
+      const sum=items.reduce((a,o)=>a+(Number(o.total)||0),0);
+      return '<div class="col" data-stage="'+st.k+'"><div class="ch" style="background:'+st.col+'">'+
+        '<div class="cn">'+st.t+'</div><div class="cm">'+items.length+' зак. · '+money(sum)+'</div></div>'+
+        '<div class="cards" data-stage="'+st.k+'">'+items.map(orderCard).join('')+'</div></div>';
+    }).join('');
+    $('#main').innerHTML=head('Заказы',
+      '<div class="spacer"></div><button class="btn-pri" id="addOrder">+ Заказ</button>'+refreshBtn)+storeNote()+
+      (rows.length?'<div class="kanban">'+cols+'</div>':'<div class="empty">Заказов пока нет. «+ Заказ» — создать с позициями из прайса и автоматической суммой.</div>');
+    bindCommon(); bindDnD('orders',ORDER_STAGES);
+    $('#addOrder').onclick=()=>editOrder(null);
+  }
+  function orderCard(o){
+    return '<div class="card" draggable="true" data-id="'+esc(o.id)+'">'+
+      '<div class="nm">'+(esc(o.client)||'Без имени')+'</div>'+(o.phone?'<div class="ph">'+esc(o.phone)+'</div>':'')+
+      '<div class="sv">'+((o.items||[]).length)+' позиц.'+(o.deadline?' · до '+esc(o.deadline):'')+'</div>'+
+      '<div class="sum">'+money(o.total)+'</div></div>';
+  }
 
-    const kpis = '<div class="cards-row">'+
-      '<div class="kpi"><b>'+total+'</b><span>Всего лидов</span></div>'+
-      '<div class="kpi"><b>'+byStage.new+'</b><span>Новых</span></div>'+
-      '<div class="kpi"><b>'+done+'</b><span>Выполнено</span></div>'+
-      '<div class="kpi"><b>'+conv+'%</b><span>Конверсия</span></div>'+
-    '</div>';
+  /* ---------- CATALOG ---------- */
+  function catalogView(){
+    const rows=filt(DATA.catalog);
+    let html=head('Прайс / услуги','<div class="spacer"></div><button class="btn-pri" id="addItem">+ Позиция</button>'+refreshBtn)+storeNote();
+    if(!DATA.catalog.length){ html+='<div class="empty">Прайс пустой. «+ Позиция» — добавьте услугу с ценой.</div>'; $('#main').innerHTML=html; bindCommon(); $('#addItem').onclick=()=>addCatalogRow(); return; }
+    const byCat={}; rows.forEach(i=>{(byCat[i.category||'Прочее']=byCat[i.category||'Прочее']||[]).push(i);});
+    const order=CATS.filter(c=>byCat[c]).concat(Object.keys(byCat).filter(c=>!CATS.includes(c)));
+    html+='<div id="catWrap">';
+    for(const cat of order){
+      html+='<div class="cat-h">'+esc(cat)+'</div><div class="table"><table><thead><tr><th>Услуга</th><th style="width:150px">Категория</th><th style="width:110px">Ед.</th><th style="width:130px">Цена</th><th style="width:70px"></th></tr></thead><tbody>'+
+        byCat[cat].map(catRow).join('')+'</tbody></table></div>';
+    }
+    html+='</div>';
+    $('#main').innerHTML=html; bindCommon(); $('#addItem').onclick=()=>addCatalogRow();
+    wireCatalog();
+  }
+  function catRow(i){
+    return '<tr data-id="'+esc(i.id)+'">'+
+      '<td><input class="inp f-name" value="'+esc(i.name)+'"></td>'+
+      '<td><select class="inp f-cat">'+CATS.map(c=>'<option'+(c===(i.category||'Прочее')?' selected':'')+'>'+c+'</option>').join('')+'</select></td>'+
+      '<td><select class="inp f-unit">'+UNITS.map(u=>'<option'+(u===(i.unit||'шт')?' selected':'')+'>'+u+'</option>').join('')+'</select></td>'+
+      '<td><input class="inp f-price" type="number" min="0" value="'+(Number(i.price)||0)+'"></td>'+
+      '<td style="white-space:nowrap"><button class="ic-btn save" title="Сохранить">💾</button><button class="ic-btn del" title="Удалить">🗑</button></td></tr>';
+  }
+  function wireCatalog(){
+    $('#catWrap').querySelectorAll('tr[data-id]').forEach(tr=>{
+      const id=tr.dataset.id;
+      tr.querySelector('.save').onclick=async()=>{
+        const rec={id, name:tr.querySelector('.f-name').value.trim(), category:tr.querySelector('.f-cat').value,
+          unit:tr.querySelector('.f-unit').value, price:Number(tr.querySelector('.f-price').value)||0,
+          ts:(DATA.catalog.find(x=>x.id===id)||{}).ts};
+        if(!rec.name){toast('Введите название');return;}
+        try{ const it=await save('catalog',rec); const i=DATA.catalog.findIndex(x=>x.id===id);
+          if(i>=0)DATA.catalog[i]=it; else DATA.catalog.push(it); toast('Сохранено'); }catch(e){}
+      };
+      tr.querySelector('.del').onclick=async()=>{
+        if(!confirm('Удалить позицию?'))return;
+        await remove('catalog',id); DATA.catalog=DATA.catalog.filter(x=>x.id!==id); catalogView();
+      };
+    });
+  }
+  function addCatalogRow(){
+    const rec={id:genId(),name:'',category:'Вывески',unit:'шт',price:0,ts:new Date().toISOString()};
+    DATA.catalog.unshift(rec); catalogView();
+  }
 
-    const srcBars = Object.entries(bySrc).sort((a,b)=>b[1]-a[1]).map(([t,n])=>{
+  /* ---------- ANALYTICS ---------- */
+  function analyticsView(){
+    const L=DATA.leads,O=DATA.orders;
+    const bySrc={}; L.forEach(l=>{const t=srcOf(l.source).t;bySrc[t]=(bySrc[t]||0)+1;});
+    const byStage={}; LEAD_STAGES.forEach(s=>byStage[s.k]=0); L.forEach(l=>byStage[l.stage||'new']++);
+    const revenue=O.filter(o=>o.status==='done').reduce((a,o)=>a+(Number(o.total)||0),0);
+    const pipeline=O.filter(o=>o.status!=='done'&&o.status!=='cancel').reduce((a,o)=>a+(Number(o.total)||0),0);
+    const conv=L.length?Math.round(byStage.done/L.length*100):0;
+    const maxSrc=Math.max(1,...Object.values(bySrc));
+    const kpis='<div class="cards-row">'+
+      '<div class="kpi"><b>'+L.length+'</b><span>Лидов</span></div>'+
+      '<div class="kpi"><b>'+O.length+'</b><span>Заказов</span></div>'+
+      '<div class="kpi"><b>'+money(revenue)+'</b><span>Выручка (выдано)</span></div>'+
+      '<div class="kpi"><b>'+money(pipeline)+'</b><span>В работе</span></div>'+
+      '<div class="kpi"><b>'+conv+'%</b><span>Конверсия лидов</span></div></div>';
+    const srcBars=Object.entries(bySrc).sort((a,b)=>b[1]-a[1]).map(([t,n])=>{
       const c=(SRC.find(x=>x.t===t)||{c:'#6b7a8d'}).c;
       return '<div class="bar-row"><div class="bl">'+t+'</div><div class="bt"><div class="bf" style="width:'+Math.max(8,n/maxSrc*100)+'%;background:'+c+'">'+n+'</div></div></div>';
-    }).join('') || '<div class="empty">Нет данных</div>';
-
-    const funnel = '<div class="funnel">'+STAGES.map(s=>
-      '<div class="fstep" style="background:'+s.col+'"><b>'+byStage[s.k]+'</b><span>'+s.t+'</span></div>').join('')+'</div>';
-
-    $('#main').innerHTML = head('Аналитика') + storageNote() + kpis +
+    }).join('')||'<div class="empty">Нет данных</div>';
+    const funnel='<div class="funnel">'+LEAD_STAGES.map(s=>'<div class="fstep" style="background:'+s.col+'"><b>'+byStage[s.k]+'</b><span>'+s.t+'</span></div>').join('')+'</div>';
+    const oByStatus={}; ORDER_STAGES.forEach(s=>oByStatus[s.k]=0); O.forEach(o=>oByStatus[o.status||'new']++);
+    const oFunnel='<div class="funnel">'+ORDER_STAGES.map(s=>'<div class="fstep" style="background:'+s.col+'"><b>'+oByStatus[s.k]+'</b><span>'+s.t+'</span></div>').join('')+'</div>';
+    $('#main').innerHTML=head('Аналитика',refreshBtn)+storeNote()+kpis+
       '<div class="chart"><h3>Лиды по источникам</h3>'+srcBars+'</div>'+
-      '<div class="chart"><h3>Воронка по стадиям</h3>'+funnel+'</div>';
+      '<div class="chart"><h3>Воронка лидов</h3>'+funnel+'</div>'+
+      '<div class="chart"><h3>Заказы по статусам</h3>'+oFunnel+'</div>';
     bindCommon();
   }
 
-  /* ---------- channels ---------- */
-  function renderChannels(){
+  /* ---------- CHANNELS / SETTINGS ---------- */
+  function channelsView(){
     const data=[
-      ['Сайт / форма / конструктор','Работает','#9dcf00','Заявки падают в эту CRM + Telegram менеджеру.'],
+      ['Сайт / форма / конструктор','Работает','#9dcf00','Заявки падают в CRM + Telegram менеджеру.'],
+      ['Телефон / звонок','Вручную','#e67e22','Менеджер жмёт «+ Лид» и ставит источник «Звонок».'],
       ['Telegram-бот','Готов к подключению','#2fc6f6','Ссылки ?start=avito / vk / maps для меток источника.'],
       ['ВКонтакте','Нужны доступы','#ffa900','Сообщения группы vk.ru/rikss12 → в CRM.'],
-      ['Авито','Платный у Авито','#ff5752','Переписка по API требует Avito Pro. Пока — метки через QR/ссылку.'],
-      ['Яндекс Бизнес / 2ГИС','Нужно оформить','#ff3d00','Карточки + ссылка на сайт с UTM-меткой.']
-    ];
-    const cards = data.map(d=>
-      '<div class="kpi" style="display:flex;flex-direction:column;gap:6px">'+
-      '<div style="display:flex;align-items:center;gap:8px"><span class="st-pill" style="background:'+d[2]+'">'+d[1]+'</span></div>'+
-      '<b style="font-size:16px">'+d[0]+'</b>'+
-      '<span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--muted);font-size:13px">'+d[3]+'</span></div>'
-    ).join('');
-    $('#main').innerHTML = head('Источники лидов') +
+      ['Авито','Платный у Авито','#ff5752','Переписка по API требует Avito Pro. Пока — метки через ссылку/QR.'],
+      ['Яндекс Бизнес / 2ГИС','Оформить','#ff3d00','Карточки + ссылка на сайт с UTM.']];
+    $('#main').innerHTML=head('Источники лидов')+
       '<div class="note">Все каналы сводятся в одно окно — эту CRM. Источник у каждого лида виден бейджем. Битрикс для этого не нужен.</div>'+
-      '<div class="cards-row" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">'+cards+'</div>';
+      '<div class="cards-row" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">'+
+      data.map(d=>'<div class="kpi" style="display:flex;flex-direction:column;gap:6px"><span class="st-pill" style="background:'+d[2]+';align-self:flex-start">'+d[1]+'</span>'+
+        '<b style="font-size:16px">'+d[0]+'</b><span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--muted);font-size:13px">'+d[3]+'</span></div>').join('')+'</div>';
     bindCommon();
   }
-
-  /* ---------- settings ---------- */
-  function renderSettings(){
-    $('#main').innerHTML = head('Настройка') +
-      '<div class="chart"><h3>Как это работает</h3><p style="color:var(--muted);line-height:1.6">Формы сайта шлют заявку на <code>/api/lead</code>. Менеджер получает уведомление в Telegram сразу, а заявка сохраняется и показывается здесь в воронке. Стадии (Новая → Выполнено) двигаются перетаскиванием карточек.</p></div>'+
-      '<div class="chart"><h3>Что нужно включить в Vercel</h3>'+
-      '<ol style="color:var(--muted);line-height:1.9;padding-left:20px">'+
+  function settingsView(){
+    $('#main').innerHTML=head('Настройка')+
+      '<div class="chart"><h3>Как это работает</h3><p style="color:var(--muted);line-height:1.6">Формы сайта шлют заявку на <code>/api/lead</code>: менеджер получает уведомление в Telegram и лид появляется в воронке. Заказы, прайс и стадии хранятся в базе (Redis) и доступны всем менеджерам. Всё под паролем.</p></div>'+
+      '<div class="chart"><h3>Что включить в Vercel (один раз)</h3><ol style="color:var(--muted);line-height:1.9;padding-left:20px">'+
       '<li><b>TELEGRAM_BOT_TOKEN</b> и <b>TELEGRAM_CHAT_ID</b> — уведомления менеджеру.</li>'+
       '<li><b>LEADS_PASS</b> — пароль от этой панели.</li>'+
-      '<li><b>Storage → Upstash Redis</b> — чтобы список лидов и стадии сохранялись (иначе только Telegram).</li>'+
-      '</ol></div>';
+      '<li><b>Storage → Upstash Redis</b> (бесплатно) — чтобы лиды, заказы и прайс сохранялись.</li></ol>'+
+      '<p style="color:var(--muted);margin-top:8px">Прайс по умолчанию подгружается автоматически при первом входе — цены потом правятся в разделе «Прайс».</p></div>';
     bindCommon();
   }
 
-  /* ---------- drag & drop ---------- */
-  function bindDnD(){
+  /* ---------- drag & drop (generic) ---------- */
+  function bindDnD(col,stages){
     let dragId=null;
     document.querySelectorAll('.card').forEach(c=>{
       c.addEventListener('dragstart',e=>{dragId=c.dataset.id;c.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
       c.addEventListener('dragend',()=>{dragId=null;c.classList.remove('dragging');document.querySelectorAll('.col').forEach(x=>x.classList.remove('drag-over'));});
+      c.addEventListener('click',()=>{ if(!c.classList.contains('dragging')){ col==='leads'?openLead(c.dataset.id):editOrder(c.dataset.id);} });
     });
-    document.querySelectorAll('.col').forEach(col=>{
-      col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('drag-over');});
-      col.addEventListener('dragleave',()=>col.classList.remove('drag-over'));
-      col.addEventListener('drop',e=>{
-        e.preventDefault();col.classList.remove('drag-over');
-        const st=col.dataset.stage;
-        if(dragId && st) setStage(dragId, st);
+    document.querySelectorAll('.col').forEach(cl=>{
+      cl.addEventListener('dragover',e=>{e.preventDefault();cl.classList.add('drag-over');});
+      cl.addEventListener('dragleave',()=>cl.classList.remove('drag-over'));
+      cl.addEventListener('drop',async e=>{e.preventDefault();cl.classList.remove('drag-over');
+        const k=cl.dataset.stage; if(!dragId||!k)return;
+        if(col==='leads'){ const l=DATA.leads.find(x=>x.id===dragId); if(!l)return; l.stage=k; render();
+          try{await save('leads',l); toast(stOf(stages,k).t);}catch(e){} }
+        else { const o=DATA.orders.find(x=>x.id===dragId); if(!o)return; o.status=k; render();
+          try{await save('orders',o); toast(stOf(stages,k).t);}catch(e){} }
       });
     });
-    // клик по карточке — открыть карточку лида (но не во время драга)
-    document.querySelectorAll('.card').forEach(c=>{
-      c.addEventListener('click',()=>{ if(!c.classList.contains('dragging')) openDrawer(c.dataset.id); });
-    });
   }
 
-  async function setStage(id, stage, note, silent){
-    STATUS[id] = Object.assign({}, STATUS[id], {stage, note: note!=null?note:(STATUS[id]&&STATUS[id].note)||''});
-    if(!silent) render();
-    if(PASS==='demo'){ if(!silent) toast('Демо: '+stageOf(stage).t); return; }
-    try{
-      const r = await fetch('/api/lead-status',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({pass:PASS, id, stage, note: STATUS[id].note})});
-      const j = await r.json();
-      if(j.ok){ if(!silent) toast('Сохранено: '+stageOf(stage).t); }
-      else toast('Не сохранилось (проверьте Storage)');
-    }catch(e){ toast('Нет связи с сервером'); }
-  }
-
-  /* ---------- drawer ---------- */
-  function openDrawer(id){
-    const l = LEADS.find(x=>idOf(x)===id); if(!l) return;
-    curId=id; draftStage=stageKey(l);
-    const s=srcOf(l.source);
-    $('#dNm').textContent = l.name || 'Без имени';
-    $('#dSub').textContent = l.service || '';
-    const tel=(l.phone||'').replace(/[^\d+]/g,'');
-    $('#dCall').href='tel:'+tel;
-    $('#dBody').innerHTML =
+  /* ---------- lead drawer ---------- */
+  let curLead=null,draftStage='new';
+  function openLead(id){
+    const l=DATA.leads.find(x=>x.id===id); if(!l)return; curLead=l; draftStage=l.stage||'new';
+    const s=srcOf(l.source), tel=(l.phone||'').replace(/[^\d+]/g,'');
+    $('#dNm').textContent=l.name||'Без имени'; $('#dSub').textContent=l.service||''; $('#dCall').href='tel:'+tel;
+    $('#dBody').innerHTML=
       '<div class="fld"><div class="k">Телефон</div><div class="v"><a href="tel:'+tel+'">'+esc(l.phone)+'</a></div></div>'+
-      (l.detail?'<div class="fld"><div class="k">Комментарий</div><div class="v">'+esc(l.detail)+'</div></div>':'')+
+      (l.detail?'<div class="fld"><div class="k">Комментарий клиента</div><div class="v">'+esc(l.detail)+'</div></div>':'')+
       '<div class="fld"><div class="k">Источник</div><div class="v"><span class="badge" style="background:'+s.c+'">'+s.t+'</span> <span style="color:var(--muted);font-size:12px">'+esc(l.source||'—')+'</span></div></div>'+
       '<div class="fld"><div class="k">Страница</div><div class="v">'+esc(l.page||'—')+'</div></div>'+
       '<div class="fld"><div class="k">Когда</div><div class="v">'+fmt(l.ts)+'</div></div>'+
       '<div class="fld"><div class="k">Стадия</div><div class="stages" id="dStages">'+
-        STAGES.map(st=>'<button data-k="'+st.k+'" style="'+(st.k===draftStage?'background:'+st.col+';':'')+'">'+st.t+'</button>').join('')+
-      '</div></div>'+
-      '<div class="fld"><div class="k">Заметка менеджера</div><textarea id="dNote" placeholder="Что обсудили, что нужно…">'+esc(noteOf(l))+'</textarea></div>';
-    $('#dStages').querySelectorAll('button').forEach(b=>b.onclick=()=>{
-      draftStage=b.dataset.k;
-      $('#dStages').querySelectorAll('button').forEach(x=>{const st=stageOf(x.dataset.k);x.style.background=x.dataset.k===draftStage?st.col:'';x.style.color=x.dataset.k===draftStage?'#fff':'';x.style.borderColor=x.dataset.k===draftStage?'transparent':'';});
-    });
+        LEAD_STAGES.map(st=>'<button data-k="'+st.k+'" style="'+(st.k===draftStage?'background:'+st.col+';color:#fff;border-color:transparent':'')+'">'+st.t+'</button>').join('')+'</div></div>'+
+      '<div class="fld"><div class="k">Заметка менеджера</div><textarea class="inp" id="dNote" placeholder="Что обсудили…">'+esc(l.note||'')+'</textarea></div>'+
+      '<div class="fld"><button class="btn-sec" id="dEdit">✎ Редактировать лид</button> <button class="btn-sec" id="dDel" style="border-color:#f2b8b8;color:var(--st-fail)">Удалить</button></div>';
+    $('#dStages').querySelectorAll('button').forEach(b=>b.onclick=()=>{draftStage=b.dataset.k;
+      $('#dStages').querySelectorAll('button').forEach(x=>{const st=stOf(LEAD_STAGES,x.dataset.k);const on=x.dataset.k===draftStage;
+        x.style.background=on?st.col:'';x.style.color=on?'#fff':'';x.style.borderColor=on?'transparent':'';});});
+    $('#dEdit').onclick=()=>{closeDrawer();editLead(l);};
+    $('#dDel').onclick=async()=>{ if(!confirm('Удалить лид?'))return; await remove('leads',l.id); DATA.leads=DATA.leads.filter(x=>x.id!==l.id); closeDrawer(); render(); };
     $('#scrim').classList.add('on'); $('#drawer').classList.add('on');
   }
-  function closeDrawer(){ $('#scrim').classList.remove('on'); $('#drawer').classList.remove('on'); curId=null; }
-  $('#dClose').onclick=closeDrawer; $('#scrim').onclick=closeDrawer;
-  $('#dSave').onclick=()=>{ if(!curId) return; const note=$('#dNote').value; setStage(curId, draftStage, note); closeDrawer(); };
+  function closeDrawer(){ $('#drawer').classList.remove('on'); if(!$('#modal').classList.contains('on'))$('#scrim').classList.remove('on'); curLead=null; }
+  $('#dClose').onclick=closeDrawer;
+  $('#dSave').onclick=async()=>{ if(!curLead)return; curLead.stage=draftStage; curLead.note=$('#dNote').value;
+    try{await save('leads',curLead);toast('Сохранено');}catch(e){} closeDrawer(); render(); };
 
-  /* ---------- common binds ---------- */
-  function bindCommon(){
-    const r=$('#refresh'); if(r) r.onclick=()=>load(PASS);
-    $('#main').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{VIEW=b.dataset.go;render();});
+  /* ---------- modal helper ---------- */
+  function showModal(title,html){ $('#mTitle').textContent=title; $('#mBody').innerHTML=html;
+    $('#scrim').classList.add('on'); $('#modal').classList.add('on'); }
+  function hideModal(){ $('#modal').classList.remove('on'); if(!$('#drawer').classList.contains('on'))$('#scrim').classList.remove('on'); $('#mSave').onclick=null; }
+  $('#mClose').onclick=hideModal; $('#mCancel').onclick=hideModal;
+  $('#scrim').onclick=()=>{ if($('#modal').classList.contains('on'))hideModal(); else closeDrawer(); };
+
+  /* ---------- lead editor (create/edit) ---------- */
+  function editLead(l){
+    const e=l||{}; const isNew=!l;
+    showModal(isNew?'Новый лид':'Редактировать лид',
+      '<div class="grid2">'+
+      '<div class="fld"><div class="k">Имя</div><input class="inp" id="e_name" value="'+esc(e.name||'')+'"></div>'+
+      '<div class="fld"><div class="k">Телефон *</div><input class="inp" id="e_phone" value="'+esc(e.phone||'')+'" placeholder="+7 …"></div></div>'+
+      '<div class="fld"><div class="k">Услуга / что нужно</div><input class="inp" id="e_service" value="'+esc(e.service||'')+'"></div>'+
+      '<div class="fld"><div class="k">Комментарий</div><textarea class="inp" id="e_detail">'+esc(e.detail||'')+'</textarea></div>'+
+      '<div class="grid2">'+
+      '<div class="fld"><div class="k">Источник</div><select class="inp" id="e_source">'+SRC_OPTS.map(o=>'<option'+(o===(e.source||'Звонок')?' selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
+      '<div class="fld"><div class="k">Стадия</div><select class="inp" id="e_stage">'+LEAD_STAGES.map(s=>'<option value="'+s.k+'"'+(s.k===(e.stage||'new')?' selected':'')+'>'+s.t+'</option>').join('')+'</select></div></div>');
+    $('#mSave').onclick=async()=>{
+      const phone=$('#e_phone').value.trim(); if(!phone.replace(/\D/g,'')){toast('Введите телефон');return;}
+      const rec=Object.assign({},e,{id:e.id||genId(),name:$('#e_name').value.trim(),phone,
+        service:$('#e_service').value.trim(),detail:$('#e_detail').value.trim(),
+        source:$('#e_source').value,stage:$('#e_stage').value,note:e.note||'',page:e.page||'вручную',
+        ts:e.ts||new Date().toISOString()});
+      try{ const it=await save('leads',rec); const i=DATA.leads.findIndex(x=>x.id===rec.id);
+        if(i>=0)DATA.leads[i]=it; else DATA.leads.unshift(it); toast('Лид сохранён'); hideModal(); render(); }catch(err){}
+    };
   }
+
+  /* ---------- order editor (create/edit) ---------- */
+  function editOrder(id){
+    const o=id?DATA.orders.find(x=>x.id===id):null; const e=o||{}; const items=(e.items||[]).map(x=>Object.assign({},x));
+    if(!items.length) items.push({name:'',unit:'шт',qty:1,price:0});
+    const catOpts='<option value="">— из прайса —</option>'+DATA.catalog.map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+' ('+money(c.price)+')</option>').join('');
+    showModal(id?'Заказ':'Новый заказ',
+      '<div class="grid2">'+
+      '<div class="fld"><div class="k">Клиент</div><input class="inp" id="o_client" value="'+esc(e.client||'')+'"></div>'+
+      '<div class="fld"><div class="k">Телефон</div><input class="inp" id="o_phone" value="'+esc(e.phone||'')+'"></div></div>'+
+      '<div class="grid2">'+
+      '<div class="fld"><div class="k">Статус</div><select class="inp" id="o_status">'+ORDER_STAGES.map(s=>'<option value="'+s.k+'"'+(s.k===(e.status||'new')?' selected':'')+'>'+s.t+'</option>').join('')+'</select></div>'+
+      '<div class="fld"><div class="k">Срок (до)</div><input class="inp" id="o_deadline" value="'+esc(e.deadline||'')+'" placeholder="напр. 25.11"></div></div>'+
+      '<div class="fld"><div class="k">Позиции</div>'+
+      '<table class="items-t"><thead><tr><th>Услуга</th><th>Кол-во</th><th>Цена</th><th style="text-align:right">Сумма</th><th></th></tr></thead><tbody id="o_items"></tbody></table>'+
+      '<button class="btn-sec" id="o_add" style="margin-top:8px">+ строка</button>'+
+      '<div class="ord-total" id="o_total">Итого: 0 ₽</div></div>'+
+      '<div class="fld"><div class="k">Заметка</div><textarea class="inp" id="o_note">'+esc(e.note||'')+'</textarea></div>'+
+      (id?'<div class="fld"><button class="btn-sec" id="o_del" style="border-color:#f2b8b8;color:var(--st-fail)">Удалить заказ</button></div>':''));
+
+    const tb=$('#o_items');
+    const rowHTML=(it)=>'<tr>'+
+      '<td><select class="inp o-cat" style="margin-bottom:4px">'+catOpts+'</select>'+
+      '<input class="inp o-name" value="'+esc(it.name||'')+'" placeholder="или вручную"></td>'+
+      '<td class="q"><input class="inp o-qty" type="number" min="0" step="0.1" value="'+(it.qty||1)+'"></td>'+
+      '<td class="p"><input class="inp o-price" type="number" min="0" value="'+(Number(it.price)||0)+'"></td>'+
+      '<td class="s o-sum">0 ₽</td><td><button class="ic-btn del o-rm">🗑</button></td></tr>';
+    function recalc(){ let t=0; tb.querySelectorAll('tr').forEach(tr=>{
+        const q=Number(tr.querySelector('.o-qty').value)||0, p=Number(tr.querySelector('.o-price').value)||0;
+        tr.querySelector('.o-sum').textContent=money(q*p); t+=q*p; });
+      $('#o_total').textContent='Итого: '+money(t); return t; }
+    function wireRow(tr){
+      tr.querySelector('.o-cat').onchange=ev=>{const c=DATA.catalog.find(x=>x.id===ev.target.value);
+        if(c){tr.querySelector('.o-name').value=c.name;tr.querySelector('.o-price').value=c.price;recalc();}};
+      tr.querySelectorAll('.o-qty,.o-price').forEach(i=>i.oninput=recalc);
+      tr.querySelector('.o-rm').onclick=()=>{tr.remove();recalc();};
+    }
+    items.forEach(it=>{ tb.insertAdjacentHTML('beforeend',rowHTML(it)); wireRow(tb.lastElementChild); });
+    recalc();
+    $('#o_add').onclick=()=>{ tb.insertAdjacentHTML('beforeend',rowHTML({name:'',qty:1,price:0})); wireRow(tb.lastElementChild); recalc(); };
+    if(id)$('#o_del').onclick=async()=>{ if(!confirm('Удалить заказ?'))return; await remove('orders',id); DATA.orders=DATA.orders.filter(x=>x.id!==id); hideModal(); render(); };
+
+    $('#mSave').onclick=async()=>{
+      const rows=[...tb.querySelectorAll('tr')].map(tr=>({name:tr.querySelector('.o-name').value.trim(),
+        qty:Number(tr.querySelector('.o-qty').value)||0,price:Number(tr.querySelector('.o-price').value)||0})).filter(r=>r.name);
+      const total=rows.reduce((a,r)=>a+r.qty*r.price,0);
+      const rec=Object.assign({},e,{id:e.id||genId(),client:$('#o_client').value.trim(),phone:$('#o_phone').value.trim(),
+        status:$('#o_status').value,deadline:$('#o_deadline').value.trim(),items:rows,total,note:$('#o_note').value.trim(),
+        source:e.source||'CRM',ts:e.ts||new Date().toISOString()});
+      if(!rec.client&&!rows.length){toast('Заполните клиента или позиции');return;}
+      try{ const it=await save('orders',rec); const i=DATA.orders.findIndex(x=>x.id===rec.id);
+        if(i>=0)DATA.orders[i]=it; else DATA.orders.unshift(it); toast('Заказ сохранён'); hideModal(); render(); }catch(err){}
+    };
+  }
+
+  /* ---------- common ---------- */
+  function bindCommon(){ const r=$('#refresh'); if(r)r.onclick=()=>loadAll();
+    $('#main').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{VIEW=b.dataset.go;render();}); }
   document.querySelectorAll('.side .nav').forEach(n=>n.onclick=()=>{VIEW=n.dataset.view;render();});
-  $('#q').addEventListener('input',e=>{Q=e.target.value; if(VIEW==='kanban'||VIEW==='list') render();});
+  $('#q').addEventListener('input',e=>{Q=e.target.value; render();});
 
-  /* ---------- load ---------- */
-  async function load(pass){
-    const r = await fetch('/api/leads?pass='+encodeURIComponent(pass));
-    if(r.status===401) throw new Error('auth');
-    const j = await r.json();
-    LEADS = (j.leads||[]);
-    STATUS = (j.status||{});
-    if(j.note==='storage-not-configured') STATUS.__nostore=true;
-    render();
-  }
-
-  async function enter(){
-    const p=$('#pass').value.trim(); if(!p) return;
-    try{
-      await load(p); PASS=p;
-      try{localStorage.setItem('riks_leads_pass',p);}catch(e){}
-      $('#gate').style.display='none'; $('#app').style.display='block';
-    }catch(e){ $('#err').textContent='Неверный пароль или хранилище недоступно.'; }
-  }
-  $('#enter').onclick=enter;
-  $('#pass').addEventListener('keydown',e=>{if(e.key==='Enter')enter();});
+  /* ---------- auth / load ---------- */
+  async function enter(){ const p=$('#pass').value.trim(); if(!p)return;
+    try{ PASS=p; await loadAll(); try{localStorage.setItem('riks_leads_pass',p);}catch(e){}
+      $('#gate').style.display='none'; $('#app').style.display='block'; }
+    catch(e){ $('#err').textContent='Неверный пароль или хранилище недоступно.'; } }
+  $('#enter').onclick=enter; $('#pass').addEventListener('keydown',e=>{if(e.key==='Enter')enter();});
   $('#exit').onclick=()=>{try{localStorage.removeItem('riks_leads_pass');}catch(e){}location.reload();};
 
-  // демо-режим (?demo=1) — заполненный пример без пароля и бэкенда, для показа клиенту
-  function demo(){
-    const now=Date.now(), h=3600e3;
-    LEADS=[
-      {id:'d1',name:'Андрей',phone:'+7 902 100-11-22',service:'Световой короб',detail:'фасад магазина, ~4×1 м',source:'Авито',page:'vyveski',ts:new Date(now-1*h).toISOString()},
-      {id:'d2',name:'Марина',phone:'+7 927 333-44-55',service:'Неоновая вывеска',detail:'кофейня, логотип',source:'vk.ru/rikss12',page:'neon',ts:new Date(now-5*h).toISOString()},
-      {id:'d3',name:'ООО «Старт»',phone:'+7 836 248-27-26',service:'Информационный стенд',detail:'уголок потребителя',source:'Яндекс Карты',page:'stendy',ts:new Date(now-26*h).toISOString()},
-      {id:'d4',name:'Сергей',phone:'+7 961 777-88-99',service:'Оклейка авто',detail:'газель, 2 борта',source:'Сайт',page:'transport',ts:new Date(now-30*h).toISOString()},
-      {id:'d5',name:'Ника',phone:'+7 905 222-33-44',service:'Визитки + листовки',detail:'1000 шт',source:'telegram',page:'poligrafiya',ts:new Date(now-50*h).toISOString()},
-      {id:'d6',name:'Пекарня «Тёплый хлеб»',phone:'+7 917 555-66-77',service:'Вывеска + монтаж',detail:'',source:'Реферал',page:'index',ts:new Date(now-72*h).toISOString()},
-      {id:'d7',name:'Игорь',phone:'+7 902 909-80-70',service:'Табличка на дверь',detail:'режим работы',source:'2ГИС',page:'poligrafiya',ts:new Date(now-96*h).toISOString()}
-    ];
-    STATUS={d1:{stage:'new'},d2:{stage:'work'},d3:{stage:'kp'},d4:{stage:'work'},d5:{stage:'deal'},d6:{stage:'done'},d7:{stage:'fail'}};
-    PASS='demo';
+  /* ---------- demo ---------- */
+  function demo(){ DEMO=true; PASS='demo'; const now=Date.now(),h=3600e3;
+    DATA.leads=[
+      {id:'d1',name:'Андрей',phone:'+7 902 100-11-22',service:'Световой короб',detail:'фасад, ~4×1 м',source:'Авито',page:'vyveski',stage:'new',ts:new Date(now-1*h).toISOString()},
+      {id:'d2',name:'Марина',phone:'+7 927 333-44-55',service:'Неоновая вывеска',detail:'кофейня, логотип',source:'vk.ru/rikss12',page:'neon',stage:'work',ts:new Date(now-5*h).toISOString()},
+      {id:'d3',name:'ООО «Старт»',phone:'+7 836 248-27-26',service:'Информационный стенд',source:'Яндекс Карты',page:'stendy',stage:'kp',ts:new Date(now-26*h).toISOString()},
+      {id:'d4',name:'Сергей',phone:'+7 961 777-88-99',service:'Оклейка авто',detail:'газель, 2 борта',source:'Звонок',page:'вручную',stage:'work',ts:new Date(now-30*h).toISOString()},
+      {id:'d5',name:'Ника',phone:'+7 905 222-33-44',service:'Визитки + листовки',source:'telegram',page:'poligrafiya',stage:'deal',ts:new Date(now-50*h).toISOString()},
+      {id:'d6',name:'Пекарня «Тёплый хлеб»',phone:'+7 917 555-66-77',service:'Вывеска + монтаж',source:'Реферал',page:'index',stage:'done',ts:new Date(now-72*h).toISOString()},
+      {id:'d7',name:'Игорь',phone:'+7 902 909-80-70',service:'Табличка на дверь',source:'2ГИС',page:'poligrafiya',stage:'fail',ts:new Date(now-96*h).toISOString()}];
+    DATA.catalog=[
+      {id:'c1',category:'Вывески',name:'Световой короб, двусторонний',unit:'м²',price:9500},
+      {id:'c2',category:'Вывески',name:'Монтаж вывески',unit:'компл.',price:5000},
+      {id:'c3',category:'Неон',name:'Гибкий неон (контур)',unit:'п.м.',price:2500},
+      {id:'c4',category:'Транспорт',name:'Брендирование авто',unit:'м²',price:1800},
+      {id:'c5',category:'Полиграфия',name:'Визитки, 1000 шт',unit:'компл.',price:1500},
+      {id:'c6',category:'Печать',name:'Баннер литой',unit:'м²',price:450}];
+    DATA.orders=[
+      {id:'o1',client:'Пекарня «Тёплый хлеб»',phone:'+7 917 555-66-77',status:'prod',deadline:'25.11',source:'Реферал',
+        items:[{name:'Световой короб, двусторонний',qty:4,price:9500},{name:'Монтаж вывески',qty:1,price:5000}],total:43000,ts:new Date(now-40*h).toISOString()},
+      {id:'o2',client:'Марина (кофейня)',phone:'+7 927 333-44-55',status:'new',deadline:'',source:'ВКонтакте',
+        items:[{name:'Гибкий неон (контур)',qty:6,price:2500}],total:15000,ts:new Date(now-6*h).toISOString()},
+      {id:'o3',client:'ООО «Старт»',phone:'+7 836 248-27-26',status:'done',deadline:'выдан',source:'Яндекс',
+        items:[{name:'Визитки, 1000 шт',qty:2,price:1500},{name:'Баннер литой',qty:3,price:450}],total:4350,ts:new Date(now-120*h).toISOString()}];
     $('#gate').style.display='none'; $('#app').style.display='block'; render();
   }
   if(/[?&]demo=1/.test(location.search)){ demo(); return; }
 
-  // автологин
   let saved=''; try{saved=localStorage.getItem('riks_leads_pass')||'';}catch(e){}
-  if(saved) load(saved).then(()=>{PASS=saved;$('#gate').style.display='none';$('#app').style.display='block';}).catch(()=>{});
+  if(saved){ PASS=saved; loadAll().then(()=>{$('#gate').style.display='none';$('#app').style.display='block';}).catch(()=>{PASS='';}); }
 })();
 </script>
 </body>

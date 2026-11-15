@@ -1,6 +1,7 @@
-// Приём заявок с сайта: уведомление менеджеру в Telegram + сохранение (Upstash Redis, если подключён).
-// Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (обязательно для Telegram);
-//      KV_REST_API_URL, KV_REST_API_TOKEN (опционально, для списка лидов и дашборда).
+// Приём заявок с сайта: уведомление менеджеру в Telegram + сохранение в Redis (hash riks:leads).
+// Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID (для Telegram); KV_REST_API_URL, KV_REST_API_TOKEN (хранилище).
+
+const { kvReady, cmd, genId } = require('./_kv.js');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -9,7 +10,6 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ ok: false });
 
-  // читаем тело
   let raw = '';
   try {
     raw = await new Promise((resolve, reject) => {
@@ -27,11 +27,6 @@ module.exports = async (req, res) => {
   const phone = clean(lead.phone, 40);
   if (!phone.replace(/\D/g, '')) return res.status(400).json({ ok: false, error: 'no phone' });
 
-  const genId = () => {
-    try { if (global.crypto && global.crypto.randomUUID) return global.crypto.randomUUID(); } catch (e) {}
-    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
-  };
-
   const rec = {
     id: genId(),
     name: clean(lead.name, 100),
@@ -42,6 +37,8 @@ module.exports = async (req, res) => {
     source: clean(lead.source, 120),
     utm: (lead.utm && typeof lead.utm === 'object') ? lead.utm : {},
     ref: clean(lead.ref, 200),
+    stage: 'new',
+    note: '',
     ts: clean(lead.ts, 40) || new Date().toISOString()
   };
 
@@ -68,15 +65,10 @@ module.exports = async (req, res) => {
     } catch (e) { /* не валим заявку, если телега недоступна */ }
   }
 
-  // Сохранение в Upstash Redis (если настроен) — для дашборда и будущего переноса в Битрикс
-  const KVURL = process.env.KV_REST_API_URL, KVTOK = process.env.KV_REST_API_TOKEN;
-  if (KVURL && KVTOK) {
-    try {
-      await fetch(KVURL + '/lpush/riks_leads/' + encodeURIComponent(JSON.stringify(rec)), {
-        headers: { Authorization: 'Bearer ' + KVTOK }
-      });
-    } catch (e) { /* ignore */ }
+  // Сохранение в Redis (hash riks:leads, поле = id)
+  if (kvReady()) {
+    try { await cmd(['HSET', 'riks:leads', rec.id, JSON.stringify(rec)]); } catch (e) { /* ignore */ }
   }
 
-  return res.status(200).json({ ok: true });
+  return res.status(200).json({ ok: true, id: rec.id });
 };
