@@ -298,8 +298,9 @@
     const rows=filt(DATA.leads);
     const cols=LEAD_STAGES.map(st=>{
       const items=rows.filter(l=>(l.stage||'new')===st.k);
+      const sum=items.reduce((a,l)=>a+(Number(l.amount)||0),0);
       return '<div class="col" data-stage="'+st.k+'"><div class="ch" style="background:'+st.col+'">'+
-        '<div class="cn">'+st.t+'</div><div class="cm">'+items.length+' лид.</div></div>'+
+        '<div class="cn">'+st.t+'</div><div class="cm">'+items.length+' лид.'+(sum?' · '+money(sum):'')+'</div></div>'+
         '<div class="cards" data-stage="'+st.k+'">'+items.map(leadCard).join('')+'</div></div>';
     }).join('');
     $('#main').innerHTML=head('Лиды · Воронка',
@@ -314,6 +315,7 @@
     return '<div class="card" draggable="true" data-id="'+esc(l.id)+'" style="border-left-color:'+s.c+'">'+
       '<div class="nm">'+(esc(l.name)||'Без имени')+'</div><div class="ph">'+esc(l.phone)+'</div>'+
       (l.service?'<div class="sv">'+esc(l.service)+(l.detail?' — '+esc(l.detail):'')+'</div>':'')+
+      (Number(l.amount)>0?'<div class="sum">'+money(l.amount)+'</div>':'')+
       '<div class="meta"><span class="badge" style="background:'+s.c+'">'+s.t+'</span><span class="tm">'+fmt(l.ts)+'</span></div></div>';
   }
 
@@ -324,12 +326,13 @@
       return '<tr data-id="'+esc(l.id)+'"><td class="nm">'+(esc(l.name)||'—')+'</td><td class="ph">'+esc(l.phone)+'</td>'+
         '<td>'+(esc(l.service)||'—')+(l.detail?'<div style="color:var(--muted);font-size:12px">'+esc(l.detail)+'</div>':'')+'</td>'+
         '<td><span class="badge" style="background:'+s.c+'">'+s.t+'</span></td>'+
+        '<td style="white-space:nowrap;font-weight:700">'+(Number(l.amount)>0?money(l.amount):'—')+'</td>'+
         '<td><span class="st-pill" style="background:'+st.col+'">'+st.t+'</span></td>'+
         '<td style="color:var(--muted);white-space:nowrap">'+fmt(l.ts)+'</td></tr>';}).join('');
     $('#main').innerHTML=head('Лиды · Список',
       '<div class="tabs"><button data-go="leads">Канбан</button><button class="on">Список</button></div>'+
       '<div class="spacer"></div><button class="btn-pri" id="addLead">+ Лид</button>'+refreshBtn)+storeNote()+
-      (rows.length?'<div class="table"><table><thead><tr><th>Имя</th><th>Телефон</th><th>Услуга</th><th>Источник</th><th>Стадия</th><th>Когда</th></tr></thead><tbody>'+body+'</tbody></table></div>':'<div class="empty">Пока нет заявок.</div>');
+      (rows.length?'<div class="table"><table><thead><tr><th>Имя</th><th>Телефон</th><th>Услуга</th><th>Источник</th><th>Сумма</th><th>Стадия</th><th>Когда</th></tr></thead><tbody>'+body+'</tbody></table></div>':'<div class="empty">Пока нет заявок.</div>');
     bindCommon(); $('#addLead').onclick=()=>editLead(null);
     $('#main').querySelectorAll('tr[data-id]').forEach(tr=>tr.onclick=()=>openLead(tr.dataset.id));
   }
@@ -411,12 +414,14 @@
     const revenue=O.filter(o=>o.status==='done').reduce((a,o)=>a+(Number(o.total)||0),0);
     const pipeline=O.filter(o=>o.status!=='done'&&o.status!=='cancel').reduce((a,o)=>a+(Number(o.total)||0),0);
     const conv=L.length?Math.round(byStage.done/L.length*100):0;
+    const leadsPipe=L.filter(l=>l.stage!=='fail'&&l.stage!=='done').reduce((a,l)=>a+(Number(l.amount)||0),0);
     const maxSrc=Math.max(1,...Object.values(bySrc));
     const kpis='<div class="cards-row">'+
       '<div class="kpi"><b>'+L.length+'</b><span>Лидов</span></div>'+
+      '<div class="kpi"><b>'+money(leadsPipe)+'</b><span>Сделки в воронке</span></div>'+
       '<div class="kpi"><b>'+O.length+'</b><span>Заказов</span></div>'+
       '<div class="kpi"><b>'+money(revenue)+'</b><span>Выручка (выдано)</span></div>'+
-      '<div class="kpi"><b>'+money(pipeline)+'</b><span>В работе</span></div>'+
+      '<div class="kpi"><b>'+money(pipeline)+'</b><span>Заказы в работе</span></div>'+
       '<div class="kpi"><b>'+conv+'%</b><span>Конверсия лидов</span></div></div>';
     const srcBars=Object.entries(bySrc).sort((a,b)=>b[1]-a[1]).map(([t,n])=>{
       const c=(SRC.find(x=>x.t===t)||{c:'#6b7a8d'}).c;
@@ -494,6 +499,7 @@
       '<div class="fld"><div class="k">Когда</div><div class="v">'+fmt(l.ts)+'</div></div>'+
       '<div class="fld"><div class="k">Стадия</div><div class="stages" id="dStages">'+
         LEAD_STAGES.map(st=>'<button data-k="'+st.k+'" style="'+(st.k===draftStage?'background:'+st.col+';color:#fff;border-color:transparent':'')+'">'+st.t+'</button>').join('')+'</div></div>'+
+      '<div class="fld"><div class="k">Сумма сделки, ₽</div><input class="inp" id="dAmount" type="number" min="0" value="'+(Number(l.amount)||0)+'"></div>'+
       '<div class="fld"><div class="k">Заметка менеджера</div><textarea class="inp" id="dNote" placeholder="Что обсудили…">'+esc(l.note||'')+'</textarea></div>'+
       '<div class="fld"><button class="btn-sec" id="dEdit">✎ Редактировать лид</button> <button class="btn-sec" id="dDel" style="border-color:#f2b8b8;color:var(--st-fail)">Удалить</button></div>';
     $('#dStages').querySelectorAll('button').forEach(b=>b.onclick=()=>{draftStage=b.dataset.k;
@@ -505,7 +511,7 @@
   }
   function closeDrawer(){ $('#drawer').classList.remove('on'); if(!$('#modal').classList.contains('on'))$('#scrim').classList.remove('on'); curLead=null; }
   $('#dClose').onclick=closeDrawer;
-  $('#dSave').onclick=async()=>{ if(!curLead)return; curLead.stage=draftStage; curLead.note=$('#dNote').value;
+  $('#dSave').onclick=async()=>{ if(!curLead)return; curLead.stage=draftStage; curLead.note=$('#dNote').value; curLead.amount=Number($('#dAmount').value)||0;
     try{await save('leads',curLead);toast('Сохранено');}catch(e){} closeDrawer(); render(); };
 
   /* ---------- modal helper ---------- */
@@ -526,13 +532,14 @@
       '<div class="fld"><div class="k">Комментарий</div><textarea class="inp" id="e_detail">'+esc(e.detail||'')+'</textarea></div>'+
       '<div class="grid2">'+
       '<div class="fld"><div class="k">Источник</div><select class="inp" id="e_source">'+SRC_OPTS.map(o=>'<option'+(o===(e.source||'Звонок')?' selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
-      '<div class="fld"><div class="k">Стадия</div><select class="inp" id="e_stage">'+LEAD_STAGES.map(s=>'<option value="'+s.k+'"'+(s.k===(e.stage||'new')?' selected':'')+'>'+s.t+'</option>').join('')+'</select></div></div>');
+      '<div class="fld"><div class="k">Стадия</div><select class="inp" id="e_stage">'+LEAD_STAGES.map(s=>'<option value="'+s.k+'"'+(s.k===(e.stage||'new')?' selected':'')+'>'+s.t+'</option>').join('')+'</select></div></div>'+
+      '<div class="fld"><div class="k">Сумма сделки, ₽</div><input class="inp" id="e_amount" type="number" min="0" value="'+(Number(e.amount)||0)+'" placeholder="0"></div>');
     $('#mSave').onclick=async()=>{
       const phone=$('#e_phone').value.trim(); if(!phone.replace(/\D/g,'')){toast('Введите телефон');return;}
       const rec=Object.assign({},e,{id:e.id||genId(),name:$('#e_name').value.trim(),phone,
         service:$('#e_service').value.trim(),detail:$('#e_detail').value.trim(),
-        source:$('#e_source').value,stage:$('#e_stage').value,note:e.note||'',page:e.page||'вручную',
-        ts:e.ts||new Date().toISOString()});
+        source:$('#e_source').value,stage:$('#e_stage').value,amount:Number($('#e_amount').value)||0,
+        note:e.note||'',page:e.page||'вручную',ts:e.ts||new Date().toISOString()});
       try{ const it=await save('leads',rec); const i=DATA.leads.findIndex(x=>x.id===rec.id);
         if(i>=0)DATA.leads[i]=it; else DATA.leads.unshift(it); toast('Лид сохранён'); hideModal(); render(); }catch(err){}
     };
@@ -609,13 +616,13 @@
   /* ---------- demo ---------- */
   function demo(){ DEMO=true; PASS='demo'; const now=Date.now(),h=3600e3;
     DATA.leads=[
-      {id:'d1',name:'Андрей',phone:'+7 902 100-11-22',service:'Световой короб',detail:'фасад, ~4×1 м',source:'Авито',page:'vyveski',stage:'new',ts:new Date(now-1*h).toISOString()},
-      {id:'d2',name:'Марина',phone:'+7 927 333-44-55',service:'Неоновая вывеска',detail:'кофейня, логотип',source:'vk.ru/rikss12',page:'neon',stage:'work',ts:new Date(now-5*h).toISOString()},
-      {id:'d3',name:'ООО «Старт»',phone:'+7 836 248-27-26',service:'Информационный стенд',source:'Яндекс Карты',page:'stendy',stage:'kp',ts:new Date(now-26*h).toISOString()},
-      {id:'d4',name:'Сергей',phone:'+7 961 777-88-99',service:'Оклейка авто',detail:'газель, 2 борта',source:'Звонок',page:'вручную',stage:'work',ts:new Date(now-30*h).toISOString()},
-      {id:'d5',name:'Ника',phone:'+7 905 222-33-44',service:'Визитки + листовки',source:'telegram',page:'poligrafiya',stage:'deal',ts:new Date(now-50*h).toISOString()},
-      {id:'d6',name:'Пекарня «Тёплый хлеб»',phone:'+7 917 555-66-77',service:'Вывеска + монтаж',source:'Реферал',page:'index',stage:'done',ts:new Date(now-72*h).toISOString()},
-      {id:'d7',name:'Игорь',phone:'+7 902 909-80-70',service:'Табличка на дверь',source:'2ГИС',page:'poligrafiya',stage:'fail',ts:new Date(now-96*h).toISOString()}];
+      {id:'d1',name:'Андрей',phone:'+7 902 100-11-22',service:'Световой короб',detail:'фасад, ~4×1 м',source:'Авито',page:'vyveski',stage:'new',amount:38000,ts:new Date(now-1*h).toISOString()},
+      {id:'d2',name:'Марина',phone:'+7 927 333-44-55',service:'Неоновая вывеска',detail:'кофейня, логотип',source:'vk.ru/rikss12',page:'neon',stage:'work',amount:15000,ts:new Date(now-5*h).toISOString()},
+      {id:'d3',name:'ООО «Старт»',phone:'+7 836 248-27-26',service:'Информационный стенд',source:'Яндекс Карты',page:'stendy',stage:'kp',amount:9000,ts:new Date(now-26*h).toISOString()},
+      {id:'d4',name:'Сергей',phone:'+7 961 777-88-99',service:'Оклейка авто',detail:'газель, 2 борта',source:'Звонок',page:'вручную',stage:'work',amount:22000,ts:new Date(now-30*h).toISOString()},
+      {id:'d5',name:'Ника',phone:'+7 905 222-33-44',service:'Визитки + листовки',source:'telegram',page:'poligrafiya',stage:'deal',amount:4000,ts:new Date(now-50*h).toISOString()},
+      {id:'d6',name:'Пекарня «Тёплый хлеб»',phone:'+7 917 555-66-77',service:'Вывеска + монтаж',source:'Реферал',page:'index',stage:'done',amount:43000,ts:new Date(now-72*h).toISOString()},
+      {id:'d7',name:'Игорь',phone:'+7 902 909-80-70',service:'Табличка на дверь',source:'2ГИС',page:'poligrafiya',stage:'fail',amount:0,ts:new Date(now-96*h).toISOString()}];
     DATA.catalog=[
       {id:'c1',category:'Вывески',name:'Световой короб, двусторонний',unit:'м²',price:9500},
       {id:'c2',category:'Вывески',name:'Монтаж вывески',unit:'компл.',price:5000},
