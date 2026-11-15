@@ -411,17 +411,17 @@
     const L=DATA.leads,O=DATA.orders;
     const bySrc={}; L.forEach(l=>{const t=srcOf(l.source).t;bySrc[t]=(bySrc[t]||0)+1;});
     const byStage={}; LEAD_STAGES.forEach(s=>byStage[s.k]=0); L.forEach(l=>byStage[l.stage||'new']++);
-    const revenue=O.filter(o=>o.status==='done').reduce((a,o)=>a+(Number(o.total)||0),0);
-    const pipeline=O.filter(o=>o.status!=='done'&&o.status!=='cancel').reduce((a,o)=>a+(Number(o.total)||0),0);
-    const conv=L.length?Math.round(byStage.done/L.length*100):0;
+    const leadsWon=L.filter(l=>l.stage==='done').reduce((a,l)=>a+(Number(l.amount)||0),0);
     const leadsPipe=L.filter(l=>l.stage!=='fail'&&l.stage!=='done').reduce((a,l)=>a+(Number(l.amount)||0),0);
+    const ordersSum=O.filter(o=>o.status!=='cancel').reduce((a,o)=>a+(Number(o.total)||0),0);
+    const conv=L.length?Math.round(byStage.done/L.length*100):0;
     const maxSrc=Math.max(1,...Object.values(bySrc));
     const kpis='<div class="cards-row">'+
       '<div class="kpi"><b>'+L.length+'</b><span>Лидов</span></div>'+
       '<div class="kpi"><b>'+money(leadsPipe)+'</b><span>Сделки в воронке</span></div>'+
+      '<div class="kpi"><b>'+money(leadsWon)+'</b><span>Выручка (выполнено)</span></div>'+
       '<div class="kpi"><b>'+O.length+'</b><span>Заказов</span></div>'+
-      '<div class="kpi"><b>'+money(revenue)+'</b><span>Выручка (выдано)</span></div>'+
-      '<div class="kpi"><b>'+money(pipeline)+'</b><span>Заказы в работе</span></div>'+
+      '<div class="kpi"><b>'+money(ordersSum)+'</b><span>Сумма заказов</span></div>'+
       '<div class="kpi"><b>'+conv+'%</b><span>Конверсия лидов</span></div></div>';
     const srcBars=Object.entries(bySrc).sort((a,b)=>b[1]-a[1]).map(([t,n])=>{
       const c=(SRC.find(x=>x.t===t)||{c:'#6b7a8d'}).c;
