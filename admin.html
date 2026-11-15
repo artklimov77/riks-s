@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Рикс+С — CRM</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --b-blue:#2a8add; --b-blue2:#27b4e8; --b-blue-d:#1a6db5;
+    --bg:#eef2f4; --panel:#fff; --line:#e3e7ec; --line2:#d5dde3;
+    --ink:#333; --muted:#6a7681; --muted2:#9aa7b2;
+    --st-new:#55d0e0; --st-work:#2fc6f6; --st-kp:#ffa900; --st-deal:#a673e8; --st-done:#9dcf00; --st-fail:#ff5752;
+    --shadow:0 1px 3px rgba(0,0,0,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'Open Sans',system-ui,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.4}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+  /* ---- gate ---- */
+  .gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--b-blue),var(--b-blue2));z-index:100}
+  .gate .box{background:#fff;border-radius:10px;padding:34px 30px;width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+  .gate .logo{font-weight:700;font-size:22px;color:var(--b-blue-d)}
+  .gate .logo b{color:var(--st-fail)}
+  .gate p{color:var(--muted);font-size:13px;margin:6px 0 18px}
+  .gate input{width:100%;height:46px;border:1.5px solid var(--line2);border-radius:7px;padding:0 14px;font-size:15px;outline:none}
+  .gate input:focus{border-color:var(--b-blue)}
+  .gate button{width:100%;height:46px;border-radius:7px;background:var(--b-blue);color:#fff;font-weight:600;font-size:15px;margin-top:12px}
+  .gate .err{color:var(--st-fail);font-size:13px;min-height:18px;margin-top:10px}
+
+  /* ---- layout ---- */
+  .app{display:none;min-height:100vh}
+  .topbar{position:sticky;top:0;z-index:40;height:54px;background:linear-gradient(90deg,var(--b-blue),var(--b-blue2));display:flex;align-items:center;gap:16px;padding:0 18px;color:#fff}
+  .topbar .brand{font-weight:700;font-size:17px;white-space:nowrap}
+  .topbar .brand b{color:#fff}
+  .topbar .search{flex:1;max-width:460px}
+  .topbar .search input{width:100%;height:34px;border:none;border-radius:6px;padding:0 14px;font-size:14px;outline:none;background:rgba(255,255,255,.95)}
+  .topbar .sp{flex:1}
+  .topbar .tb-btn{color:#fff;font-size:13px;font-weight:600;padding:7px 12px;border-radius:6px;background:rgba(255,255,255,.16)}
+  .topbar .tb-btn:hover{background:rgba(255,255,255,.28)}
+  .topbar .ava{width:34px;height:34px;border-radius:50%;background:#fff;color:var(--b-blue-d);font-weight:700;display:flex;align-items:center;justify-content:center}
+
+  .body{display:flex;align-items:flex-start}
+  .side{width:220px;flex:0 0 220px;background:var(--panel);border-right:1px solid var(--line);min-height:calc(100vh - 54px);position:sticky;top:54px}
+  .side .grp{padding:10px 0;border-bottom:1px solid var(--line)}
+  .side .gt{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted2);padding:6px 18px 4px;font-weight:700}
+  .side .nav{display:flex;align-items:center;gap:10px;padding:9px 18px;font-size:14px;color:#404a54;border-left:3px solid transparent}
+  .side .nav .ic{width:18px;text-align:center;font-size:15px}
+  .side .nav:hover{background:#f5f8fa}
+  .side .nav.on{background:#eaf5fd;border-left-color:var(--b-blue);color:var(--b-blue-d);font-weight:600}
+  .side .nav .cnt{margin-left:auto;background:var(--st-fail);color:#fff;font-size:11px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 5px}
+
+  .main{flex:1;min-width:0;padding:18px 20px 60px}
+  .page-h{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+  .page-h h1{font-size:22px;font-weight:700}
+  .tabs{display:flex;gap:4px;background:#e2e8ec;border-radius:8px;padding:3px}
+  .tabs button{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:600;color:var(--muted)}
+  .tabs button.on{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+  .page-h .refresh{margin-left:auto;font-size:13px;font-weight:600;color:var(--b-blue-d);border:1.5px solid var(--b-blue);border-radius:6px;padding:7px 14px}
+
+  .note{background:#fff8e1;border:1px solid #ffe0a3;color:#8a6d00;border-radius:8px;padding:12px 16px;font-size:13px;margin-bottom:14px}
+
+  /* ---- kanban ---- */
+  .kanban{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;align-items:flex-start}
+  .col{flex:0 0 250px;width:250px;background:#e7edf1;border-radius:10px;display:flex;flex-direction:column;max-height:calc(100vh - 170px)}
+  .col.drag-over{outline:2px dashed var(--b-blue);outline-offset:-2px}
+  .col .ch{padding:10px 12px 8px;border-radius:10px 10px 0 0;color:#fff}
+  .col .ch .cn{font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px}
+  .col .ch .cm{font-size:11px;opacity:.9;margin-top:2px}
+  .col .cards{padding:8px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;min-height:40px}
+  .card{background:#fff;border-radius:8px;padding:10px 11px;box-shadow:var(--shadow);cursor:pointer;border-left:3px solid var(--line2)}
+  .card:hover{box-shadow:0 2px 8px rgba(0,0,0,.14)}
+  .card.dragging{opacity:.4}
+  .card .nm{font-weight:700;font-size:13px}
+  .card .ph{font-size:13px;color:var(--b-blue-d);font-weight:600;margin-top:2px}
+  .card .sv{font-size:12px;color:var(--muted);margin-top:4px}
+  .card .meta{display:flex;align-items:center;gap:6px;margin-top:7px;flex-wrap:wrap}
+  .badge{font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;color:#fff;white-space:nowrap}
+  .card .tm{font-size:10px;color:var(--muted2);margin-left:auto}
+
+  /* ---- list ---- */
+  .table{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .table table{width:100%;border-collapse:collapse}
+  .table th{background:#f5f8fa;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:11px 14px;border-bottom:1px solid var(--line);font-weight:700}
+  .table td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
+  .table tr:last-child td{border-bottom:none}
+  .table tr:hover td{background:#f8fbfd}
+  .table .nm{font-weight:700}
+  .table .ph{color:var(--b-blue-d);font-weight:600}
+  .st-pill{font-size:11px;font-weight:700;padding:4px 9px;border-radius:12px;color:#fff;display:inline-block}
+
+  /* ---- analytics ---- */
+  .cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .kpi b{display:block;font-size:30px;font-weight:700;letter-spacing:-.02em}
+  .kpi span{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
+  .chart{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:16px}
+  .chart h3{font-size:14px;font-weight:700;margin-bottom:14px}
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .bar-row .bl{width:120px;font-size:12px;color:var(--muted);text-align:right;flex:0 0 120px}
+  .bar-row .bt{flex:1;background:#eef2f4;border-radius:5px;height:22px;overflow:hidden}
+  .bar-row .bf{height:100%;border-radius:5px;display:flex;align-items:center;padding:0 8px;color:#fff;font-size:11px;font-weight:700;min-width:26px}
+  .funnel{display:flex;gap:8px;flex-wrap:wrap}
+  .funnel .fstep{flex:1;min-width:90px;text-align:center;padding:14px 8px;border-radius:8px;color:#fff}
+  .funnel .fstep b{display:block;font-size:24px;font-weight:700}
+  .funnel .fstep span{font-size:11px;font-weight:600;opacity:.95}
+
+  .empty{text-align:center;color:var(--muted);padding:50px 0}
+
+  /* ---- drawer ---- */
+  .scrim{position:fixed;inset:0;background:rgba(20,30,40,.35);z-index:60;display:none}
+  .scrim.on{display:block}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:420px;max-width:92vw;background:#fff;z-index:70;transform:translateX(100%);transition:transform .22s ease;box-shadow:-8px 0 30px rgba(0,0,0,.2);display:flex;flex-direction:column}
+  .drawer.on{transform:translateX(0)}
+  .drawer .dh{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:12px}
+  .drawer .dh .nm{font-size:19px;font-weight:700}
+  .drawer .dh .x{margin-left:auto;font-size:22px;color:var(--muted);line-height:1}
+  .drawer .dc{padding:18px 20px;overflow-y:auto;flex:1}
+  .drawer .fld{margin-bottom:14px}
+  .drawer .fld .k{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted2);font-weight:700;margin-bottom:3px}
+  .drawer .fld .v{font-size:14px}
+  .drawer .fld .v a{color:var(--b-blue-d);font-weight:600}
+  .drawer .stages{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
+  .drawer .stages button{font-size:12px;font-weight:600;padding:7px 11px;border-radius:6px;border:1.5px solid var(--line2);color:var(--muted)}
+  .drawer .stages button.on{color:#fff;border-color:transparent}
+  .drawer textarea{width:100%;min-height:80px;border:1.5px solid var(--line2);border-radius:7px;padding:10px 12px;font-family:inherit;font-size:14px;resize:vertical;outline:none}
+  .drawer textarea:focus{border-color:var(--b-blue)}
+  .drawer .df{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:10px}
+  .drawer .df .call{flex:1;height:44px;border-radius:7px;background:var(--st-done);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;gap:7px}
+  .drawer .df .save{flex:1;height:44px;border-radius:7px;background:var(--b-blue);color:#fff;font-weight:700;font-size:14px}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;padding:11px 20px;border-radius:8px;font-size:13px;z-index:90;opacity:0;transition:.2s;pointer-events:none}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media(max-width:720px){
+    .side{display:none}
+    .topbar .search{max-width:none}
+    .page-h h1{font-size:19px}
+  }
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div class="gate" id="gate">
+  <div class="box">
+    <div class="logo">Рикс<b>+</b>С · CRM</div>
+    <p>Внутренняя панель. Введите пароль.</p>
+    <input type="password" id="pass" placeholder="Пароль" autocomplete="current-password">
+    <button id="enter">Войти</button>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="brand">Рикс<b>+</b>С</div>
+    <div class="search"><input id="q" type="search" placeholder="Поиск: имя, телефон, услуга…"></div>
+    <div class="sp"></div>
+    <button class="tb-btn" id="exit">Выход</button>
+    <div class="ava">Р</div>
+  </div>
+
+  <div class="body">
+    <aside class="side">
+      <div class="grp">
+        <div class="gt">CRM</div>
+        <a class="nav on" data-view="kanban"><span class="ic">▦</span> Лиды · Воронка <span class="cnt" id="navCnt" style="display:none"></span></a>
+        <a class="nav" data-view="list"><span class="ic">☰</span> Список</a>
+        <a class="nav" data-view="analytics"><span class="ic">📊</span> Аналитика</a>
+      </div>
+      <div class="grp">
+        <div class="gt">Каналы</div>
+        <a class="nav" data-view="channels"><span class="ic">🔌</span> Источники лидов</a>
+      </div>
+      <div class="grp">
+        <div class="gt">Система</div>
+        <a class="nav" data-view="settings"><span class="ic">⚙️</span> Настройка</a>
+      </div>
+    </aside>
+
+    <main class="main" id="main"></main>
+  </div>
+</div>
+
+<!-- DRAWER -->
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer">
+  <div class="dh">
+    <div><div class="nm" id="dNm">—</div><div style="color:var(--muted);font-size:13px" id="dSub"></div></div>
+    <button class="x" id="dClose">&times;</button>
+  </div>
+  <div class="dc" id="dBody"></div>
+  <div class="df">
+    <a class="call" id="dCall">📞 Позвонить</a>
+    <button class="save" id="dSave">Сохранить</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s==null?'':s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+
+  const STAGES = [
+    {k:'new',  t:'Новая',        c:'var(--st-new)',  col:'#55d0e0'},
+    {k:'work', t:'В обработке',  c:'var(--st-work)', col:'#2fc6f6'},
+    {k:'kp',   t:'Замер / КП',   c:'var(--st-kp)',   col:'#ffa900'},
+    {k:'deal', t:'Договор',      c:'var(--st-deal)', col:'#a673e8'},
+    {k:'done', t:'Выполнено',    c:'var(--st-done)', col:'#9dcf00'},
+    {k:'fail', t:'Отказ',        c:'var(--st-fail)', col:'#ff5752'}
+  ];
+  const stageOf = k => STAGES.find(s=>s.k===k) || STAGES[0];
+
+  const SRC = [
+    {re:/avito|авито/i,            t:'Авито',       c:'#0a8f3c'},
+    {re:/vk|вконтакт/i,            t:'ВКонтакте',   c:'#2787f5'},
+    {re:/t\.me|telegram|телеграм/i,t:'Telegram',    c:'#29a9eb'},
+    {re:/yandex|яндекс|карт|maps/i,t:'Яндекс',      c:'#ff3d00'},
+    {re:/2gis|2гис/i,             t:'2ГИС',        c:'#39c936'},
+    {re:/google/i,                t:'Google',      c:'#4285f4'},
+    {re:/реферал|ref|qr/i,        t:'Реферал',     c:'#8e44ad'}
+  ];
+  const srcOf = s => { s=(s||''); for(const x of SRC) if(x.re.test(s)) return x; return {t:'Сайт / прямой',c:'#6b7a8d'}; };
+
+  let LEADS = [], STATUS = {}, VIEW='kanban', Q='', PASS='', curId=null, draftStage='new';
+
+  const idOf = l => l.id || l.ts || (l.phone+'|'+l.ts);
+  const stageKey = l => (STATUS[idOf(l)] && STATUS[idOf(l)].stage) || 'new';
+  const noteOf = l => (STATUS[idOf(l)] && STATUS[idOf(l)].note) || '';
+  const fmt = ts => { try { return new Date(ts).toLocaleString('ru-RU',{timeZone:'Europe/Moscow',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); } catch(e){ return ts||''; } };
+
+  const filtered = () => {
+    const q = Q.trim().toLowerCase();
+    if(!q) return LEADS;
+    return LEADS.filter(l => (l.name+' '+l.phone+' '+l.service+' '+l.detail+' '+l.source).toLowerCase().includes(q));
+  };
+
+  const toast = m => { const t=$('#toast'); t.textContent=m; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),1800); };
+
+  /* ---------- render switch ---------- */
+  const render = () => {
+    document.querySelectorAll('.side .nav').forEach(n=>n.classList.toggle('on', n.dataset.view===VIEW));
+    const nu = LEADS.filter(l=>stageKey(l)==='new').length;
+    const navCnt=$('#navCnt'); if(nu){navCnt.style.display='flex';navCnt.textContent=nu;} else navCnt.style.display='none';
+    if(VIEW==='kanban') renderKanban();
+    else if(VIEW==='list') renderList();
+    else if(VIEW==='analytics') renderAnalytics();
+    else if(VIEW==='channels') renderChannels();
+    else if(VIEW==='settings') renderSettings();
+  };
+
+  const head = (title, extra='') =>
+    '<div class="page-h"><h1>'+title+'</h1>'+extra+'<button class="refresh" id="refresh">↻ Обновить</button></div>';
+
+  const storageNote = () => STATUS.__nostore ?
+    '<div class="note">⚠️ Хранилище лидов (Upstash) не подключено — список пуст и стадии не сохраняются. Подключите Storage в Vercel (см. «Настройка»).</div>' : '';
+
+  /* ---------- kanban ---------- */
+  function renderKanban(){
+    const rows = filtered();
+    let cols = '';
+    for(const st of STAGES){
+      const items = rows.filter(l=>stageKey(l)===st.k);
+      cols += '<div class="col" data-stage="'+st.k+'">'+
+        '<div class="ch" style="background:'+st.col+'"><div class="cn">'+st.t+'</div><div class="cm">'+items.length+' лид.</div></div>'+
+        '<div class="cards" data-stage="'+st.k+'">'+
+          items.map(cardHTML).join('')+
+        '</div></div>';
+    }
+    $('#main').innerHTML = head('Лиды · Воронка',
+      '<div class="tabs"><button class="on">Канбан</button><button data-go="list">Список</button></div>') +
+      storageNote() +
+      (rows.length? '<div class="kanban" id="kb">'+cols+'</div>' : '<div class="empty">Пока нет заявок. Как только с сайта придёт форма — она появится здесь.</div>');
+    bindCommon();
+    bindDnD();
+  }
+  function cardHTML(l){
+    const s=srcOf(l.source);
+    return '<div class="card" draggable="true" data-id="'+esc(idOf(l))+'" style="border-left-color:'+s.c+'">'+
+      '<div class="nm">'+(esc(l.name)||'Без имени')+'</div>'+
+      '<div class="ph">'+esc(l.phone)+'</div>'+
+      (l.service?'<div class="sv">'+esc(l.service)+(l.detail?' — '+esc(l.detail):'')+'</div>':'')+
+      '<div class="meta"><span class="badge" style="background:'+s.c+'">'+s.t+'</span><span class="tm">'+fmt(l.ts)+'</span></div>'+
+    '</div>';
+  }
+
+  /* ---------- list ---------- */
+  function renderList(){
+    const rows=filtered();
+    const body = rows.map(l=>{
+      const s=srcOf(l.source), st=stageOf(stageKey(l));
+      return '<tr data-id="'+esc(idOf(l))+'">'+
+        '<td class="nm">'+(esc(l.name)||'—')+'</td>'+
+        '<td class="ph">'+esc(l.phone)+'</td>'+
+        '<td>'+(esc(l.service)||'—')+(l.detail?'<div style="color:var(--muted);font-size:12px">'+esc(l.detail)+'</div>':'')+'</td>'+
+        '<td><span class="badge" style="background:'+s.c+'">'+s.t+'</span></td>'+
+        '<td><span class="st-pill" style="background:'+st.c+'">'+st.t+'</span></td>'+
+        '<td style="color:var(--muted);white-space:nowrap">'+fmt(l.ts)+'</td>'+
+      '</tr>';
+    }).join('');
+    $('#main').innerHTML = head('Лиды · Список',
+      '<div class="tabs"><button data-go="kanban">Канбан</button><button class="on">Список</button></div>') +
+      storageNote() +
+      (rows.length? '<div class="table"><table><thead><tr><th>Имя</th><th>Телефон</th><th>Услуга</th><th>Источник</th><th>Стадия</th><th>Когда</th></tr></thead><tbody>'+body+'</tbody></table></div>'
+                  : '<div class="empty">Пока нет заявок.</div>');
+    bindCommon();
+    $('#main').querySelectorAll('tr[data-id]').forEach(tr=>tr.onclick=()=>openDrawer(tr.dataset.id));
+  }
+
+  /* ---------- analytics ---------- */
+  function renderAnalytics(){
+    const rows=LEADS;
+    const total=rows.length;
+    const bySrc={}; rows.forEach(l=>{const t=srcOf(l.source).t; bySrc[t]=(bySrc[t]||0)+1;});
+    const byStage={}; STAGES.forEach(s=>byStage[s.k]=0); rows.forEach(l=>byStage[stageKey(l)]++);
+    const done=byStage.done, maxSrc=Math.max(1,...Object.values(bySrc));
+    const conv = total? Math.round(done/total*100) : 0;
+
+    const kpis = '<div class="cards-row">'+
+      '<div class="kpi"><b>'+total+'</b><span>Всего лидов</span></div>'+
+      '<div class="kpi"><b>'+byStage.new+'</b><span>Новых</span></div>'+
+      '<div class="kpi"><b>'+done+'</b><span>Выполнено</span></div>'+
+      '<div class="kpi"><b>'+conv+'%</b><span>Конверсия</span></div>'+
+    '</div>';
+
+    const srcBars = Object.entries(bySrc).sort((a,b)=>b[1]-a[1]).map(([t,n])=>{
+      const c=(SRC.find(x=>x.t===t)||{c:'#6b7a8d'}).c;
+      return '<div class="bar-row"><div class="bl">'+t+'</div><div class="bt"><div class="bf" style="width:'+Math.max(8,n/maxSrc*100)+'%;background:'+c+'">'+n+'</div></div></div>';
+    }).join('') || '<div class="empty">Нет данных</div>';
+
+    const funnel = '<div class="funnel">'+STAGES.map(s=>
+      '<div class="fstep" style="background:'+s.col+'"><b>'+byStage[s.k]+'</b><span>'+s.t+'</span></div>').join('')+'</div>';
+
+    $('#main').innerHTML = head('Аналитика') + storageNote() + kpis +
+      '<div class="chart"><h3>Лиды по источникам</h3>'+srcBars+'</div>'+
+      '<div class="chart"><h3>Воронка по стадиям</h3>'+funnel+'</div>';
+    bindCommon();
+  }
+
+  /* ---------- channels ---------- */
+  function renderChannels(){
+    const data=[
+      ['Сайт / форма / конструктор','Работает','#9dcf00','Заявки падают в эту CRM + Telegram менеджеру.'],
+      ['Telegram-бот','Готов к подключению','#2fc6f6','Ссылки ?start=avito / vk / maps для меток источника.'],
+      ['ВКонтакте','Нужны доступы','#ffa900','Сообщения группы vk.ru/rikss12 → в CRM.'],
+      ['Авито','Платный у Авито','#ff5752','Переписка по API требует Avito Pro. Пока — метки через QR/ссылку.'],
+      ['Яндекс Бизнес / 2ГИС','Нужно оформить','#ff3d00','Карточки + ссылка на сайт с UTM-меткой.']
+    ];
+    const cards = data.map(d=>
+      '<div class="kpi" style="display:flex;flex-direction:column;gap:6px">'+
+      '<div style="display:flex;align-items:center;gap:8px"><span class="st-pill" style="background:'+d[2]+'">'+d[1]+'</span></div>'+
+      '<b style="font-size:16px">'+d[0]+'</b>'+
+      '<span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--muted);font-size:13px">'+d[3]+'</span></div>'
+    ).join('');
+    $('#main').innerHTML = head('Источники лидов') +
+      '<div class="note">Все каналы сводятся в одно окно — эту CRM. Источник у каждого лида виден бейджем. Битрикс для этого не нужен.</div>'+
+      '<div class="cards-row" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">'+cards+'</div>';
+    bindCommon();
+  }
+
+  /* ---------- settings ---------- */
+  function renderSettings(){
+    $('#main').innerHTML = head('Настройка') +
+      '<div class="chart"><h3>Как это работает</h3><p style="color:var(--muted);line-height:1.6">Формы сайта шлют заявку на <code>/api/lead</code>. Менеджер получает уведомление в Telegram сразу, а заявка сохраняется и показывается здесь в воронке. Стадии (Новая → Выполнено) двигаются перетаскиванием карточек.</p></div>'+
+      '<div class="chart"><h3>Что нужно включить в Vercel</h3>'+
+      '<ol style="color:var(--muted);line-height:1.9;padding-left:20px">'+
+      '<li><b>TELEGRAM_BOT_TOKEN</b> и <b>TELEGRAM_CHAT_ID</b> — уведомления менеджеру.</li>'+
+      '<li><b>LEADS_PASS</b> — пароль от этой панели.</li>'+
+      '<li><b>Storage → Upstash Redis</b> — чтобы список лидов и стадии сохранялись (иначе только Telegram).</li>'+
+      '</ol></div>';
+    bindCommon();
+  }
+
+  /* ---------- drag & drop ---------- */
+  function bindDnD(){
+    let dragId=null;
+    document.querySelectorAll('.card').forEach(c=>{
+      c.addEventListener('dragstart',e=>{dragId=c.dataset.id;c.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+      c.addEventListener('dragend',()=>{dragId=null;c.classList.remove('dragging');document.querySelectorAll('.col').forEach(x=>x.classList.remove('drag-over'));});
+    });
+    document.querySelectorAll('.col').forEach(col=>{
+      col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('drag-over');});
+      col.addEventListener('dragleave',()=>col.classList.remove('drag-over'));
+      col.addEventListener('drop',e=>{
+        e.preventDefault();col.classList.remove('drag-over');
+        const st=col.dataset.stage;
+        if(dragId && st) setStage(dragId, st);
+      });
+    });
+    // клик по карточке — открыть карточку лида (но не во время драга)
+    document.querySelectorAll('.card').forEach(c=>{
+      c.addEventListener('click',()=>{ if(!c.classList.contains('dragging')) openDrawer(c.dataset.id); });
+    });
+  }
+
+  async function setStage(id, stage, note, silent){
+    STATUS[id] = Object.assign({}, STATUS[id], {stage, note: note!=null?note:(STATUS[id]&&STATUS[id].note)||''});
+    if(!silent) render();
+    if(PASS==='demo'){ if(!silent) toast('Демо: '+stageOf(stage).t); return; }
+    try{
+      const r = await fetch('/api/lead-status',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({pass:PASS, id, stage, note: STATUS[id].note})});
+      const j = await r.json();
+      if(j.ok){ if(!silent) toast('Сохранено: '+stageOf(stage).t); }
+      else toast('Не сохранилось (проверьте Storage)');
+    }catch(e){ toast('Нет связи с сервером'); }
+  }
+
+  /* ---------- drawer ---------- */
+  function openDrawer(id){
+    const l = LEADS.find(x=>idOf(x)===id); if(!l) return;
+    curId=id; draftStage=stageKey(l);
+    const s=srcOf(l.source);
+    $('#dNm').textContent = l.name || 'Без имени';
+    $('#dSub').textContent = l.service || '';
+    const tel=(l.phone||'').replace(/[^\d+]/g,'');
+    $('#dCall').href='tel:'+tel;
+    $('#dBody').innerHTML =
+      '<div class="fld"><div class="k">Телефон</div><div class="v"><a href="tel:'+tel+'">'+esc(l.phone)+'</a></div></div>'+
+      (l.detail?'<div class="fld"><div class="k">Комментарий</div><div class="v">'+esc(l.detail)+'</div></div>':'')+
+      '<div class="fld"><div class="k">Источник</div><div class="v"><span class="badge" style="background:'+s.c+'">'+s.t+'</span> <span style="color:var(--muted);font-size:12px">'+esc(l.source||'—')+'</span></div></div>'+
+      '<div class="fld"><div class="k">Страница</div><div class="v">'+esc(l.page||'—')+'</div></div>'+
+      '<div class="fld"><div class="k">Когда</div><div class="v">'+fmt(l.ts)+'</div></div>'+
+      '<div class="fld"><div class="k">Стадия</div><div class="stages" id="dStages">'+
+        STAGES.map(st=>'<button data-k="'+st.k+'" style="'+(st.k===draftStage?'background:'+st.col+';':'')+'">'+st.t+'</button>').join('')+
+      '</div></div>'+
+      '<div class="fld"><div class="k">Заметка менеджера</div><textarea id="dNote" placeholder="Что обсудили, что нужно…">'+esc(noteOf(l))+'</textarea></div>';
+    $('#dStages').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+      draftStage=b.dataset.k;
+      $('#dStages').querySelectorAll('button').forEach(x=>{const st=stageOf(x.dataset.k);x.style.background=x.dataset.k===draftStage?st.col:'';x.style.color=x.dataset.k===draftStage?'#fff':'';x.style.borderColor=x.dataset.k===draftStage?'transparent':'';});
+    });
+    $('#scrim').classList.add('on'); $('#drawer').classList.add('on');
+  }
+  function closeDrawer(){ $('#scrim').classList.remove('on'); $('#drawer').classList.remove('on'); curId=null; }
+  $('#dClose').onclick=closeDrawer; $('#scrim').onclick=closeDrawer;
+  $('#dSave').onclick=()=>{ if(!curId) return; const note=$('#dNote').value; setStage(curId, draftStage, note); closeDrawer(); };
+
+  /* ---------- common binds ---------- */
+  function bindCommon(){
+    const r=$('#refresh'); if(r) r.onclick=()=>load(PASS);
+    $('#main').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{VIEW=b.dataset.go;render();});
+  }
+  document.querySelectorAll('.side .nav').forEach(n=>n.onclick=()=>{VIEW=n.dataset.view;render();});
+  $('#q').addEventListener('input',e=>{Q=e.target.value; if(VIEW==='kanban'||VIEW==='list') render();});
+
+  /* ---------- load ---------- */
+  async function load(pass){
+    const r = await fetch('/api/leads?pass='+encodeURIComponent(pass));
+    if(r.status===401) throw new Error('auth');
+    const j = await r.json();
+    LEADS = (j.leads||[]);
+    STATUS = (j.status||{});
+    if(j.note==='storage-not-configured') STATUS.__nostore=true;
+    render();
+  }
+
+  async function enter(){
+    const p=$('#pass').value.trim(); if(!p) return;
+    try{
+      await load(p); PASS=p;
+      try{localStorage.setItem('riks_leads_pass',p);}catch(e){}
+      $('#gate').style.display='none'; $('#app').style.display='block';
+    }catch(e){ $('#err').textContent='Неверный пароль или хранилище недоступно.'; }
+  }
+  $('#enter').onclick=enter;
+  $('#pass').addEventListener('keydown',e=>{if(e.key==='Enter')enter();});
+  $('#exit').onclick=()=>{try{localStorage.removeItem('riks_leads_pass');}catch(e){}location.reload();};
+
+  // демо-режим (?demo=1) — заполненный пример без пароля и бэкенда, для показа клиенту
+  function demo(){
+    const now=Date.now(), h=3600e3;
+    LEADS=[
+      {id:'d1',name:'Андрей',phone:'+7 902 100-11-22',service:'Световой короб',detail:'фасад магазина, ~4×1 м',source:'Авито',page:'vyveski',ts:new Date(now-1*h).toISOString()},
+      {id:'d2',name:'Марина',phone:'+7 927 333-44-55',service:'Неоновая вывеска',detail:'кофейня, логотип',source:'vk.ru/rikss12',page:'neon',ts:new Date(now-5*h).toISOString()},
+      {id:'d3',name:'ООО «Старт»',phone:'+7 836 248-27-26',service:'Информационный стенд',detail:'уголок потребителя',source:'Яндекс Карты',page:'stendy',ts:new Date(now-26*h).toISOString()},
+      {id:'d4',name:'Сергей',phone:'+7 961 777-88-99',service:'Оклейка авто',detail:'газель, 2 борта',source:'Сайт',page:'transport',ts:new Date(now-30*h).toISOString()},
+      {id:'d5',name:'Ника',phone:'+7 905 222-33-44',service:'Визитки + листовки',detail:'1000 шт',source:'telegram',page:'poligrafiya',ts:new Date(now-50*h).toISOString()},
+      {id:'d6',name:'Пекарня «Тёплый хлеб»',phone:'+7 917 555-66-77',service:'Вывеска + монтаж',detail:'',source:'Реферал',page:'index',ts:new Date(now-72*h).toISOString()},
+      {id:'d7',name:'Игорь',phone:'+7 902 909-80-70',service:'Табличка на дверь',detail:'режим работы',source:'2ГИС',page:'poligrafiya',ts:new Date(now-96*h).toISOString()}
+    ];
+    STATUS={d1:{stage:'new'},d2:{stage:'work'},d3:{stage:'kp'},d4:{stage:'work'},d5:{stage:'deal'},d6:{stage:'done'},d7:{stage:'fail'}};
+    PASS='demo';
+    $('#gate').style.display='none'; $('#app').style.display='block'; render();
+  }
+  if(/[?&]demo=1/.test(location.search)){ demo(); return; }
+
+  // автологин
+  let saved=''; try{saved=localStorage.getItem('riks_leads_pass')||'';}catch(e){}
+  if(saved) load(saved).then(()=>{PASS=saved;$('#gate').style.display='none';$('#app').style.display='block';}).catch(()=>{});
+})();
+</script>
+</body>
+</html>

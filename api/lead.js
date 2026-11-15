@@ -27,7 +27,13 @@ module.exports = async (req, res) => {
   const phone = clean(lead.phone, 40);
   if (!phone.replace(/\D/g, '')) return res.status(400).json({ ok: false, error: 'no phone' });
 
+  const genId = () => {
+    try { if (global.crypto && global.crypto.randomUUID) return global.crypto.randomUUID(); } catch (e) {}
+    return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+  };
+
   const rec = {
+    id: genId(),
     name: clean(lead.name, 100),
     phone,
     service: clean(lead.service, 200),
