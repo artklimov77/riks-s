@@ -484,7 +484,7 @@ body{background:#fff}
 .hero{background:radial-gradient(1200px 500px at 85% -10%,var(--or-l),transparent 60%),#fff}
 .mark::before{background:var(--or);opacity:.55}
 .label .sq{background:var(--red);outline-color:var(--red)}
-.sec.white{background:var(--paper-2)}
+.sec.white{background:#FBF7F3}
 .btn-ink{background:var(--red);color:#fff}
 .btn-ink:hover{background:var(--red-d);box-shadow:0 12px 30px -10px rgba(227,36,27,.6)}
 .btn-y{color:#fff}
@@ -493,10 +493,10 @@ body{background:#fff}
 /* карточки услуг */
 .s-card:hover{background:var(--or-l)}
 .s-card:hover .go{background:var(--red);color:#fff;border-color:var(--red)}
-.s-card.feat{background:linear-gradient(140deg,#E3241B 0%,#D81E1A 55%,#F05A1E 100%)}
-.s-card.feat:hover{background:linear-gradient(140deg,#D81E1A,#E84B1C)}
+.s-card.feat{background:#262220}
+.s-card.feat:hover{background:#2e2926}
 .s-card.feat .no,.s-card.feat p{color:rgba(255,255,255,.86)}
-.s-card.feat:hover .go{background:#fff;color:var(--red);border-color:#fff}
+.s-card.feat:hover .go{background:var(--red);color:#fff;border-color:var(--red)}
 .s-card.yel{background:var(--or);color:#fff}
 .s-card.yel:hover{background:#EE8A12}
 .s-card.yel .no,.s-card.yel p{color:rgba(255,255,255,.9)}
@@ -507,30 +507,31 @@ body{background:#fff}
 .prow .add.added{color:#fff;border-color:var(--red)}
 .tab.on,.gal-filter .fb.on,.opt.on{background:var(--red);border-color:var(--red);color:#fff}
 /* тёмные секции → фирменный красно-оранжевый градиент */
-.dark{background:linear-gradient(135deg,#E3241B 0%,#D81E1A 50%,#F05A1E 100%);color:#fff;
-  --y:#fff; --y-2:#FFE6D6; --muted-d:rgba(255,255,255,.85); --line-d:rgba(255,255,255,.22); --line-d2:rgba(255,255,255,.4)}
-.dark .btn-y,.dark .type.on{color:var(--red)}
-.dark .btn-ink{background:#fff;color:var(--red)}
-.dark .ruler b{color:var(--red)}
+.dark{background:radial-gradient(900px 420px at 100% 0%,rgba(247,148,29,.16),transparent 60%),radial-gradient(700px 380px at 0% 100%,rgba(227,36,27,.14),transparent 60%),#221f1d;color:#fff;
+  --y:#F7941D; --y-2:#E8850F; --muted-d:rgba(255,255,255,.85); --line-d:rgba(255,255,255,.22); --line-d2:rgba(255,255,255,.4)}
+.dark .btn-y,.dark .type.on{color:#fff}
+.dark .btn-ink{background:var(--red);color:#fff}
+.dark .ruler b{color:#fff}
 .dark .step .hl{border-color:rgba(255,255,255,.5)}
-.dark .panel{background:rgba(43,42,40,.88)}
+.dark .panel{background:#2c2825}
 .dark .panel{--y:#F7941D;--y-2:#E8850F}
 .dark .panel .type.on{color:#fff}
 .dark .gal figure{border-color:rgba(255,255,255,.25)}
 /* кейсы */
 .c1{background:linear-gradient(140deg,#2B2A28,#3a2a26)}
 .c1 .num{color:var(--or)}
-.c2{background:var(--red);border-color:var(--red);color:#fff}
-.c2 .tag,.c2 p{color:rgba(255,255,255,.85)}
+.c2{background:#FFF1E6;border-color:#F6D9C4;color:var(--ink)}
+.c2 .tag,.c2 p{color:var(--muted)}
+.c2 .num{color:var(--red)}
 .c4{background:var(--or);border-color:var(--or)}
 .c4 .tag,.c4 p{color:rgba(255,255,255,.88)}
 /* блок заявки */
-.lead-box{background:linear-gradient(135deg,#E3241B 0%,#EA3F1C 55%,#F7941D 100%);color:#fff}
-.lead-box::after{border-color:rgba(255,255,255,.25)}
-.lead-box .lead{color:rgba(255,255,255,.9)}
-.lead-box .label{color:rgba(255,255,255,.85)}
-.lead-box .label .sq{background:#fff;outline-color:#fff}
-.perk i{background:#fff;color:var(--red)}
+.lead-box{background:linear-gradient(135deg,#FFF3EA 0%,#FFE9DA 100%);color:var(--ink);border:1px solid #F6D9C4}
+.lead-box::after{border-color:rgba(227,36,27,.12)}
+.lead-box .lead{color:var(--muted)}
+.lead-box .label{color:var(--muted)}
+.lead-box .label .sq{background:var(--red);outline-color:var(--red)}
+.perk i{background:var(--red);color:#fff}
 .form{color:var(--ink)}
 .fin{background:#fff}
 .fin:focus{border-color:var(--or)}
@@ -542,8 +543,8 @@ body{background:#fff}
 .ya{background:#fff}
 .socials a:hover{background:var(--red);border-color:var(--red)}
 /* подвал и бегущая строка — чёрный из обводки тигра + акценты */
-.ticker{background:var(--red)}
-.ticker span::after{color:#fff}
+.ticker{background:#221f1d}
+.ticker span::after{color:var(--or)}
 .ftr{background:#211f1d}
 .ftr-big{color:#2f2b28}
 .ftr-big span{color:var(--red)}
