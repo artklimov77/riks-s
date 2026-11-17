@@ -118,7 +118,7 @@
   .qz-top .qz-x{margin-left:auto;width:36px;height:36px;border-radius:10px;font-size:22px;color:#8a817a;background:#f6f1ed}
   .qz-run{position:relative;height:66px;margin:6px 20px 0}
   .qz-ground{position:absolute;left:0;right:0;bottom:10px;height:8px;border-radius:8px;background:repeating-linear-gradient(90deg,#f3d9c8 0 14px,#fbe9de 14px 28px)}
-  .qz-fill{position:absolute;left:0;bottom:10px;height:8px;border-radius:8px;background:linear-gradient(90deg,#F7941D,#E3241B);transition:width .5s cubic-bezier(.2,.7,.2,1)}
+  .qz-fill{position:absolute;left:0;bottom:10px;height:8px;border-radius:8px;background:linear-gradient(90deg,#FF8A00,#E3241B);transition:width .5s cubic-bezier(.2,.7,.2,1)}
   .qz-coin{position:absolute;bottom:22px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:#F7941D;border:2px solid #fff;box-shadow:0 0 0 2px #F7941D;transition:all .3s}
   .qz-coin.got{transform:translateY(-14px) scale(.2);opacity:0}
   .qz-flag{position:absolute;right:-4px;bottom:18px;font-size:22px}
@@ -142,8 +142,8 @@
   .qz-chk{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:14px;font-weight:600;color:#7a6f67}
   .qz-foot{padding:12px 20px 16px;border-top:1px solid #f1e8e1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .qz-btn{height:50px;padding:0 22px;border-radius:12px;font-weight:800;font-size:15px}
-  .qz-next{background:#E3241B;color:#fff;margin-left:auto}
-  .qz-next:hover{background:#B5161A}
+  .qz-next{background:linear-gradient(115deg,#FF8A00,#FF5A1F 48%,#E3241B);color:#fff;margin-left:auto}
+  .qz-next:hover{filter:brightness(1.06)}
   .qz-next:disabled{opacity:.4;cursor:not-allowed}
   .qz-back{border:2px solid #eee3db;color:#2B2A28}
   .qz-call{width:100%;height:46px;border-radius:12px;background:#fff5ec;color:#B5161A;font-weight:800;font-size:14px;border:2px dashed #F7941D;order:9}
