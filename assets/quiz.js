@@ -1,0 +1,332 @@
+/* Рикс+С — квиз перед заявкой.
+   4–6 коротких вопросов под каждую услугу, чтобы менеджер сразу понимал задачу.
+   Тигр бежит по дорожке как в игре; кнопка «Устал(а), позвоните мне» видна всегда.
+   Открывается: при отправке любой формы заявки, по ссылкам на #lead / #form и по [data-quiz="ключ"]. */
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const esc = s => String(s == null ? '' : s).replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
+
+  const DESIGN = { id: 'design', q: 'Макет есть?', type: 'one', opts: ['Есть готовый макет', 'Есть логотип, нужен дизайн', 'Ничего нет — нужен дизайн с нуля'], hint: 'Дизайнер нарисует в вашем фирменном стиле. Свой макет — по техтребованиям наших станков, подскажем.' };
+  const WHEN = { id: 'when', q: 'Когда нужно?', type: 'one', opts: ['Срочно, на этой неделе', 'В течение 2–3 недель', 'Не горит, присматриваюсь'] };
+
+  const QUIZZES = {
+    vyveski: { title: 'Вывеска', intro: 'Цену вывески честно называем только после замера и предсогласования — от размера, материалов и крепления зависит всё. Ответьте на 5 вопросов, и менеджер придёт к разговору подготовленным.', qs: [
+      { id: 'what', q: 'Что нужно?', type: 'one', opts: ['Объёмные световые буквы', 'Панель-кронштейн (двусторонняя)', 'Табличка «Режим работы»', 'Световая панель в окно (до 50×50 см)', 'Табличка на дом / аншлаг', 'Пока не знаю — нужна консультация'] },
+      { id: 'where', q: 'Где будет вывеска?', type: 'one', opts: ['На фасаде, 1 этаж', 'На фасаде, выше 1 этажа', 'Отдельно стоящее здание', 'Внутри помещения'], hint: 'Световые короба на фасадах в Йошкар-Оле запрещены — для фасада делаем объёмные буквы прямого или контражурного свечения.' },
+      { id: 'center', q: 'Здание в историческом центре?', type: 'one', opts: ['Да', 'Нет', 'Не знаю'], hint: 'В историческом центре вывеску согласуем ещё и с Минкультуры — это мы берём на себя.', skip: a => a.where === 'Внутри помещения' },
+      { id: 'size', q: 'Примерный размер вывески', type: 'size', unit: 'см', hint: 'Не знаете — не страшно, приедем на замер.' },
+      { id: 'have', q: 'Что уже есть?', type: 'many', opts: ['Логотип в векторе', 'Фото фасада', 'Адрес точки', 'Товарный знак', 'Ничего из этого'], hint: 'Вывеску на английском согласуют только при зарегистрированном товарном знаке.' },
+      { id: 'addr', q: 'Адрес точки (если знаете)', type: 'text', ph: 'ул. …, д. …', opt: true }
+    ]},
+    neon: { title: 'Неоновая вывеска', intro: '5 вопросов — и пришлём эскиз с ценой.', qs: [
+      { id: 'where', q: 'Где будет неон?', type: 'one', opts: ['В помещении / зал', 'В витрине', 'Фотозона, мероприятие', 'Дома / в подарок'] },
+      { id: 'what', q: 'Что светим?', type: 'one', opts: ['Готовая надпись («Открыто», «Кофе с собой»…)', 'Логотип', 'Своя надпись', 'Картинка / символ'] },
+      { id: 'text', q: 'Текст или идея', type: 'text', ph: 'напр. «Красота — это ты»', opt: true },
+      { id: 'size', q: 'Размер по длинной стороне', type: 'one', opts: ['около 50 см', 'около 80 см', 'около 1 м', 'больше 1 м', 'не знаю'] },
+      { id: 'color', q: 'Цвет', type: 'many', opts: ['Тёплый белый', 'Холодный белый', 'Красный', 'Оранжевый', 'Жёлтый', 'Зелёный', 'Голубой', 'Синий', 'Фиолетовый', 'Подберите вы'] },
+      { id: 'mount', q: 'Крепление', type: 'one', opts: ['На стену', 'Подвесное', 'На подставке'] }
+    ]},
+    transport: { title: 'Реклама на транспорте', intro: 'Ответьте на 5 вопросов — подберём вариант и посчитаем изготовление и монтаж.', qs: [
+      { id: 'what', q: 'Что оклеиваем?', type: 'one', opts: ['Легковой автомобиль', 'Газель / фургон', 'Троллейбус', 'Другой транспорт'] },
+      { id: 'area', q: 'Сколько оклеиваем?', type: 'one', opts: ['Только логотип / надписи', 'Частично (борта)', 'Полностью'] },
+      { id: 'trolley', q: 'Как устроена реклама на троллейбусе', type: 'info', text: 'Аренду места вы заключаете напрямую с троллейбусным парком: договор на 6 месяцев, оплата помесячно. Мы делаем макет, печать на плёнке и монтаж. Официальные тарифы парка пришлёт менеджер.', skip: a => a.what !== 'Троллейбус' },
+      DESIGN,
+      { id: 'law', q: 'Важно про текст рекламы', type: 'info', text: 'Монтаж запускаем только после юридического заключения, что реклама не нарушает закон о рекламе. Поможем с этим — так вас не оштрафуют.' },
+      WHEN
+    ]},
+    stendy: { title: 'Информационный стенд', intro: 'Пара вопросов — и сразу скажем, что влезет в стенд и сколько это стоит.', qs: [
+      { id: 'what', q: 'Какой стенд?', type: 'one', opts: ['Уголок потребителя', 'План эвакуации', 'Антитеррор / пожарная безопасность / ГО и ЧС', 'Стенд с символикой', 'Свой информационный стенд'] },
+      { id: 'bti', q: 'Есть копия плана БТИ?', type: 'one', opts: ['Есть', 'Нет', 'Не знаю'], hint: 'Для плана эвакуации нужна копия плана БТИ и места огнетушителей. Дизайн входит в стоимость.', skip: a => a.what !== 'План эвакуации' },
+      { id: 'shape', q: 'Форма', type: 'one', opts: ['Прямоугольный', 'Фигурный'], skip: a => a.what === 'План эвакуации' },
+      { id: 'size', q: 'Размер стенда', type: 'size', unit: 'мм', hint: 'Стандарт: уголок потребителя 730×530, тематические 1000×800.', skip: a => a.what === 'План эвакуации' },
+      { id: 'pockets', q: 'Карманы', type: 'pockets', skip: a => a.what === 'План эвакуации' },
+      DESIGN
+    ]},
+    stojki: { title: 'Мобильная стойка', intro: '5 вопросов — подберём стойку под задачу.', qs: [
+      { id: 'what', q: 'Какая стойка?', type: 'one', opts: ['«Паук» — от 4 750 ₽', 'Ролл Ап — от 9 000 ₽', 'Виндер (флаг) — от 11 000 ₽', 'Пресс Волл / фотозона — от 15 700 ₽', 'Помогите выбрать'] },
+      { id: 'size', q: 'Размер', type: 'one', dyn: a => /Паук/.test(a.what) ? ['800×1800 мм — 4 750 ₽', '950×1950 мм — 5 550 ₽', '1100×2200 мм — 6 750 ₽'] : /Ролл/.test(a.what) ? ['850×2000 мм — 9 000 ₽', '1000×2000 мм — 9 300 ₽', '1200×2000 мм — 13 000 ₽', '«Капля» 850×2000 мм — 13 200 ₽'] : /Виндер/.test(a.what) ? ['Сетка, 1,8 м — 11 000 ₽', 'Блэкаут, двусторонний, 1,8 м — 15 500 ₽'] : /Пресс/.test(a.what) ? ['2000×3000 мм — 15 700 ₽', '2000×3000 мм с усилением — 17 400 ₽', 'Другой размер'] : ['Пока не знаю'], skip: a => /Помогите/.test(a.what || '') },
+      { id: 'need', q: 'Нужна новая стойка или только полотно?', type: 'one', opts: ['Стойка с полотном', 'Только полотно — стойка есть'], hint: 'Доп. полотно на «Паук» — 2 400 ₽, меняете сами за минуту. Замена полотна на ролл-апе — 2 000 ₽ + полотно.' },
+      { id: 'for', q: 'Для чего?', type: 'one', opts: ['Выставка / ярмарка', 'У входа в точку', 'Фотозона на мероприятие', 'Другое'] },
+      DESIGN,
+      WHEN
+    ]},
+    poligrafiya: { title: 'Полиграфия', intro: '5 вопросов — и сразу назовём цену. Срок печати — 6–8 рабочих дней после согласования макета.', qs: [
+      { id: 'what', q: 'Что печатаем?', type: 'one', opts: ['Визитки', 'Листовки / флаеры', 'Буклеты / лифлеты', 'Купоны / сертификаты', 'Открытки', 'Наклейки', 'Другое'] },
+      { id: 'fmt', q: 'Формат', type: 'one', dyn: a => ({
+        'Визитки': ['50×90 — от 4 000 ₽ / 1000 шт', 'Евро 55×85 — от 4 500 ₽', 'С ламинацией — от 4 700 ₽', 'Со скруглёнными углами — от 5 000 ₽', 'С отверстием — от 5 000 ₽'],
+        'Листовки / флаеры': ['А7 — от 2 500 ₽ / 1000 шт', 'А6 — от 3 900 ₽', 'А5 — от 4 500 ₽', 'А4 — от 8 800 ₽', 'Минифлаер 150×90 — от 3 600 ₽', 'Еврофлаер 210×99 — от 4 100 ₽'],
+        'Буклеты / лифлеты': ['А6 в А7 — от 4 800 ₽', 'Минибуклет 150×90 — от 5 500 ₽', 'А5 в А6 — от 6 200 ₽', 'Евробуклет — от 6 800 ₽', 'Лифлет А4 в накидку — от 8 700 ₽', 'Лифлет А4 гармошкой — от 9 700 ₽'],
+        'Купоны / сертификаты': ['Купон 1/3 А4', 'Сертификат 1/3 А4', 'Сертификат А5'],
+        'Открытки': ['99×210', '210×148', 'Еврооткрытка'],
+        'Наклейки': ['Круг / квадрат 30 мм', '40 мм', '50 мм', '40×55 мм', '50×90 мм', 'Своя форма']
+      }[a.what] || ['Расскажу менеджеру']) },
+      { id: 'qty', q: 'Тираж', type: 'one', opts: ['100', '200', '500', '1000', '2500', '5000', 'Другой'], hint: 'Чем больше тираж — тем дешевле каждая штука.' },
+      { id: 'sides', q: 'Печать', type: 'one', opts: ['С одной стороны', 'С двух сторон'], skip: a => a.what === 'Наклейки' },
+      DESIGN,
+      WHEN
+    ]}
+  };
+  QUIZZES.nakleyki = { title: 'Наклейки', intro: '4 вопроса — и посчитаем тираж наклеек.', qs: [
+    { id: 'for', q: 'Для чего наклейки?', type: 'one', opts: ['На упаковку / коробку', 'На продукцию (бирка, этикетка)', 'Стикерпак / подарок', 'На витрину / стекло', 'Другое'] },
+    { id: 'mat', q: 'Материал', type: 'one', opts: ['Плёнка глянцевая', 'Плёнка матовая', 'Прозрачная плёнка', 'Самоклеящаяся бумага', 'Объёмные (смоляные)', 'Подскажите'] },
+    { id: 'size', q: 'Размер и форма', type: 'one', opts: ['Круг / квадрат 30 мм', '40 мм', '50 мм', '40×55 мм', '50×90 мм', 'Своя форма (фигурная)'] },
+    { id: 'qty', q: 'Тираж', type: 'one', opts: ['100', '200', '500', '1000', 'Больше'], hint: '200 наклеек 30 мм — 900 ₽, 1000 шт — 2 600 ₽. Чем больше тираж, тем дешевле штука.' },
+    DESIGN
+  ]};
+  QUIZZES.pechat = { title: 'Широкоформатная печать', intro: '4 вопроса — и посчитаем печать по метражу.', qs: [
+    { id: 'what', q: 'Что печатаем?', type: 'one', opts: ['Баннер (улица)', 'Плёнка на витрину / стекло', 'Плёнка на стену / мебель', 'Аппликация из цветной плёнки', 'Постер / интерьер'] },
+    { id: 'size', q: 'Размер', type: 'size', unit: 'см', hint: 'Ширина печати: баннер до 3,15 м, плёнка до 1,56 м — больше склеим.' },
+    { id: 'fin', q: 'Обработка', type: 'many', opts: ['Проклейка по периметру', 'Люверсы', 'Ламинация (защита от выцветания)', 'Монтаж', 'Не знаю'] },
+    DESIGN,
+    WHEN
+  ]};
+  QUIZZES.suveniry = { title: 'Сувениры с логотипом', intro: '4 вопроса — и пришлём расчёт.', qs: [
+    { id: 'what', q: 'Что брендируем?', type: 'many', opts: ['Ручки', 'Карандаши', 'Кружки', 'Другое'] },
+    { id: 'qty', q: 'Тираж', type: 'one', opts: ['до 100', '100–300', '300–500', 'больше 500'], hint: 'Ручки и карандаши — от 100 шт, срок 14 рабочих дней после согласования макета.' },
+    { id: 'for', q: 'Повод', type: 'one', opts: ['Подарки клиентам', 'Мероприятие / выставка', 'Для сотрудников', 'Другое'] },
+    DESIGN
+  ]};
+  QUIZZES.interier = { title: 'Оформление помещения', intro: '5 вопросов — поймём масштаб и приедем с идеями.', qs: [
+    { id: 'what', q: 'Что оформляем?', type: 'many', opts: ['Зона ресепшн с логотипом', 'Таблички на кабинеты', 'Указатели по коридору', 'Витрины', 'Стены (печать, аппликация)', 'Школа / учреждение'] },
+    { id: 'obj', q: 'Что за помещение?', type: 'one', opts: ['Салон / студия', 'Офис', 'Магазин / кафе', 'Школа / детсад', 'Медицина', 'Другое'] },
+    { id: 'area', q: 'Примерная площадь', type: 'one', opts: ['до 30 м²', '30–100 м²', 'больше 100 м²', 'не знаю'] },
+    { id: 'pack', q: 'Нужен «базовый пакет»?', type: 'one', opts: ['Да: вывеска + режим работы + уголок потребителя', 'Нет, только оформление', 'Расскажите подробнее'], hint: 'Базовый пакет — то, что обязательно по закону: вывеска, режим работы, уголок потребителя (и план эвакуации, если нужен).' },
+    DESIGN
+  ]};
+  QUIZZES.general = { title: 'Заявка', intro: 'Пара вопросов — чтобы менеджер сразу понял задачу и не переспрашивал.', qs: [
+    { id: 'svc', q: 'Что вас интересует?', type: 'one', opts: ['Вывеска', 'Неон', 'Реклама на транспорте', 'Информационный стенд', 'Мобильная стойка', 'Полиграфия', 'Наклейки', 'Широкоформатная печать', 'Оформление помещения', 'Сувениры с логотипом', 'Другое'],
+      branch: { 'Вывеска': 'vyveski', 'Неон': 'neon', 'Реклама на транспорте': 'transport', 'Информационный стенд': 'stendy', 'Мобильная стойка': 'stojki', 'Полиграфия': 'poligrafiya', 'Наклейки': 'nakleyki', 'Широкоформатная печать': 'pechat', 'Оформление помещения': 'interier', 'Сувениры с логотипом': 'suveniry' } },
+    { id: 'what', q: 'Коротко, что нужно?', type: 'text', ph: 'напр. табличка на дверь…', opt: true, skip: a => !!a.svc && a.svc !== 'Другое' }
+  ]};
+
+  const PAGE = { vyveski: 'vyveski', neon: 'neon', transport: 'transport', stendy: 'stendy', 'mobilnye-stojki': 'stojki', poligrafiya: 'poligrafiya' };
+  const pageKey = () => document.body.dataset.quiz || PAGE[(location.pathname.split('/').pop() || '').replace('.html', '')] || 'general';
+  const fromService = s => { s = (s || '').toLowerCase();
+    if (/стойк|ролл|паук|виндер|пресс/.test(s)) return 'stojki'; if (/неон/.test(s)) return 'neon'; if (/вывес|букв|короб|кронштейн|табличк/.test(s)) return 'vyveski';
+    if (/транспорт|авто|троллейб/.test(s)) return 'transport'; if (/стенд|уголок|эвакуац/.test(s)) return 'stendy'; if (/наклей|стикер/.test(s)) return 'nakleyki';
+    if (/баннер|плёнк|пленк|широкоформат|печать/.test(s)) return 'pechat'; if (/сувенир|кружк|ручк/.test(s)) return 'suveniry'; if (/интерьер|ресепшн|оформлен|указател/.test(s)) return 'interier';
+    if (/визит|листов|буклет|полиграф|флаер/.test(s)) return 'poligrafiya'; return ''; };
+
+  // ----- стили (фирменные: красный, оранжевый, белый) -----
+  const css = `
+  .qz-scrim{position:fixed;inset:0;background:rgba(30,15,10,.55);z-index:200;display:none;align-items:center;justify-content:center;padding:12px;backdrop-filter:blur(3px)}
+  .qz-scrim.on{display:flex}
+  .qz{width:600px;max-width:100%;max-height:96vh;background:#fff;border-radius:22px;box-shadow:0 40px 90px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden;font-family:inherit;color:#2B2A28}
+  .qz-top{padding:16px 20px 0;display:flex;align-items:center;gap:10px}
+  .qz-top b{font-size:15px;font-weight:800}
+  .qz-top .qz-x{margin-left:auto;width:36px;height:36px;border-radius:10px;font-size:22px;color:#8a817a;background:#f6f1ed}
+  .qz-run{position:relative;height:66px;margin:6px 20px 0}
+  .qz-ground{position:absolute;left:0;right:0;bottom:10px;height:8px;border-radius:8px;background:repeating-linear-gradient(90deg,#f3d9c8 0 14px,#fbe9de 14px 28px)}
+  .qz-fill{position:absolute;left:0;bottom:10px;height:8px;border-radius:8px;background:linear-gradient(90deg,#F7941D,#E3241B);transition:width .5s cubic-bezier(.2,.7,.2,1)}
+  .qz-coin{position:absolute;bottom:22px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:#F7941D;border:2px solid #fff;box-shadow:0 0 0 2px #F7941D;transition:all .3s}
+  .qz-coin.got{transform:translateY(-14px) scale(.2);opacity:0}
+  .qz-flag{position:absolute;right:-4px;bottom:18px;font-size:22px}
+  .qz-tiger{position:absolute;bottom:12px;width:50px;height:50px;margin-left:-25px;transition:left .55s cubic-bezier(.2,.7,.2,1);z-index:2}
+  .qz-tiger img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 4px rgba(0,0,0,.25))}
+  .qz-tiger.hop{animation:qzhop .55s ease}
+  @keyframes qzhop{0%{transform:translateY(0)}35%{transform:translateY(-22px) rotate(-8deg)}70%{transform:translateY(0) rotate(4deg)}85%{transform:translateY(-4px)}100%{transform:none}}
+  .qz-body{padding:8px 22px 6px;overflow-y:auto;flex:1}
+  .qz-step{font-size:12px;font-weight:700;color:#E3241B;text-transform:uppercase;letter-spacing:.06em}
+  .qz-q{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.2;margin:6px 0 14px}
+  .qz-hint{font-size:13px;color:#7a6f67;background:#fff5ec;border-radius:10px;padding:9px 12px;margin-top:12px;line-height:1.45}
+  .qz-warn{font-size:13px;color:#8a1b13;background:#fdecea;border-radius:10px;padding:9px 12px;margin-top:12px;line-height:1.45;font-weight:600}
+  .qz-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .qz-opt{min-height:52px;text-align:left;padding:10px 14px;border-radius:12px;border:2px solid #eee3db;font-weight:700;font-size:14px;line-height:1.3;background:#fff;transition:all .15s}
+  .qz-opt:hover{border-color:#F7941D}
+  .qz-opt.on{border-color:#E3241B;background:#fff1ee;color:#B5161A}
+  .qz-in{width:100%;height:52px;border-radius:12px;border:2px solid #eee3db;padding:0 14px;font-size:16px;font-weight:600;outline:none;background:#fff}
+  .qz-in:focus{border-color:#F7941D}
+  .qz-row{display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:center}
+  .qz-row span{font-weight:700;color:#8a817a}
+  .qz-chk{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:14px;font-weight:600;color:#7a6f67}
+  .qz-foot{padding:12px 20px 16px;border-top:1px solid #f1e8e1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .qz-btn{height:50px;padding:0 22px;border-radius:12px;font-weight:800;font-size:15px}
+  .qz-next{background:#E3241B;color:#fff;margin-left:auto}
+  .qz-next:hover{background:#B5161A}
+  .qz-next:disabled{opacity:.4;cursor:not-allowed}
+  .qz-back{border:2px solid #eee3db;color:#2B2A28}
+  .qz-call{width:100%;height:46px;border-radius:12px;background:#fff5ec;color:#B5161A;font-weight:800;font-size:14px;border:2px dashed #F7941D;order:9}
+  .qz-call:hover{background:#ffe9d6}
+  .qz-done{text-align:center;padding:26px 10px}
+  .qz-done img{width:110px;animation:qzhop 1s ease infinite}
+  .qz-done h3{font-size:24px;font-weight:900;margin-top:10px}
+  .qz-done p{color:#7a6f67;margin-top:8px}
+  .qz-why{font-size:13px;color:#E3241B;font-weight:700;text-decoration:underline;margin-top:12px;display:inline-block;cursor:pointer}
+  @media(max-width:560px){.qz-opts{grid-template-columns:1fr}.qz-q{font-size:19px}.qz{border-radius:18px}.qz-btn{padding:0 16px}}`;
+  const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+
+  const root = document.createElement('div'); root.className = 'qz-scrim';
+  root.innerHTML = '<div class="qz" role="dialog" aria-modal="true"><div class="qz-top"><b id="qzTitle"></b><button class="qz-x" aria-label="Закрыть">×</button></div>' +
+    '<div class="qz-run"><div class="qz-ground"></div><div class="qz-fill"></div><div class="qz-coins"></div><div class="qz-flag">🏁</div><div class="qz-tiger"><img src="img/logo-mark.png" alt=""></div></div>' +
+    '<div class="qz-body"></div><div class="qz-foot"></div></div>';
+  document.body.appendChild(root);
+  const body = $('.qz-body', root), foot = $('.qz-foot', root), tiger = $('.qz-tiger', root), fill = $('.qz-fill', root), coins = $('.qz-coins', root);
+
+  let S = null; // состояние
+
+  function steps() {
+    // intro, вопросы (с ветвлением и пропусками), контакты
+    const out = [{ t: 'intro' }];
+    let qz = QUIZZES[S.key];
+    const add = list => list.forEach(q => { if (!q.skip || !q.skip(S.ans)) out.push({ t: 'q', q }); });
+    add(qz.qs);
+    if (S.key === 'general' && S.branch) add(QUIZZES[S.branch].qs);
+    out.push({ t: 'contact' });
+    return out;
+  }
+  function progress() {
+    const all = steps(), n = all.length - 1, i = Math.min(S.i, n);
+    const pct = n ? i / n : 0;
+    tiger.style.left = `calc(${pct * 100}% * .92 + 4%)`; fill.style.width = (pct * 100) + '%';
+    tiger.classList.remove('hop'); void tiger.offsetWidth; tiger.classList.add('hop');
+    coins.innerHTML = all.slice(1, -1).map((_, k) => `<i class="qz-coin${k + 1 <= i - 0 && i > k + 1 ? ' got' : ''}" style="left:calc(${((k + 1) / n) * 100}% * .92 + 4%)"></i>`).join('');
+  }
+  const answerText = q => { const a = S.ans[q.id]; if (a == null || a === '') return ''; if (Array.isArray(a)) return a.join(', '); if (typeof a === 'object') return q.type === 'size' ? (a.w || '?') + '×' + (a.h || '?') + ' ' + (q.unit || '') + (a.unknown ? ' (не знаю — нужен замер)' : '') : q.type === 'pockets' ? (a.n ? a.n + ' шт., ' + (a.f || '') : 'без карманов') : JSON.stringify(a); return String(a); };
+
+  // проверка здравого смысла: влезут ли карманы в стенд
+  const POCKET = { 'А5': [148, 210], 'А4 вертикальный': [210, 297], 'А4 горизонтальный': [297, 210], 'А3': [297, 420] };
+  function pocketWarn() {
+    const s = S.ans.size || {}, p = S.ans.pockets || {}; const W = +s.w, H = +s.h, n = +p.n;
+    if (!W || !H || !n || !POCKET[p.f]) return '';
+    const [pw, ph] = POCKET[p.f].map(x => x + 30); // карман + поля
+    const perRow = Math.floor((W - 40) / pw), rows = Math.floor((H - 120) / ph); // 120 мм — заголовок
+    const fit = Math.max(0, perRow) * Math.max(0, rows);
+    if (fit >= n) return '';
+    const cols = Math.ceil(Math.sqrt(n * (W / H || 1))), rws = Math.ceil(n / Math.max(1, cols));
+    return `В стенд ${W}×${H} мм ${n} карман(а) ${p.f} не поместятся — влезет максимум ${fit}. Нужен размер примерно от ${cols * pw + 40}×${rws * ph + 120} мм, или уменьшим карманы до А5. Менеджер поможет подобрать.`;
+  }
+
+  function draw() {
+    const all = steps(); if (S.i >= all.length) S.i = all.length - 1;
+    const step = all[S.i], qz = QUIZZES[S.key]; $('#qzTitle', root).textContent = (S.branch ? QUIZZES[S.branch].title : qz.title) + ' · расчёт';
+    progress();
+    const qCount = all.length - 2, qNo = S.i;
+    let html = '', canNext = true;
+    if (step.t === 'intro') {
+      html = `<div class="qz-q">Сейчас зададим несколько уточняющих вопросов</div><p style="color:#5f5650;line-height:1.55">${esc(qz.intro)}</p><p style="color:#7a6f67;margin-top:10px;font-size:14px">⏱ около минуты · ${Math.max(qCount, 3)} вопросов · можно пропускать</p><span class="qz-why">Зачем мы спрашиваем?</span><div class="qz-hint" id="qzWhy" style="display:none">Чтобы менеджер не тратил ваше время на переспрашивания, а дизайнер начал работу сразу. Мы работаем с 1995 года и знаем: от ответов зависят материалы, согласования и цена. Не хотите отвечать — нажмите «позвоните мне», и мы просто перезвоним.</div>`;
+    } else if (step.t === 'q') {
+      const q = step.q; const a = S.ans[q.id];
+      html = `<div class="qz-step">вопрос ${qNo} из ${qCount}</div><div class="qz-q">${esc(q.q)}</div>`;
+      if (q.type === 'one' || q.type === 'many') {
+        const opts = q.dyn ? q.dyn(S.ans) : q.opts;
+        html += '<div class="qz-opts">' + opts.map(o => `<button type="button" class="qz-opt${(q.type === 'many' ? (a || []).includes(o) : a === o) ? ' on' : ''}" data-v="${esc(o)}">${esc(o)}</button>`).join('') + '</div>';
+        if (q.type === 'one') canNext = !!a;
+      } else if (q.type === 'text') {
+        html += `<input class="qz-in" id="qzText" placeholder="${esc(q.ph || '')}" value="${esc(a || '')}">`;
+      } else if (q.type === 'size') {
+        const v = a || {};
+        html += `<div class="qz-row"><input class="qz-in" id="qzW" inputmode="numeric" placeholder="ширина" value="${esc(v.w || '')}"><span>×</span><input class="qz-in" id="qzH" inputmode="numeric" placeholder="высота" value="${esc(v.h || '')}"><span>${esc(q.unit)}</span></div><label class="qz-chk"><input type="checkbox" id="qzUnk"${v.unknown ? ' checked' : ''}> Не знаю — нужен замер</label>`;
+      } else if (q.type === 'pockets') {
+        const v = a || {};
+        html += `<div class="qz-row" style="grid-template-columns:110px 1fr"><input class="qz-in" id="qzPn" inputmode="numeric" placeholder="кол-во" value="${esc(v.n || '')}"><select class="qz-in" id="qzPf">${['', 'А5', 'А4 вертикальный', 'А4 горизонтальный', 'А3', 'Индивидуальный'].map(f => `<option${f === v.f ? ' selected' : ''}>${f}</option>`).join('')}</select></div><label class="qz-chk"><input type="checkbox" id="qzNoP"${v.none ? ' checked' : ''}> Карманы не нужны</label><div id="qzPW"></div>`;
+      } else if (q.type === 'info') {
+        html += `<div class="qz-hint" style="font-size:15px;color:#2B2A28">${esc(q.text)}</div>`;
+      }
+      if (q.hint) html += `<div class="qz-hint">💡 ${esc(q.hint)}</div>`;
+    } else {
+      html = `<div class="qz-step">последний шаг</div><div class="qz-q">Куда прислать расчёт?</div>
+        <input class="qz-in" id="qzName" placeholder="Имя" value="${esc(S.name || '')}" style="margin-bottom:8px">
+        <input class="qz-in" id="qzPhone" inputmode="tel" placeholder="+7 (___) ___-__-__" value="${esc(S.phone || '')}">
+        <div style="margin-top:12px;font-size:13px;font-weight:700;color:#7a6f67">Как удобнее связаться?</div>
+        <div class="qz-opts" style="grid-template-columns:repeat(3,1fr);margin-top:6px">${['Позвонить', 'Telegram', 'ВКонтакте', 'MAX', 'WhatsApp', 'Не важно'].map(o => `<button type="button" class="qz-opt${S.contact === o ? ' on' : ''}" data-c="${o}" style="min-height:42px;text-align:center">${o}</button>`).join('')}</div>
+        <p style="font-size:12px;color:#8a817a;margin-top:10px">Нажимая «Отправить», вы соглашаетесь на обработку персональных данных для связи по заявке.</p>`;
+    }
+    body.innerHTML = html;
+    const isLast = step.t === 'contact';
+    foot.innerHTML = (S.i > 0 ? '<button type="button" class="qz-btn qz-back">← Назад</button>' : '') +
+      `<button type="button" class="qz-btn qz-next"${canNext ? '' : ' disabled'}>${step.t === 'intro' ? 'Начать →' : isLast ? 'Отправить менеджеру' : step.t === 'q' && step.q.type !== 'one' && step.t !== 'info' ? 'Дальше →' : 'Дальше →'}</button>` +
+      '<button type="button" class="qz-call">📞 Устал(а) от вопросов — просто позвоните мне</button>';
+    wire(step);
+  }
+
+  function wire(step) {
+    $('.qz-why', body)?.addEventListener('click', () => { const w = $('#qzWhy'); w.style.display = w.style.display === 'none' ? 'block' : 'none'; });
+    const next = $('.qz-next', foot);
+    if (step.t === 'q') {
+      const q = step.q;
+      $$('.qz-opt', body).forEach(b => b.onclick = () => {
+        if (q.type === 'many') { const arr = S.ans[q.id] || []; const v = b.dataset.v; S.ans[q.id] = arr.includes(v) ? arr.filter(x => x !== v) : arr.concat(v); b.classList.toggle('on'); return; }
+        S.ans[q.id] = b.dataset.v; if (q.branch) S.branch = q.branch[b.dataset.v] || null;
+        $$('.qz-opt', body).forEach(x => x.classList.toggle('on', x === b)); next.disabled = false;
+        setTimeout(() => go(1), 220); // одиночный выбор — сразу дальше, как в игре
+      });
+      const t = $('#qzText', body); if (t) { t.oninput = () => S.ans[q.id] = t.value.trim(); setTimeout(() => t.focus(), 50); t.onkeydown = e => { if (e.key === 'Enter') go(1); }; }
+      if (q.type === 'size') { const upd = () => S.ans[q.id] = { w: $('#qzW').value.replace(/\D/g, ''), h: $('#qzH').value.replace(/\D/g, ''), unknown: $('#qzUnk').checked }; $$('#qzW,#qzH,#qzUnk', body).forEach(i => i.oninput = i.onchange = upd); }
+      if (q.type === 'pockets') { const pw = $('#qzPW'); const upd = () => { S.ans[q.id] = { n: $('#qzPn').value.replace(/\D/g, ''), f: $('#qzPf').value, none: $('#qzNoP').checked }; if (S.ans[q.id].none) S.ans[q.id] = { none: true }; const w = pocketWarn(); pw.innerHTML = w ? '<div class="qz-warn">⚠️ ' + esc(w) + '</div>' : ''; S.warn = w; }; $$('#qzPn,#qzPf,#qzNoP', body).forEach(i => i.oninput = i.onchange = upd); upd(); }
+    }
+    if (step.t === 'contact') {
+      const ph = $('#qzPhone', body); ph.addEventListener('input', () => fmtPhone(ph));
+      $$('[data-c]', body).forEach(b => b.onclick = () => { S.contact = b.dataset.c; $$('[data-c]', body).forEach(x => x.classList.toggle('on', x === b)); });
+    }
+    next.onclick = () => step.t === 'contact' ? submit(false) : go(1);
+    $('.qz-back', foot)?.addEventListener('click', () => go(-1));
+    $('.qz-call', foot).onclick = () => callMe();
+  }
+  function go(d) { S.i = Math.max(0, S.i + d); draw(); }
+
+  function fmtPhone(ph) {
+    let v = ph.value.replace(/\D/g, ''); if (v.startsWith('8')) v = '7' + v.slice(1); if (v && !v.startsWith('7')) v = '7' + v; v = v.slice(0, 11);
+    const m = v.match(/^7(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/); if (!m) { ph.value = v ? '+' + v : ''; return; }
+    ph.value = '+7' + (m[1] ? ' (' + m[1] : '') + (m[1].length === 3 ? ') ' : '') + m[2] + (m[3] ? '-' + m[3] : '') + (m[4] ? '-' + m[4] : '');
+  }
+
+  function collect() {
+    const list = [];
+    const qs = QUIZZES[S.key].qs.concat(S.key === 'general' && S.branch ? QUIZZES[S.branch].qs : []);
+    qs.forEach(q => { if (q.type === 'info') return; const t = answerText(q); if (t) list.push({ q: q.q, a: t }); });
+    return list;
+  }
+  function callMe() {
+    // если телефона ещё нет — просим только его
+    const ph = $('#qzPhone', body);
+    const phone = (ph ? ph.value : S.phone) || '';
+    if (phone.replace(/\D/g, '').length < 11) {
+      body.innerHTML = '<div class="qz-q">Конечно! Оставьте номер — перезвоним.</div><input class="qz-in" id="qzPhone" inputmode="tel" placeholder="+7 (___) ___-__-__"><input class="qz-in" id="qzName" placeholder="Имя (необязательно)" style="margin-top:8px">';
+      foot.innerHTML = '<button type="button" class="qz-btn qz-next">Перезвоните мне</button>';
+      const p = $('#qzPhone', body); p.addEventListener('input', () => fmtPhone(p)); p.focus();
+      $('.qz-next', foot).onclick = () => submit(true);
+      return;
+    }
+    submit(true);
+  }
+  async function submit(callback) {
+    const ph = $('#qzPhone', body), nm = $('#qzName', body);
+    if (ph) S.phone = ph.value; if (nm) S.name = nm.value.trim();
+    if ((S.phone || '').replace(/\D/g, '').length < 11) { if (ph) { ph.style.borderColor = '#E3241B'; ph.focus(); } return; }
+    const answers = collect(); const title = S.branch ? QUIZZES[S.branch].title : QUIZZES[S.key].title;
+    const detail = (callback ? '📞 Просит перезвонить. ' : '') + 'Квиз «' + title + '»' + (answers.length ? ': ' + answers.map(x => x.q + ' — ' + x.a).join('; ') : ' (без ответов)') + (S.warn ? ' ⚠ ' + S.warn : '') + (S.extraDetail ? ' | ' + S.extraDetail : '');
+    const extra = { name: S.name || '', phone: S.phone, service: S.service || title, detail, quiz: answers, contact: S.contact || '', callback };
+    body.innerHTML = '<div class="qz-done"><img src="img/logo-mark.png" alt=""><h3>' + (callback ? 'Перезвоним!' : 'Финиш! Заявка у менеджера') + '</h3><p>' + (callback ? 'Менеджер свяжется с вами в рабочее время.' : 'Менеджер посмотрит ответы и свяжется с вами' + (S.contact && S.contact !== 'Не важно' ? ' — ' + esc(S.contact) : '') + '.') + '</p></div>';
+    foot.innerHTML = '<button type="button" class="qz-btn qz-next">Отлично</button>'; $('.qz-next', foot).onclick = close;
+    tiger.style.left = '96%'; fill.style.width = '100%'; $$('.qz-coin', coins).forEach(c => c.classList.add('got'));
+    if (S.onDone) S.onDone(extra);
+    else {
+      const SRC = window.RiksSRC || {}; const lbl = window.RiksSrcLabel ? window.RiksSrcLabel() : 'сайт';
+      try { await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign(extra, { page: location.pathname.replace(/^\//, '') || 'index.html', source: lbl, utm: SRC.utm || {}, ref: SRC.ref || '', ts: new Date().toISOString() })) }); } catch (e) {}
+    }
+    S.sent = true;
+  }
+  function close() { root.classList.remove('on'); document.documentElement.style.overflow = ''; }
+  $('.qz-x', root).onclick = () => { if (!S || S.sent || S.i === 0 || confirm('Закрыть? Ответы не сохранятся.')) close(); };
+  root.addEventListener('click', e => { if (e.target === root) $('.qz-x', root).onclick(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && root.classList.contains('on')) $('.qz-x', root).onclick(); });
+
+  window.RiksQuiz = {
+    open(o) {
+      o = o || {};
+      const key = o.key || fromService(o.service) || pageKey();
+      S = { key: QUIZZES[key] ? key : 'general', i: o.skipIntro ? 1 : 0, ans: {}, name: o.name || '', phone: o.phone || '', service: o.service || '', onDone: o.onDone, branch: null, contact: '', extraDetail: o.detail || '' };
+      root.classList.add('on'); document.documentElement.style.overflow = 'hidden'; draw();
+    },
+    QUIZZES
+  };
+
+  // кнопки и ссылки, которые открывают квиз
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-quiz], a[href="#lead"], a[href="#form"]');
+    if (!el || el.closest('.qz')) return;
+    e.preventDefault();
+    window.RiksQuiz.open({ key: el.dataset.quiz || '' });
+  });
+})();

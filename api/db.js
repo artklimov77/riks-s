@@ -1,70 +1,80 @@
-// Приватный CRUD для админки Рикс+С. Защита паролем (env LEADS_PASS).
-// POST { pass, op, col, id?, data? }
-//   op: list | save | delete | seedCatalog
-//   col: leads | orders | catalog
+// Приватный CRUD для админки Рикс+С. Защита паролем (env LEADS_PASS, один вход на всех).
+// POST { pass, op, col?, id?, data?, items? }
+//   op: list | save | delete | bulk | importUds | seedCatalog | backup | notify
+//   col: leads | orders | catalog | clients | settings
 // Хранилище — Upstash Redis (hash riks:<col>, поле = id).
 
 const { kvReady, cmd, hall, genId } = require('./_kv.js');
+const UDS = require('../data/uds-catalog.json');
 
-const KEY = { leads: 'riks:leads', orders: 'riks:orders', catalog: 'riks:catalog' };
+const KEY = {
+  leads: 'riks:leads', orders: 'riks:orders', catalog: 'riks:catalog',
+  clients: 'riks:clients', settings: 'riks:settings'
+};
 
-const DEFAULT_CATALOG = [
-  // category, name, unit, price (цены — стартовые, правятся в админке)
-  ['Вывески', 'Световой короб, односторонний', 'м²', 7500],
-  ['Вывески', 'Световой короб, двусторонний', 'м²', 9500],
-  ['Вывески', 'Несветовая вывеска (композит)', 'м²', 3500],
-  ['Вывески', 'Объёмные световые буквы', 'шт', 2800],
-  ['Вывески', 'Монтаж вывески', 'компл.', 5000],
-  ['Неон', 'Гибкий неон (контур)', 'п.м.', 2500],
-  ['Неон', 'Неоновая вывеска под макет', 'шт', 15000],
-  ['Транспорт', 'Брендирование авто (оклейка)', 'м²', 1800],
-  ['Транспорт', 'Магнитная наклейка на борт', 'шт', 1200],
-  ['Полиграфия', 'Визитки, 1000 шт', 'компл.', 1500],
-  ['Полиграфия', 'Листовки А6, 1000 шт', 'компл.', 2500],
-  ['Полиграфия', 'Буклет (евро)', 'шт', 25],
-  ['Стенды', 'Информационный стенд', 'шт', 4500],
-  ['Стенды', 'Ролл-ап 85×200', 'шт', 3500],
-  ['Стенды', 'Пресс-волл (баннер+каркас)', 'м²', 2200],
-  ['Печать', 'Баннер литой', 'м²', 450],
-  ['Печать', 'Интерьерная печать', 'м²', 900],
-  ['Печать', 'УФ-печать', 'м²', 2500]
-];
+const now = () => new Date().toISOString();
+
+async function readBody(req) {
+  if (req.body && typeof req.body === 'object') return req.body;
+  const raw = await new Promise((resolve, reject) => {
+    let d = '';
+    req.on('data', (c) => { d += c; if (d.length > 3e6) req.destroy(); });
+    req.on('end', () => resolve(d));
+    req.on('error', reject);
+  });
+  try { return JSON.parse(raw || '{}'); } catch (e) { return {}; }
+}
+
+// HSET одной командой для многих записей
+async function hsetMany(key, recs) {
+  for (let i = 0; i < recs.length; i += 100) {
+    const args = ['HSET', key];
+    for (const r of recs.slice(i, i + 100)) args.push(r.id, JSON.stringify(r));
+    await cmd(args);
+  }
+}
+
+async function tgSend(chatId, text) {
+  const tok = process.env.TELEGRAM_BOT_TOKEN;
+  if (!tok || !chatId) return { ok: false, note: 'telegram-not-configured' };
+  const r = await fetch('https://api.telegram.org/bot' + tok + '/sendMessage', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, text: String(text).slice(0, 3900), disable_web_page_preview: true })
+  });
+  const j = await r.json().catch(() => ({}));
+  return { ok: !!j.ok };
+}
 
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(204).end();
+  res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') return res.status(405).json({ ok: false });
 
-  let raw = '';
-  try {
-    raw = await new Promise((resolve, reject) => {
-      let d = '';
-      req.on('data', (c) => { d += c; if (d.length > 2e5) req.destroy(); });
-      req.on('end', () => resolve(d));
-      req.on('error', reject);
-    });
-  } catch (e) { return res.status(400).json({ ok: false }); }
-
-  let b = {};
-  try { b = typeof req.body === 'object' && req.body ? req.body : JSON.parse(raw || '{}'); } catch (e) { b = {}; }
+  const b = await readBody(req).catch(() => ({}));
 
   if (!process.env.LEADS_PASS || (b.pass || '') !== process.env.LEADS_PASS) {
     return res.status(401).json({ ok: false, error: 'auth' });
   }
 
-  const col = b.col;
-  const key = KEY[col];
-  if (!key) return res.status(400).json({ ok: false, error: 'bad col' });
-
   if (!kvReady()) {
-    // без хранилища: чтение вернёт пусто, запись — сообщит о необходимости подключить Redis
     if (b.op === 'list') return res.status(200).json({ ok: true, items: [], note: 'storage-not-configured' });
     return res.status(200).json({ ok: false, note: 'storage-not-configured' });
   }
 
   try {
+    if (b.op === 'backup') {
+      const out = { exportedAt: now() };
+      for (const [col, key] of Object.entries(KEY)) out[col] = await hall(key);
+      return res.status(200).json({ ok: true, backup: out });
+    }
+
+    if (b.op === 'notify') {
+      const r = await tgSend(b.chatId, b.text);
+      return res.status(200).json(r);
+    }
+
+    const key = KEY[b.col];
+    if (!key) return res.status(400).json({ ok: false, error: 'bad col' });
+
     if (b.op === 'list') {
       const items = await hall(key);
       items.sort((x, y) => String(y.ts || '').localeCompare(String(x.ts || '')));
@@ -75,9 +85,18 @@ module.exports = async (req, res) => {
       const data = (b.data && typeof b.data === 'object') ? b.data : {};
       const id = String(data.id || b.id || genId()).slice(0, 80);
       const rec = Object.assign({}, data, { id });
-      if (!rec.ts) rec.ts = new Date().toISOString();
+      if (!rec.ts) rec.ts = now();
+      rec.upd = now();
       await cmd(['HSET', key, id, JSON.stringify(rec)]);
       return res.status(200).json({ ok: true, item: rec });
+    }
+
+    if (b.op === 'bulk') {
+      const items = Array.isArray(b.items) ? b.items.slice(0, 5000) : [];
+      const recs = items.map((d) => Object.assign({}, d, { id: String(d.id || genId()).slice(0, 80), ts: d.ts || now() }));
+      if (b.replace) await cmd(['DEL', key]);
+      if (recs.length) await hsetMany(key, recs);
+      return res.status(200).json({ ok: true, saved: recs.length });
     }
 
     if (b.op === 'delete') {
@@ -87,16 +106,16 @@ module.exports = async (req, res) => {
       return res.status(200).json({ ok: true });
     }
 
-    if (b.op === 'seedCatalog') {
-      const existing = await hall('riks:catalog');
-      if (existing.length) return res.status(200).json({ ok: true, seeded: 0, items: existing });
-      const items = [];
-      for (const [category, name, unit, price] of DEFAULT_CATALOG) {
-        const rec = { id: genId(), category, name, unit, price, ts: new Date().toISOString() };
-        items.push(rec);
-        await cmd(['HSET', 'riks:catalog', rec.id, JSON.stringify(rec)]);
+    // Прайс из UDS (снимок data/uds-catalog.json). seedCatalog — только если пусто.
+    if (b.op === 'importUds' || b.op === 'seedCatalog') {
+      if (b.op === 'seedCatalog') {
+        const existing = await hall(KEY.catalog);
+        if (existing.length) return res.status(200).json({ ok: true, seeded: 0, items: existing });
       }
-      return res.status(200).json({ ok: true, seeded: items.length, items });
+      const recs = UDS.map((r) => Object.assign({}, r, { ts: now(), src: 'uds' }));
+      await cmd(['DEL', KEY.catalog]);
+      await hsetMany(KEY.catalog, recs);
+      return res.status(200).json({ ok: true, seeded: recs.length, items: recs });
     }
 
     return res.status(400).json({ ok: false, error: 'bad op' });
