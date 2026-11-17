@@ -685,14 +685,18 @@ svg [stroke="#F7941D"],svg [stroke="#FFD000"]{stroke:var(--orange)}
 .sc-sparks{position:absolute;inset:0;pointer-events:none}
 .sc-sparks i{position:absolute;width:5px;height:5px;border-radius:50%;background:#FFC46B;box-shadow:0 0 8px #FF8A00;animation:scSpark .6s ease-out forwards}
 @keyframes scSpark{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
-.sc-tiger{position:absolute;right:-7%;top:16%;width:31%;transform:translateX(70%) rotate(18deg);opacity:0;transition:transform .7s cubic-bezier(.3,1.4,.5,1),opacity .4s;z-index:2}
-.sc-tiger img{width:100%;height:auto;display:block;filter:drop-shadow(0 14px 18px rgba(0,0,0,.6))}
-.scene.peek .sc-tiger{transform:translateX(0) rotate(-6deg);opacity:1}
-.sc-paw{position:absolute;width:34%;left:-24%;top:52%;transform-origin:50% 95%;transform:rotate(-10deg);filter:drop-shadow(0 6px 8px rgba(0,0,0,.5))}
-.scene.wave .sc-paw{animation:scWave .5s ease-in-out 4 alternate}
-@keyframes scWave{from{transform:rotate(-24deg)}to{transform:rotate(22deg)}}
-.scene.peek .sc-tiger img{animation:tigerbob 3.4s ease-in-out infinite}
-.sc-bubble{position:absolute;right:16%;top:3%;background:#fff;color:var(--ink);font:800 14px/1.3 var(--sans);padding:10px 14px;border-radius:14px 14px 4px 14px;box-shadow:0 16px 34px -14px rgba(0,0,0,.6);opacity:0;transform:translateY(8px) scale(.9);transition:all .35s cubic-bezier(.3,1.4,.5,1);z-index:3;white-space:nowrap}
+.sc-tiger{position:absolute;right:-12%;top:4%;width:37%;transform:translateY(40%);opacity:0;transition:transform .9s cubic-bezier(.3,1.3,.5,1),opacity .4s;z-index:2;filter:drop-shadow(0 16px 18px rgba(0,0,0,.55))}
+.sc-tiger svg{width:100%;height:auto;display:block;overflow:visible}
+.scene.peek .sc-tiger{transform:none;opacity:1}
+.scene.peek .sc-tiger svg{animation:tgBob 3.2s ease-in-out infinite}
+@keyframes tgBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.tg-drill{transform-origin:122px 222px}
+.scene.drilling .tg-drill{animation:tgDrill .12s linear infinite}
+@keyframes tgDrill{0%,100%{transform:rotate(0)}50%{transform:rotate(1.6deg) translateX(-1px)}}
+.tg-wave{transform-origin:188px 222px;transform:rotate(-8deg)}
+.scene.wave .tg-wave{animation:tgWave .45s ease-in-out 6 alternate}
+@keyframes tgWave{from{transform:rotate(-22deg)}to{transform:rotate(18deg)}}
+.sc-bubble{position:absolute;right:22%;top:0;background:#fff;color:var(--ink);font:800 14px/1.3 var(--sans);padding:10px 14px;border-radius:14px 14px 4px 14px;box-shadow:0 16px 34px -14px rgba(0,0,0,.6);opacity:0;transform:translateY(8px) scale(.9);transition:all .35s cubic-bezier(.3,1.4,.5,1);z-index:3;white-space:nowrap}
 .scene.wave .sc-bubble{opacity:1;transform:none}
 .scene .rating-tag{left:-4%;right:auto;top:auto;bottom:4%;background:#fff;color:var(--ink)}
 @media (max-width:1100px){.scene{justify-self:center;margin-top:20px}}

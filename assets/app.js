@@ -287,12 +287,14 @@
   async function loop() {
     for (;;) {
       const w = WORDS[n++ % WORDS.length];
-      sc.className = sc.className.replace(/\b(lit|wave|out|measure)\b/g, '').trim();
+      sc.className = sc.className.replace(/\b(lit|wave|out|measure|drilling)\b/g, '').trim();
       word.innerHTML = [...w].map(ch => '<span>' + (ch === ' ' ? '&nbsp;' : ch) + '</span>').join('');
       if (reduce) { sc.classList.add('peek', 'lit', 'wave'); return; }
       await wait(300); sc.classList.add('peek', 'measure');
       await wait(500);
+      sc.classList.add('drilling');
       for (const sp of word.children) { sp.classList.add('in'); setTimeout(() => spark(sp), 320); await wait(170); }
+      await wait(250); sc.classList.remove('drilling');
       await wait(500); sc.classList.add('lit');
       await wait(450); sc.classList.add('wave');
       await wait(3200); sc.classList.add('out'); sc.classList.remove('wave');

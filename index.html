@@ -62,14 +62,61 @@
         <path d="M110 86v62M70 117h80M230 86v62M190 117h80M350 86v62M310 117h80"/>
         <path d="M58 262h344"/><rect x="74" y="280" width="104" height="130"/><rect x="198" y="280" width="64" height="130"/><rect x="282" y="280" width="104" height="130"/>
         <path d="M86 300l30-18M300 300l30-18" opacity=".6"/><path d="M248 340v22" stroke="rgba(255,255,255,.4)"/>
+        <g class="sc-ladder" stroke="rgba(255,180,58,.55)" stroke-width="3"><path d="M432 418 L462 196 M474 418 L504 196"/><path d="M436 388h42M440 358h42M444 328h42M448 298h42M452 268h42M456 238h42M460 212h40" stroke-width="2.5"/></g>
         <g class="sc-dim" stroke="rgba(255,180,58,.75)"><path d="M70 168v12M390 168v12M70 174h320"/><path d="M70 174l8-3v6zM390 174l-8-3v6z" fill="rgba(255,180,58,.75)"/></g>
       </svg>
       <div class="sc-dimtxt">3200 мм</div>
       <div class="sc-sign"><div class="sc-board"><span class="sc-word" id="scWord"></span></div><i class="sc-glow"></i></div>
       <div class="sc-sparks" id="scSparks"></div>
       <div class="sc-tiger">
-        <svg class="sc-paw" viewBox="0 0 60 80" aria-hidden="true"><path d="M30 78 C14 78 10 66 12 50 L14 30 C8 26 6 18 10 12 C14 6 20 8 22 12 C22 4 30 2 34 8 C38 2 46 6 46 14 C52 12 56 18 54 26 C52 32 48 34 46 34 L48 52 C50 68 46 78 30 78 Z" fill="#fff" stroke="#1A1513" stroke-width="3"/><path d="M18 46c8 2 16 2 26-2M17 58c9 2 18 2 28-2" stroke="#FF6A1F" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
-        <img src="img/logo-mark.png" alt="">
+        <svg viewBox="0 0 260 400" aria-hidden="true">
+          <defs>
+            <linearGradient id="tgFl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8A00"/><stop offset=".5" stop-color="#FF5A1F"/><stop offset="1" stop-color="#E3241B"/></linearGradient>
+          </defs>
+          <!-- хвост -->
+          <path d="M190 300 C222 296 236 270 226 244 C220 228 230 216 238 220" fill="none" stroke="#1A1513" stroke-width="15" stroke-linecap="round"/>
+          <path d="M190 300 C222 296 236 270 226 244 C220 228 230 216 238 220" fill="none" stroke="#FF7A1A" stroke-width="9" stroke-linecap="round"/>
+          <path d="M214 292l-4 10M228 270l-10 4M225 246l-10-2" stroke="#1A1513" stroke-width="4" stroke-linecap="round"/>
+          <!-- ноги -->
+          <path d="M120 312 L114 366 L142 366 L148 318 Z" fill="#2A2320" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M160 318 L166 366 L194 366 L188 312 Z" fill="#2A2320" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M108 362 h38 a6 6 0 0 1 6 6 v8 h-50 v-6 a8 8 0 0 1 6-8z" fill="url(#tgFl)" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M162 362 h34 a8 8 0 0 1 8 8 v6 h-48 v-8 a6 6 0 0 1 6-6z" fill="url(#tgFl)" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/>
+          <!-- рука с шуруповёртом -->
+          <g class="tg-drill">
+            <path d="M122 222 C100 236 84 246 66 250" fill="none" stroke="#1A1513" stroke-width="26" stroke-linecap="round"/>
+            <path d="M122 222 C100 236 84 246 66 250" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round"/>
+            <path d="M98 230l4 12M84 238l3 11" stroke="#1A1513" stroke-width="4" stroke-linecap="round"/>
+            <rect x="22" y="232" width="40" height="18" rx="5" fill="url(#tgFl)" stroke="#1A1513" stroke-width="4"/>
+            <rect x="46" y="246" width="12" height="22" rx="3" fill="#2A2320" stroke="#1A1513" stroke-width="4"/>
+            <rect x="12" y="236" width="12" height="10" rx="2" fill="#9A9089" stroke="#1A1513" stroke-width="3"/>
+            <path d="M2 241 h11" stroke="#C9C2BC" stroke-width="3" stroke-linecap="round" class="tg-bit"/>
+            <circle cx="66" cy="250" r="12" fill="#fff" stroke="#1A1513" stroke-width="4"/>
+          </g>
+          <!-- туловище в жилете -->
+          <path d="M112 198 C100 250 104 290 114 316 L192 316 C202 290 204 250 190 198 Z" fill="#fff" stroke="#1A1513" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M146 214 l8 0 l-2 96 l-6 0 z" fill="#FF7A1A" opacity=".0"/>
+          <path d="M112 204 C104 250 106 288 114 314 L146 314 L144 214 C134 214 122 210 112 204 Z" fill="url(#tgFl)" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M190 204 C198 250 198 288 192 314 L160 314 L160 214 C170 214 182 210 190 204 Z" fill="url(#tgFl)" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M108 262 h38 M160 262 h37 M110 280 h36 M160 280 h35" stroke="#FFD58A" stroke-width="6"/>
+          <rect x="108" y="302" width="92" height="12" rx="3" fill="#2A2320" stroke="#1A1513" stroke-width="3"/>
+          <rect x="146" y="300" width="16" height="16" rx="3" fill="#FFB43A" stroke="#1A1513" stroke-width="3"/>
+          <!-- голова из логотипа -->
+          <image href="img/logo-mark.png" x="22" y="18" width="190" height="205"/>
+          <!-- машущая рука -->
+          <g class="tg-wave">
+            <path d="M188 222 C212 208 226 186 232 160" fill="none" stroke="#1A1513" stroke-width="26" stroke-linecap="round"/>
+            <path d="M188 222 C212 208 226 186 232 160" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round"/>
+            <path d="M212 206l8 8M224 186l10 4" stroke="#1A1513" stroke-width="4" stroke-linecap="round"/>
+            <path d="M232 166 C218 166 216 148 220 138 C218 128 226 124 230 130 C230 120 240 120 242 128 C246 122 254 126 252 136 C254 148 248 166 232 166 Z" fill="#fff" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/>
+          </g>
+          <!-- каска -->
+          <g transform="rotate(-10 120 40)">
+            <path d="M58 58 C60 14 96 -2 128 0 C164 2 186 22 186 58 Z" fill="url(#tgFl)" stroke="#1A1513" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M118 2 C112 20 112 40 116 58 M138 2 C142 20 142 40 138 58" stroke="#1A1513" stroke-width="3" fill="none" opacity=".55"/>
+            <path d="M44 58 H200 a6 6 0 0 1 0 12 H44 a6 6 0 0 1 0-12z" fill="#FF6A1F" stroke="#1A1513" stroke-width="5"/>
+          </g>
+        </svg>
       </div>
       <div class="sc-bubble" id="scBubble">Готово! Следующая — ваша? 👋</div>
       <div class="rating-tag"><b>5.0</b><div><span class="st">★★★★★</span><small>42 оценки · Яндекс</small></div></div>
