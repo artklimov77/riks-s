@@ -25,6 +25,24 @@
     return 'прямой / сайт';
   };
 
+
+  /* ---------- палитры (подбор цветов с клиентом): ?pal=1 показывает переключатель ---------- */
+  (() => {
+    const PALS = [['red', 'Красный + графит', ['#E3241B', '#1E1C1B', '#F7F5F3']], ['wine', 'Винный', ['#B3122B', '#241B1C', '#F8F3F1']], ['tiger', 'Красный + оранжевый тигра', ['#E3241B', '#FF7A00', '#1E1C1B']], ['mono', 'Чёрно-белый + красная кнопка', ['#E3241B', '#141414', '#F4F4F4']], ['navy', 'Красный + тёмно-синий', ['#E3241B', '#14213D', '#F3F5F9']]];
+    const q = new URLSearchParams(location.search);
+    let cur = q.get('pal'); if (cur && !PALS.some(p => p[0] === cur)) cur = null;
+    try { if (cur) localStorage.setItem('riks_pal', cur); else cur = localStorage.getItem('riks_pal'); } catch (e) {}
+    if (cur) document.documentElement.dataset.pal = cur;
+    let show = q.has('pal') || /^(127\.0\.0\.1|localhost)$/.test(location.hostname);
+    try { if (q.has('pal')) localStorage.setItem('riks_pal_show', '1'); if (localStorage.getItem('riks_pal_show')) show = true; } catch (e) {}
+    if (!show) return;
+    const box = document.createElement('div'); box.className = 'palsw';
+    const draw = () => { const c = document.documentElement.dataset.pal || 'red';
+      box.innerHTML = '<b>Палитра сайта</b>' + PALS.map(p => `<button data-p="${p[0]}" class="${p[0] === c ? 'on' : ''}"><i>${p[2].map(x => `<span style="background:${x}"></span>`).join('')}</i>${p[1]}</button>`).join('');
+      box.querySelectorAll('button').forEach(b => b.onclick = () => { document.documentElement.dataset.pal = b.dataset.p; try { localStorage.setItem('riks_pal', b.dataset.p); } catch (e) {} draw(); }); };
+    draw(); document.body.appendChild(box);
+  })();
+
   /* ---------- хедер + мобильное меню ---------- */
   const hdr = $('#hdr');
   if (hdr) {
