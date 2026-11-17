@@ -195,13 +195,13 @@
       <p class="lead reveal d2" style="max-width:420px">Впишите название, выберите тип, цвет и размер. Переключите на «вечер» — так вывеску увидят клиенты после закрытия офисов.</p>
     </div>
     <div class="builder-grid">
-      <div class="stage reveal" id="stage">
+      <div class="stage reveal" id="stage" data-type="letters" data-color="#C8102E">
         <div class="stage-shade"></div>
         <div class="stage-tools">
           <div class="seg" id="dayNight"><button data-v="day" class="on">День</button><button data-v="night">Вечер</button></div>
           <div class="seg" id="power"><button data-v="on" class="on">Подсветка</button><button data-v="off">Выкл</button></div>
         </div>
-        <div class="sign-zone"><div class="sign box" id="sign"><span class="txt" id="signTxt">Пекарня</span></div></div>
+        <div class="sign-zone"><div class="sign letters" id="sign"><span class="txt" id="signTxt">Пекарня</span></div></div>
         <div class="ruler" id="ruler"><b id="rulerTxt">160 см</b></div>
         <div class="store"><div class="win"></div><div class="door"></div><div class="win"></div></div>
         <div class="stage-tag">предварительный просмотр</div>
@@ -210,8 +210,8 @@
         <div class="field"><label for="tIn">Текст вывески</label><input class="inp" id="tIn" maxlength="22" value="Пекарня" autocomplete="off"></div>
         <div class="field"><span class="lbl">Тип конструкции</span>
           <div class="types" id="types">
-            <button class="type on" data-t="box">Лайтбокс (внутри)</button>
-            <button class="type" data-t="letters">Объёмные буквы</button>
+            <button class="type" data-t="box">Лайтбокс (внутри)</button>
+            <button class="type on" data-t="letters">Объёмные буквы</button>
             <button class="type" data-t="neon">Неон</button>
             <button class="type" data-t="plate">Табличка</button>
           </div>
