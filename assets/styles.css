@@ -663,3 +663,39 @@ svg [stroke="#F7941D"],svg [stroke="#FFD000"]{stroke:var(--orange)}
 @media (max-width:1100px){.hero-pics{margin:10px 16px 0}.hero-pics .hp-tiger{right:-6px;width:84px}}
 @media (max-width:680px){.hero-pics{margin:6px 0 0;gap:8px}.hero-pics .hp-tiger{width:70px;top:-34px;right:0}.hero-pics .rating-tag{left:-4px}.hero.hero-dk::before{background-size:120vw auto;opacity:.6}}
 .hero-pics .hp1 figcaption{top:12px;bottom:auto}
+
+/* ---------- HERO-сцена: тигр монтирует вывеску ---------- */
+.scene{position:relative;aspect-ratio:520/420;width:112%;max-width:700px;justify-self:end;margin-right:-4%}
+.scene::before{content:"";position:absolute;inset:-6% -4%;background:radial-gradient(closest-side,rgba(255,110,20,.22),transparent 75%);pointer-events:none}
+.sc-bld{position:absolute;inset:0;width:100%;height:100%}
+.sc-dim{opacity:0;transition:opacity .5s}
+.sc-dimtxt{position:absolute;left:50%;top:39.2%;transform:translate(-50%,-50%);font:800 12px/1 var(--sans);color:var(--gold);background:var(--night);padding:3px 8px;border-radius:4px;opacity:0;transition:opacity .5s}
+.scene.measure .sc-dim,.scene.measure .sc-dimtxt{opacity:1}
+.sc-sign{position:absolute;left:13.5%;width:61.5%;top:44.6%;height:15%}
+.sc-board{position:relative;height:100%;border-radius:6px;background:#0c0a09;border:2px solid #2d2522;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 14px 30px -10px rgba(0,0,0,.8);z-index:1}
+.sc-glow{position:absolute;inset:-30% -8%;border-radius:40%;background:radial-gradient(closest-side,rgba(255,110,20,.55),transparent 75%);opacity:0;transition:opacity .6s;z-index:0}
+.sc-word{display:flex;gap:.04em;font:900 clamp(26px,3.3vw,46px)/1 var(--disp);letter-spacing:.06em;text-transform:uppercase}
+.sc-word span{display:inline-block;color:#3b3330;transform:translateY(-140%) rotate(-12deg);opacity:0}
+.sc-word span.in{animation:scDrop .42s cubic-bezier(.3,1.5,.5,1) forwards}
+@keyframes scDrop{0%{transform:translateY(-140%) rotate(-12deg);opacity:0}70%{opacity:1}100%{transform:none;opacity:1}}
+.scene.lit .sc-word span{background:linear-gradient(180deg,#FFD08A 0%,#FF8A00 45%,#FF4A1A 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 6px rgba(255,120,20,.85)) drop-shadow(0 0 18px rgba(255,80,20,.5));animation:none;transform:none;opacity:1;transition:filter .4s}
+.scene.lit .sc-glow{opacity:1}
+.scene.lit .sc-board{border-color:#4a2c1f}
+.scene.out .sc-word span{opacity:0;transform:translateY(30%);transition:opacity .35s,transform .35s}
+.sc-sparks{position:absolute;inset:0;pointer-events:none}
+.sc-sparks i{position:absolute;width:5px;height:5px;border-radius:50%;background:#FFC46B;box-shadow:0 0 8px #FF8A00;animation:scSpark .6s ease-out forwards}
+@keyframes scSpark{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+.sc-tiger{position:absolute;right:-7%;top:16%;width:31%;transform:translateX(70%) rotate(18deg);opacity:0;transition:transform .7s cubic-bezier(.3,1.4,.5,1),opacity .4s;z-index:2}
+.sc-tiger img{width:100%;height:auto;display:block;filter:drop-shadow(0 14px 18px rgba(0,0,0,.6))}
+.scene.peek .sc-tiger{transform:translateX(0) rotate(-6deg);opacity:1}
+.sc-paw{position:absolute;width:34%;left:-24%;top:52%;transform-origin:50% 95%;transform:rotate(-10deg);filter:drop-shadow(0 6px 8px rgba(0,0,0,.5))}
+.scene.wave .sc-paw{animation:scWave .5s ease-in-out 4 alternate}
+@keyframes scWave{from{transform:rotate(-24deg)}to{transform:rotate(22deg)}}
+.scene.peek .sc-tiger img{animation:tigerbob 3.4s ease-in-out infinite}
+.sc-bubble{position:absolute;right:16%;top:3%;background:#fff;color:var(--ink);font:800 14px/1.3 var(--sans);padding:10px 14px;border-radius:14px 14px 4px 14px;box-shadow:0 16px 34px -14px rgba(0,0,0,.6);opacity:0;transform:translateY(8px) scale(.9);transition:all .35s cubic-bezier(.3,1.4,.5,1);z-index:3;white-space:nowrap}
+.scene.wave .sc-bubble{opacity:1;transform:none}
+.scene .rating-tag{left:-4%;right:auto;top:auto;bottom:4%;background:#fff;color:var(--ink)}
+@media (max-width:1100px){.scene{justify-self:center;margin-top:20px}}
+@media (max-width:680px){.sc-bubble{font-size:12px;right:22%}.scene .rating-tag{left:0}}
+@media (prefers-reduced-motion:reduce){.scene .sc-tiger{transform:none;opacity:1}.sc-word span{opacity:1;transform:none}}
+@media (max-width:1100px){.scene{width:100%;margin-right:0}}

@@ -266,3 +266,40 @@
     });
   }
 })();
+
+/* ---------- hero-сцена: тигр собирает вывеску (цикл) ---------- */
+(() => {
+  const sc = document.getElementById('scene'); if (!sc) return;
+  const word = document.getElementById('scWord'), sparks = document.getElementById('scSparks');
+  const WORDS = ['Пекарня', 'Кофейня', 'Аптека', 'Цветы', 'Ваш бизнес'];
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const spark = el => {
+    const r = el.getBoundingClientRect(), b = sc.getBoundingClientRect();
+    for (let i = 0; i < 6; i++) {
+      const s = document.createElement('i');
+      s.style.left = (r.left - b.left + r.width / 2) + 'px'; s.style.top = (r.bottom - b.top - 4) + 'px';
+      s.style.setProperty('--dx', (Math.random() * 60 - 30) + 'px'); s.style.setProperty('--dy', (Math.random() * 40 - 10) + 'px');
+      sparks.appendChild(s); setTimeout(() => s.remove(), 650);
+    }
+  };
+  let n = 0;
+  async function loop() {
+    for (;;) {
+      const w = WORDS[n++ % WORDS.length];
+      sc.className = sc.className.replace(/\b(lit|wave|out|measure)\b/g, '').trim();
+      word.innerHTML = [...w].map(ch => '<span>' + (ch === ' ' ? '&nbsp;' : ch) + '</span>').join('');
+      if (reduce) { sc.classList.add('peek', 'lit', 'wave'); return; }
+      await wait(300); sc.classList.add('peek', 'measure');
+      await wait(500);
+      for (const sp of word.children) { sp.classList.add('in'); setTimeout(() => spark(sp), 320); await wait(170); }
+      await wait(500); sc.classList.add('lit');
+      await wait(450); sc.classList.add('wave');
+      await wait(3200); sc.classList.add('out'); sc.classList.remove('wave');
+      await wait(450);
+    }
+  }
+  // запускаем, когда сцена видна
+  const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { io.disconnect(); loop(); } }, { threshold: .3 });
+  io.observe(sc);
+})();
