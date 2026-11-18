@@ -680,7 +680,11 @@
   let FILES_READY=null, BLOBLIB=null;
   async function filesReady(){ if(DEMO) return false; if(FILES_READY===true) return true;
     try{ const j=await (await fetch('/api/files',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pass:PASS,op:'status'})})).json(); FILES_READY=!!j.ready; }catch(e){ FILES_READY=false; } return FILES_READY; }
-  const safeName=n=>String(n||'file').replace(/[\\/:*?"<>|#%{}^~\[\]`]+/g,'_').replace(/\s+/g,' ').trim().slice(-120)||'file';
+  // путь в хранилище — только латиница (подписанные ссылки Vercel ломаются на кириллице); русское имя хранится в f.name
+  const TRL={а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'e',ж:'zh',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'h',ц:'c',ч:'ch',ш:'sh',щ:'sch',ъ:'',ы:'y',ь:'',э:'e',ю:'yu',я:'ya'};
+  const safeName=n=>{ const s=String(n||'file'), dot=s.lastIndexOf('.'), ext=dot>0?s.slice(dot+1).toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,8):'';
+    const base=(dot>0?s.slice(0,dot):s).toLowerCase().split('').map(c=>TRL[c]!=null?TRL[c]:c).join('').replace(/[^a-z0-9._-]+/g,'-').replace(/-+/g,'-').replace(/^[-.]+|[-.]+$/g,'').slice(0,80)||'file';
+    return base+(ext?'.'+ext:''); };
   async function uploadOne(file,owner,meta,onProg){
     BLOBLIB=BLOBLIB||await import('./assets/blob-client.js');
     const path='riks/'+owner+'/'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)+'-'+safeName(file.name);
