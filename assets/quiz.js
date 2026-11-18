@@ -94,15 +94,63 @@
     { id: 'pack', q: 'Нужен «базовый пакет»?', type: 'one', opts: ['Да: вывеска + режим работы + уголок потребителя', 'Нет, только оформление', 'Расскажите подробнее'], hint: 'Базовый пакет — то, что обязательно по закону: вывеска, режим работы, уголок потребителя (и план эвакуации, если нужен).' },
     DESIGN
   ]};
+  QUIZZES.shtendery = { title: 'Штендер', intro: '4 вопроса — подберём штендер под вход и посчитаем.', qs: [
+    { id: 'type', q: 'Какой штендер?', type: 'one', opts: ['Двусторонний «домик»', 'Односторонний на опоре', 'С меловой / маркерной доской', 'Со сменными плакатами (клик-рамка)', 'Помогите выбрать'] },
+    { id: 'size', q: 'Размер поля', type: 'one', opts: ['А1 (594×841)', 'А0 (841×1189)', 'Свой размер', 'Не знаю'] },
+    { id: 'where', q: 'Где будет стоять?', type: 'one', opts: ['На улице у входа', 'В помещении / ТЦ', 'И там, и там'], hint: 'Для улицы — утяжелённое основание и влагостойкая печать, ветер не уронит.' },
+    DESIGN,
+    WHEN
+  ]};
+  QUIZZES.figury = { title: 'Ростовая фигура', intro: '4 вопроса — и пришлём эскиз фигуры.', qs: [
+    { id: 'who', q: 'Кто или что на фигуре?', type: 'one', opts: ['Человек в полный рост (сотрудник, звезда)', 'Персонаж / маскот', 'Продукт / упаковка', 'Фотозона с прорезью для лица', 'Своя идея'] },
+    { id: 'h', q: 'Высота', type: 'one', opts: ['около 1 м', 'около 1,5 м', 'в рост — 1,8 м', 'выше 2 м', 'не знаю'] },
+    { id: 'mat', q: 'Материал', type: 'one', opts: ['ПВХ 5 мм (лёгкая, для помещения)', 'Композит (для улицы, надолго)', 'Пенокартон (на одно мероприятие)', 'Подскажите'] },
+    { id: 'photo', q: 'Фото для печати есть?', type: 'one', opts: ['Есть качественное фото', 'Есть, но надо обработать', 'Нужна съёмка / рисунок'] },
+    WHEN
+  ]};
+  QUIZZES.penoplast = { title: 'Изделия из пенопласта', intro: '4 вопроса — и посчитаем фигурную резку.', qs: [
+    { id: 'what', q: 'Что вырезаем?', type: 'one', opts: ['Объёмные буквы / логотип', 'Цифры и надписи для фотозоны', 'Декор (фигуры, облака, звёзды)', 'Интерьерная вывеска', 'Другое'] },
+    { id: 'size', q: 'Высота буквы / фигуры', type: 'one', opts: ['до 30 см', '30–60 см', '60–100 см', 'больше 1 м'] },
+    { id: 'fin', q: 'Отделка', type: 'one', opts: ['Покраска в цвет', 'Оклейка плёнкой', 'Без покраски (белый)', 'Подскажите'], hint: 'Пенопласт лёгкий: крепим на скотч или монтажный клей, без сверления.' },
+    { id: 'where', q: 'Где будет стоять?', type: 'one', opts: ['В помещении', 'Фотозона на мероприятии', 'На улице (временно)'] },
+    DESIGN
+  ]};
+  QUIZZES.brajl = { title: 'Таблички Брайля и знаки', intro: '4 вопроса — подберём таблички и знаки по требованиям доступной среды.', qs: [
+    { id: 'what', q: 'Что нужно?', type: 'many', opts: ['Табличка со шрифтом Брайля', 'Мнемосхема для незрячих', 'Знаки пожарной безопасности', 'Знаки эвакуации (фотолюминесцентные)', 'Предупреждающие / запрещающие знаки', 'Тактильная плитка / наклейки'] },
+    { id: 'obj', q: 'Для какого объекта?', type: 'one', opts: ['Школа / детсад', 'Магазин / офис', 'Медицинское учреждение', 'Госучреждение', 'Другое'] },
+    { id: 'qty', q: 'Сколько табличек / знаков?', type: 'one', opts: ['1–5', '6–20', 'больше 20', 'Нужен аудит — не знаю'] },
+    { id: 'check', q: 'Есть предписание или проверка?', type: 'one', opts: ['Да, есть срок', 'Нет, делаем заранее'], hint: 'Сделаем по ГОСТ — проверка вопросов не задаст.' }
+  ]};
+  QUIZZES.pechati = { title: 'Печати и штампы', intro: '3 вопроса — и сделаем печать за 1–2 дня.', qs: [
+    { id: 'what', q: 'Что нужно?', type: 'one', opts: ['Печать организации (ООО)', 'Печать ИП', 'Штамп (прямоугольный)', 'Факсимиле (подпись)', 'Датер / нумератор'] },
+    { id: 'osn', q: 'Оснастка', type: 'one', opts: ['Ручная', 'Автоматическая', 'Карманная', 'Подскажите'] },
+    { id: 'docs', q: 'Для печати нужны данные', type: 'info', text: 'Пришлите название, ИНН и ОГРН (для ООО и ИП) — сверим и нарисуем оттиск. Свидетельство не нужно.' },
+    { id: 'qty', q: 'Сколько штук?', type: 'one', opts: ['1', '2–3', 'больше'] }
+  ]};
+  QUIZZES.shkoly = { title: 'Оформление школы или детсада', intro: '5 вопросов — и приедем с готовыми идеями.', qs: [
+    { id: 'obj', q: 'Учреждение', type: 'one', opts: ['Школа', 'Детский сад', 'Колледж / техникум', 'Центр допобразования'] },
+    { id: 'what', q: 'Что оформляем?', type: 'many', opts: ['Стенды (уголок потребителя, антитеррор, ПБ)', 'Классные уголки, расписание', 'Холл, коридоры, рекреации', 'Музыкальный / спортзал', 'Таблички на кабинеты', 'Паспорт доступности, знаки, Брайль'] },
+    { id: 'pay', q: 'Как оплачиваете?', type: 'one', opts: ['Бюджет (договор по 44-ФЗ / 223-ФЗ)', 'Родительский комитет / спонсор', 'Внебюджет'], hint: 'Работаем с бюджетными организациями: договор, счёт, УПД через СБИС, оплата после поставки.' },
+    { id: 'when', q: 'К какому сроку?', type: 'one', opts: ['К 1 сентября', 'К проверке', 'В течение месяца', 'Не горит'] },
+    DESIGN
+  ]};
+  QUIZZES.logotip = { title: 'Логотип и товарный знак', intro: '4 вопроса — с этого начинается любая вывеска.', qs: [
+    { id: 'what', q: 'Что нужно?', type: 'one', opts: ['Логотип с нуля', 'Обновить старый логотип', 'Логотип + фирменный стиль', 'Перевести логотип в вектор', 'Помочь с товарным знаком'] },
+    { id: 'biz', q: 'Сфера бизнеса', type: 'text', ph: 'напр. кофейня, автосервис', opt: true },
+    { id: 'en', q: 'Название на латинице?', type: 'one', opts: ['Да', 'Нет, кириллица', 'Пока не решили'], hint: 'Вывеску на английском согласуют только при зарегистрированном товарном знаке. Регистрация — около 18 месяцев, подскажем партнёров.' },
+    WHEN
+  ]};
   QUIZZES.general = { title: 'Заявка', intro: 'Пара вопросов — чтобы менеджер сразу понял задачу и не переспрашивал.', qs: [
-    { id: 'svc', q: 'Что вас интересует?', type: 'one', opts: ['Вывеска', 'Неон', 'Реклама на транспорте', 'Информационный стенд', 'Мобильная стойка', 'Полиграфия', 'Наклейки', 'Широкоформатная печать', 'Оформление помещения', 'Сувениры с логотипом', 'Другое'],
-      branch: { 'Вывеска': 'vyveski', 'Неон': 'neon', 'Реклама на транспорте': 'transport', 'Информационный стенд': 'stendy', 'Мобильная стойка': 'stojki', 'Полиграфия': 'poligrafiya', 'Наклейки': 'nakleyki', 'Широкоформатная печать': 'pechat', 'Оформление помещения': 'interier', 'Сувениры с логотипом': 'suveniry' } },
+    { id: 'svc', q: 'Что вас интересует?', type: 'one', opts: ['Вывеска', 'Неон', 'Реклама на транспорте', 'Информационный стенд', 'Мобильная стойка', 'Штендер', 'Ростовая фигура', 'Полиграфия', 'Наклейки', 'Широкоформатная печать', 'Оформление помещения', 'Школа / детсад', 'Таблички Брайля и знаки', 'Пенопласт', 'Печати и штампы', 'Логотип', 'Сувениры с логотипом', 'Другое'],
+      branch: { 'Вывеска': 'vyveski', 'Неон': 'neon', 'Реклама на транспорте': 'transport', 'Информационный стенд': 'stendy', 'Мобильная стойка': 'stojki', 'Штендер': 'shtendery', 'Ростовая фигура': 'figury', 'Полиграфия': 'poligrafiya', 'Наклейки': 'nakleyki', 'Широкоформатная печать': 'pechat', 'Оформление помещения': 'interier', 'Школа / детсад': 'shkoly', 'Таблички Брайля и знаки': 'brajl', 'Пенопласт': 'penoplast', 'Печати и штампы': 'pechati', 'Логотип': 'logotip', 'Сувениры с логотипом': 'suveniry' } },
     { id: 'what', q: 'Коротко, что нужно?', type: 'text', ph: 'напр. табличка на дверь…', opt: true, skip: a => !!a.svc && a.svc !== 'Другое' }
   ]};
 
-  const PAGE = { vyveski: 'vyveski', neon: 'neon', transport: 'transport', stendy: 'stendy', 'mobilnye-stojki': 'stojki', poligrafiya: 'poligrafiya' };
+  const PAGE = { vyveski: 'vyveski', neon: 'neon', transport: 'transport', stendy: 'stendy', 'mobilnye-stojki': 'stojki', poligrafiya: 'poligrafiya', shtendery: 'shtendery', 'rostovye-figury': 'figury', penoplast: 'penoplast', 'tablichki-brajlya': 'brajl', 'pechati-shtampy': 'pechati', 'oformlenie-shkol': 'shkoly', logotip: 'logotip' };
   const pageKey = () => document.body.dataset.quiz || PAGE[(location.pathname.split('/').pop() || '').replace('.html', '')] || 'general';
   const fromService = s => { s = (s || '').toLowerCase();
+    if (/штендер/.test(s)) return 'shtendery'; if (/ростов|фигур/.test(s)) return 'figury'; if (/пенопл/.test(s)) return 'penoplast'; if (/брайл|знак/.test(s)) return 'brajl';
+    if (/печат[ьи] и|штамп|факсимил/.test(s)) return 'pechati'; if (/школ|детсад|детск/.test(s)) return 'shkoly'; if (/логотип|товарн/.test(s)) return 'logotip';
     if (/стойк|ролл|паук|виндер|пресс/.test(s)) return 'stojki'; if (/неон/.test(s)) return 'neon'; if (/вывес|букв|короб|кронштейн|табличк/.test(s)) return 'vyveski';
     if (/транспорт|авто|троллейб/.test(s)) return 'transport'; if (/стенд|уголок|эвакуац/.test(s)) return 'stendy'; if (/наклей|стикер/.test(s)) return 'nakleyki';
     if (/баннер|плёнк|пленк|широкоформат|печать/.test(s)) return 'pechat'; if (/сувенир|кружк|ручк/.test(s)) return 'suveniry'; if (/интерьер|ресепшн|оформлен|указател/.test(s)) return 'interier';
@@ -155,6 +203,7 @@
   .qz-row{display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:center}
   .qz-row span{font-weight:700;color:#8a817a}
   .qz-chk{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:14px;font-weight:600;color:#7a6f67}
+  .qz-pd{align-items:flex-start;font-size:12px;font-weight:500;line-height:1.45;border:1.5px solid transparent;border-radius:9px;padding:6px 8px;margin-left:-8px}.qz-pd input{margin-top:2px;width:17px;height:17px;flex:0 0 17px;accent-color:#E3241B}.qz-pd a{color:#B5161A;text-decoration:underline}.qz-pd.bad{border-color:#E3241B;background:#fdecea}
   .qz-foot{padding:12px 20px 16px;border-top:1px solid #f1e8e1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .qz-btn{height:50px;padding:0 22px;border-radius:12px;font-weight:800;font-size:15px}
   .qz-next{background:linear-gradient(115deg,#FF8A00,#FF5A1F 48%,#E3241B);color:#fff;margin-left:auto}
@@ -249,7 +298,7 @@
     const qCount = all.length - 2, qNo = S.i;
     let html = '', canNext = true;
     if (step.t === 'intro') {
-      html = `<div class="qz-q">Сейчас зададим несколько уточняющих вопросов</div><p style="color:#5f5650;line-height:1.55">${esc(qz.intro)}</p><p style="color:#7a6f67;margin-top:10px;font-size:14px">⏱ около минуты · ${Math.max(qCount, 3)} вопросов · можно пропускать</p><span class="qz-why">Зачем мы спрашиваем?</span><div class="qz-hint" id="qzWhy" style="display:none">Чтобы менеджер не тратил ваше время на переспрашивания, а дизайнер начал работу сразу. Мы работаем с 1995 года и знаем: от ответов зависят материалы, согласования и цена. Не хотите отвечать — нажмите «позвоните мне», и мы просто перезвоним.</div>`;
+      html = `<div class="qz-q">Сейчас зададим несколько уточняющих вопросов</div><p style="color:#5f5650;line-height:1.55">${esc(qz.intro)}</p><p style="color:#7a6f67;margin-top:10px;font-size:14px">⏱ около минуты · ${Math.max(qCount, 3)} вопросов · можно пропускать</p><span class="qz-why">▶ Зачем мы спрашиваем? Видео 20 сек</span><div id="qzWhyV"></div><div class="qz-hint" id="qzWhy" style="display:none">Чтобы менеджер не тратил ваше время на переспрашивания, а дизайнер начал работу сразу. Мы работаем с 1995 года и знаем: от ответов зависят материалы, согласования и цена. Не хотите отвечать — нажмите «позвоните мне», и мы просто перезвоним.</div>`;
     } else if (step.t === 'q') {
       const q = step.q; const a = S.ans[q.id];
       html = `<div class="qz-step">вопрос ${qNo} из ${qCount}</div><div class="qz-q">${esc(q.q)}</div>`;
@@ -275,7 +324,7 @@
         <input class="qz-in" id="qzPhone" inputmode="tel" placeholder="+7 (___) ___-__-__" value="${esc(S.phone || '')}">
         <div style="margin-top:12px;font-size:13px;font-weight:700;color:#7a6f67">Как удобнее связаться?</div>
         <div class="qz-opts" style="grid-template-columns:repeat(3,1fr);margin-top:6px">${['Позвонить', 'Telegram', 'ВКонтакте', 'MAX', 'WhatsApp', 'Не важно'].map(o => `<button type="button" class="qz-opt${S.contact === o ? ' on' : ''}" data-c="${o}" style="min-height:42px;text-align:center">${o}</button>`).join('')}</div>
-        <p style="font-size:12px;color:#8a817a;margin-top:10px">Нажимая «Отправить», вы соглашаетесь на обработку персональных данных для связи по заявке.</p>`;
+        <label class="qz-chk qz-pd"><input type="checkbox" id="qzPd"${S.pd ? ' checked' : ''}><span>Даю <a href="soglasie.html" target="_blank">согласие на обработку персональных данных</a> и принимаю <a href="privacy.html" target="_blank">Политику обработки ПДн</a></span></label>`;
     }
     body.innerHTML = html;
     const isLast = step.t === 'contact';
@@ -286,7 +335,11 @@
   }
 
   function wire(step) {
-    $('.qz-why', body)?.addEventListener('click', () => { const w = $('#qzWhy'); w.style.display = w.style.display === 'none' ? 'block' : 'none'; });
+    $('.qz-why', body)?.addEventListener('click', () => {
+      const w = $('#qzWhy'), v = $('#qzWhyV'); w.style.display = 'block';
+      const run = () => { if (window.RiksWhyVideo && v && !v.firstChild) { window.RiksWhyVideo(v, { tiger: ARCH, onStart: () => go(1) }); const p = v.querySelector('.wv-play'); if (p) p.click(); } };
+      if (window.RiksWhyVideo) run(); else { const sc = document.createElement('script'); sc.src = 'assets/why-video.js'; sc.onload = run; document.head.appendChild(sc); }
+    });
     const next = $('.qz-next', foot);
     if (step.t === 'q') {
       const q = step.q;
@@ -327,7 +380,7 @@
     const ph = $('#qzPhone', body);
     const phone = (ph ? ph.value : S.phone) || '';
     if (phone.replace(/\D/g, '').length < 11) {
-      body.innerHTML = '<div class="qz-q">Конечно! Оставьте номер — перезвоним.</div><input class="qz-in" id="qzPhone" inputmode="tel" placeholder="+7 (___) ___-__-__"><input class="qz-in" id="qzName" placeholder="Имя (необязательно)" style="margin-top:8px">';
+      body.innerHTML = '<div class="qz-q">Конечно! Оставьте номер — перезвоним.</div><input class="qz-in" id="qzPhone" inputmode="tel" placeholder="+7 (___) ___-__-__"><input class="qz-in" id="qzName" placeholder="Имя (необязательно)" style="margin-top:8px">' + `<label class="qz-chk qz-pd"><input type="checkbox" id="qzPd"${S.pd ? ' checked' : ''}><span>Даю <a href="soglasie.html" target="_blank">согласие на обработку персональных данных</a> и принимаю <a href="privacy.html" target="_blank">Политику обработки ПДн</a></span></label>`;
       foot.innerHTML = '<button type="button" class="qz-btn qz-next">Перезвоните мне</button>';
       const p = $('#qzPhone', body); p.addEventListener('input', () => fmtPhone(p)); p.focus();
       $('.qz-next', foot).onclick = () => submit(true);
@@ -339,9 +392,11 @@
     const ph = $('#qzPhone', body), nm = $('#qzName', body);
     if (ph) S.phone = ph.value; if (nm) S.name = nm.value.trim();
     if ((S.phone || '').replace(/\D/g, '').length < 11) { if (ph) { ph.style.borderColor = '#E3241B'; ph.focus(); } return; }
+    const pdEl = $('#qzPd', body); if (pdEl) S.pd = pdEl.checked;
+    if (!S.pd) { const l = $('.qz-pd', body); if (l) { l.classList.add('bad'); l.scrollIntoView({ block: 'nearest' }); } return; }
     const answers = collect(); const title = S.branch ? QUIZZES[S.branch].title : QUIZZES[S.key].title;
     const detail = (callback ? '📞 Просит перезвонить. ' : '') + 'Квиз «' + title + '»' + (answers.length ? ': ' + answers.map(x => x.q + ' — ' + x.a).join('; ') : ' (без ответов)') + (S.warn ? ' ⚠ ' + S.warn : '') + (S.extraDetail ? ' | ' + S.extraDetail : '');
-    const extra = { name: S.name || '', phone: S.phone, service: S.service || title, detail, quiz: answers, contact: S.contact || '', callback };
+    const extra = { name: S.name || '', phone: S.phone, service: S.service || title, detail, quiz: answers, contact: S.contact || '', callback, consent: { pd: true, ver: (window.RiksLegal && window.RiksLegal.ver) || '', at: new Date().toISOString(), page: location.pathname } };
     body.innerHTML = '<div class="qz-done"><div class="qz-arch">' + ARCH.replace(/qzFl/g, 'qzFl2') + '</div><h3>' + (callback ? 'Перезвоним!' : 'Финиш! Заявка у менеджера') + '</h3><p>' + (callback ? 'Менеджер свяжется с вами в рабочее время.' : 'Менеджер посмотрит ответы и свяжется с вами' + (S.contact && S.contact !== 'Не важно' ? ' — ' + esc(S.contact) : '') + '.') + '</p></div>';
     foot.innerHTML = '<button type="button" class="qz-btn qz-next">Отлично</button>'; $('.qz-next', foot).onclick = close;
     walk(1); tiger.style.left = '96%'; fill.style.width = '100%'; $$('.qz-coin', coins).forEach(c => c.classList.add('got'));
@@ -362,7 +417,7 @@
       o = o || {};
       const key = o.key || fromService(o.service) || pageKey();
       lastPct = 0;
-      S = { key: QUIZZES[key] ? key : 'general', i: o.skipIntro ? 1 : 0, ans: {}, name: o.name || '', phone: o.phone || '', service: o.service || '', onDone: o.onDone, branch: null, contact: '', extraDetail: o.detail || '' };
+      S = { key: QUIZZES[key] ? key : 'general', i: o.skipIntro ? 1 : 0, ans: {}, name: o.name || '', phone: o.phone || '', service: o.service || '', onDone: o.onDone, branch: null, contact: '', extraDetail: o.detail || '', pd: !!o.pd };
       root.classList.add('on'); document.documentElement.style.overflow = 'hidden'; draw();
     },
     QUIZZES

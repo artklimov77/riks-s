@@ -26,6 +26,10 @@ module.exports = async (req, res) => {
   const clean = (v, n) => String(v == null ? '' : v).slice(0, n);
   const phone = clean(lead.phone, 40);
   if (!phone.replace(/\D/g, '')) return res.status(400).json({ ok: false, error: 'no phone' });
+  // без отметки о согласии на обработку ПДн заявку не принимаем (152-ФЗ, ст. 9); факт согласия храним вместе с заявкой
+  const c = (lead.consent && typeof lead.consent === 'object') ? lead.consent : null;
+  if (!c || c.pd !== true) return res.status(400).json({ ok: false, error: 'no consent' });
+  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim().slice(0, 45);
 
   const rec = {
     id: genId(),
@@ -40,6 +44,7 @@ module.exports = async (req, res) => {
     source: clean(lead.source, 120),
     utm: (lead.utm && typeof lead.utm === 'object') ? lead.utm : {},
     ref: clean(lead.ref, 200),
+    consent: { pd: true, ver: clean(c.ver, 20), at: new Date().toISOString(), page: clean(c.page, 60), ip, ua: clean(req.headers['user-agent'], 200) },
     stage: 'new',
     note: '',
     ts: clean(lead.ts, 40) || new Date().toISOString()

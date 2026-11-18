@@ -1,7 +1,7 @@
 // Приватный CRUD для админки Рикс+С. Защита паролем (env LEADS_PASS, один вход на всех).
 // POST { pass, op, col?, id?, data?, items? }
 //   op: list | save | delete | bulk | importUds | seedCatalog | backup | notify
-//   col: leads | orders | catalog | clients | settings
+//   col: leads | orders | catalog | clients | settings | tasks
 // Хранилище — Upstash Redis (hash riks:<col>, поле = id).
 
 const { kvReady, cmd, hall, genId } = require('./_kv.js');
@@ -9,7 +9,7 @@ const UDS = require('../data/uds-catalog.json');
 
 const KEY = {
   leads: 'riks:leads', orders: 'riks:orders', catalog: 'riks:catalog',
-  clients: 'riks:clients', settings: 'riks:settings'
+  clients: 'riks:clients', settings: 'riks:settings', tasks: 'riks:tasks'
 };
 
 const now = () => new Date().toISOString();

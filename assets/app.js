@@ -6,18 +6,52 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const fmt = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
-  /* ---------- источник трафика (UTM / реферал), держим в localStorage ---------- */
+  /* ---------- юридическое: выбор по cookie (152-ФЗ, ст. 9) ---------- */
+  // Необходимые (сессия, выбор по cookie) — без согласия. Аналитические (источник визита, Яндекс Метрика) — только после «Принять все».
+  const Legal = window.RiksLegal = (() => {
+    const K = 'riks_cookie', ver = '2026-11-18';
+    const get = () => { try { return JSON.parse(localStorage.getItem(K) || 'null'); } catch (e) { return null; } };
+    return {
+      ver,
+      choice: () => (get() || {}).v || '',
+      analytics: () => (get() || {}).v === 'all',
+      set(v) { try { localStorage.setItem(K, JSON.stringify({ v, ver, at: new Date().toISOString() })); } catch (e) {} if (v !== 'all') { try { localStorage.removeItem('riks_src'); } catch (e) {} } }
+    };
+  })();
+
+  /* ---------- источник трафика (UTM / реферал): в памяти; в localStorage — только с согласия на аналитику ---------- */
   const SRC = window.RiksSRC = (() => {
     try {
       const q = new URLSearchParams(location.search), utm = {};
       ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(k => { if (q.get(k)) utm[k] = q.get(k); });
-      let saved = {}; try { saved = JSON.parse(localStorage.getItem('riks_src') || '{}'); } catch (e) {}
+      let saved = {}; if (Legal.analytics()) { try { saved = JSON.parse(localStorage.getItem('riks_src') || '{}'); } catch (e) {} }
       if (Object.keys(utm).length) saved = { utm, ref: document.referrer || '', first: saved.first || location.pathname };
       else if (!saved.utm && document.referrer && !document.referrer.includes(location.host)) saved = { ref: document.referrer, first: saved.first || location.pathname };
-      try { localStorage.setItem('riks_src', JSON.stringify(saved)); } catch (e) {}
+      if (Legal.analytics()) { try { localStorage.setItem('riks_src', JSON.stringify(saved)); } catch (e) {} }
       return saved;
     } catch (e) { return {}; }
   })();
+  // Яндекс Метрика: подключается только после согласия. Номер счётчика — в <body data-metrika="…"> или window.RIKS_METRIKA_ID.
+  const loadAnalytics = () => {
+    const id = document.body.dataset.metrika || window.RIKS_METRIKA_ID; if (!id || window.ym) return;
+    (function (m, e, t, r, i, k, a) { m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); }; m[i].l = 1 * new Date(); k = e.createElement(t); a = e.getElementsByTagName(t)[0]; k.async = 1; k.src = r; a.parentNode.insertBefore(k, a); })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
+    window.ym(+id, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: false });
+  };
+  if (Legal.analytics()) loadAnalytics();
+  const cookieBar = () => {
+    if ($('.ck')) return;
+    const el = document.createElement('div'); el.className = 'ck'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Согласие на cookie');
+    el.innerHTML = '<div class="ck-t"><b>Мы используем cookie</b><p>Необходимые — чтобы сайт работал. Аналитические — чтобы понимать, откуда к нам приходят (Яндекс Метрика), только с вашего согласия. Подробнее — в <a href="cookies.html">Политике cookie</a> и <a href="privacy.html">Политике обработки персональных данных</a>.</p></div>' +
+      '<div class="ck-b"><button type="button" class="btn btn-line" data-ck="necessary">Только необходимые</button><button type="button" class="btn btn-ink" data-ck="all">Принять все</button></div>';
+    document.body.appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
+    $$('[data-ck]', el).forEach(b => b.onclick = () => {
+      Legal.set(b.dataset.ck);
+      if (b.dataset.ck === 'all') { try { localStorage.setItem('riks_src', JSON.stringify(SRC)); } catch (e) {} loadAnalytics(); }
+      el.classList.remove('on'); setTimeout(() => el.remove(), 300);
+    });
+  };
+  if (!Legal.choice()) setTimeout(cookieBar, 900);
+  $$('[data-cookie-settings]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); cookieBar(); }));
   const srcLabel = window.RiksSrcLabel = () => {
     const u = SRC.utm || {};
     if (u.utm_source) return u.utm_source + (u.utm_campaign ? ' / ' + u.utm_campaign : '');
@@ -193,10 +227,14 @@
   $$('input[inputmode="tel"]').forEach(ph => ph.addEventListener('input', () => formatPhone(ph)));
 
   $$('form.form').forEach(form => {
+    const pdIn = form.querySelector('input[name=pd]'); if (pdIn) pdIn.addEventListener('change', () => pdIn.closest('.consent')?.classList.remove('bad'));
     form.addEventListener('submit', async e => {
       e.preventDefault();
       const ph = form.querySelector('input[inputmode="tel"]');
       if (ph && ph.value.replace(/\D/g, '').length < 11) { ph.style.borderColor = '#C8102E'; ph.focus(); return; }
+      // согласие на обработку ПДн — отдельной галочкой (152-ФЗ, ст. 9), без неё заявку не отправляем
+      const pd = form.querySelector('input[name=pd]');
+      if (pd && !pd.checked) { const l = pd.closest('.consent'); if (l) { l.classList.add('bad'); l.scrollIntoView({ block: 'center', behavior: 'smooth' }); } return; }
       const dropTxt = $('#dropTxt')?.textContent || '';
       const data = {
         name: (form.querySelector('[name=name]')?.value || '').trim(),
@@ -207,7 +245,8 @@
         source: srcLabel(),
         utm: SRC.utm || {},
         ref: SRC.ref || '',
-        ts: new Date().toISOString()
+        ts: new Date().toISOString(),
+        consent: { pd: true, ver: Legal.ver, at: new Date().toISOString(), page: location.pathname }
       };
       const finish = async extra => {
         Object.assign(data, extra || {});
@@ -218,7 +257,7 @@
         } catch (err) { /* бэкенд недоступен (локально/оффлайн) — UX не блокируем */ }
       };
       // перед отправкой — короткий квиз по услуге (assets/quiz.js); квиз сам отправит заявку через finish
-      if (window.RiksQuiz && !form.dataset.noquiz) { window.RiksQuiz.open({ name: data.name, phone: data.phone, service: data.service, onDone: finish }); return; }
+      if (window.RiksQuiz && !form.dataset.noquiz) { window.RiksQuiz.open({ name: data.name, phone: data.phone, service: data.service, onDone: finish, pd: true }); return; }
       finish();
     });
   });
