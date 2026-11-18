@@ -196,6 +196,66 @@
   .req-box{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;color:var(--muted);margin:-2px 0 10px}
   .req-box label{display:flex;align-items:center;gap:4px;cursor:pointer}
   .req-box input{accent-color:var(--red)}
+  .hint{color:var(--muted);font-weight:400;font-size:12px}
+  .lnk{color:var(--red-d);font-weight:700;cursor:pointer}
+  .sec>h4 .lnk{margin-left:auto;font-size:12px}
+  .sec>h4 .spacer{margin-left:auto}
+  .modal.xl{width:1180px;height:94vh}
+  .modal.xl .mb{flex:1;padding:0;display:flex;flex-direction:column;min-height:0}
+  .modal.xl .sec{background:#fff}
+  .dl-head{padding:12px 20px 0;border-bottom:1px solid var(--line);background:#fff}
+  .dl-sum{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  .chip{font-size:12px;font-weight:700;padding:4px 10px;border-radius:14px;background:#f6f1ed;border:1px solid var(--line)}
+  .chip.gate.bad{background:#fdecea;color:#8a1b13;border-color:#f6c3bd}
+  .chip.gate.ok{background:#eef7f0;color:#1d6b35;border-color:#cfe9d7}
+  .dl-tabs{display:flex;gap:2px;overflow-x:auto}
+  .dl-tabs button{padding:10px 16px;font-size:14px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+  .dl-tabs button:hover{color:var(--ink)}
+  .dl-tabs button.on{color:var(--red-d);border-bottom-color:var(--red)}
+  .dl-tabs .n:not(:empty){background:#f1e9e3;border-radius:10px;padding:1px 7px;font-size:11px;margin-left:6px;color:var(--muted)}
+  .dl-tabs .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--bad);margin-left:6px;vertical-align:middle}
+  .dl-tabs .dot[hidden]{display:none}
+  .dl-body{flex:1;overflow-y:auto;padding:16px 20px;background:var(--bg)}
+  .dl-pane{display:none}.dl-pane.on{display:block}
+  .dl-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,1fr);gap:14px;align-items:start}
+  .dl-side{position:sticky;top:0}
+  .modal.xl .inp{height:38px;font-size:14px}
+  .modal.xl textarea.inp{min-height:80px;font-size:14px;line-height:1.5}
+  .qa-box{background:#fffaf5;border:1px solid #fbe0cc;border-radius:11px;padding:12px;margin-bottom:12px}
+  .qa-h{font-size:13px;font-weight:800;color:var(--red-d);margin-bottom:10px}.qa-h span{font-weight:600;color:var(--muted);font-size:12px;margin-left:4px}
+  .qa{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+  .qa .qi{background:#fff;border:1px solid #f3e2d5;border-radius:9px;padding:9px 12px}
+  .qa .qq{font-size:12px;color:var(--muted);line-height:1.35}
+  .qa .qv{font-size:15px;font-weight:700;margin-top:3px;line-height:1.3}
+  .qa-flags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .flag{font-size:12px;font-weight:700;padding:5px 10px;border-radius:7px;background:#eef7f0;color:#1d6b35}
+  .flag.warn{background:#fdecea;color:#8a1b13}
+  .drop{border:2px dashed var(--line2);border-radius:12px;padding:20px;text-align:center;color:var(--muted);background:#fff;cursor:pointer;transition:.15s;font-size:14px}
+  .drop:hover,.drop.over{border-color:var(--or);background:#fff6ec;color:var(--ink)}
+  .drop b{color:var(--red-d)}.drop.sm{padding:12px;font-size:13px}
+  .files{display:flex;flex-direction:column;gap:6px}
+  .file{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+  .file.click{cursor:pointer}.file.click:hover{border-color:var(--or)}
+  .file .fi{width:36px;height:36px;border-radius:8px;background:#f6efe9;display:flex;align-items:center;justify-content:center;font-size:18px;flex:0 0 36px}
+  .file .fn{font-weight:700;font-size:13px;word-break:break-word}
+  .file .fm{font-size:11px;color:var(--muted);margin-top:1px}
+  .file .fa{margin-left:auto;display:flex;gap:4px;align-items:center}
+  .file .fa .inp{height:30px;font-size:12px;width:auto;max-width:170px}
+  .prog{height:5px;border-radius:3px;background:#f1e9e3;overflow:hidden;margin-top:5px}.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--or),var(--red));width:0;transition:width .2s}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+  .chips button{font-size:12px;font-weight:700;padding:5px 11px;border-radius:16px;border:1.5px solid var(--line2);background:#fff;color:var(--muted)}
+  .chips button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .dchk{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1.5px solid var(--line);border-radius:9px;background:#fff;margin-bottom:6px}
+  .dchk.done{background:#f3faf5;border-color:#cfe9d7}
+  .dchk input{accent-color:var(--ok);width:18px;height:18px;flex:0 0 18px;cursor:pointer}
+  .dchk .dt{flex:1;font-size:13px;font-weight:600;min-width:0}
+  .dchk .dm{font-size:11px;color:var(--muted);font-weight:400;margin-top:2px}
+  .dchk .dm a{color:var(--red-d);font-weight:700;cursor:pointer}
+  .dchk.miss{border-color:var(--bad)!important;background:#fff4f2}
+  .printbar{display:flex;gap:6px;flex-wrap:wrap}
+  .scrim2{position:fixed;inset:0;background:rgba(30,20,15,.35);z-index:85;display:none}.scrim2.on{display:block}
+  .modal.m2{z-index:88}
+  @media(max-width:900px){.dl-grid{grid-template-columns:1fr}.dl-side{position:static}.modal.xl{height:100vh;max-height:100vh;width:100vw;max-width:100vw;border-radius:0}}
   @media(max-width:760px){.side{display:none}.topbar .search{display:none}.grid2,.grid3,.checks{grid-template-columns:1fr}.items .it .r2{grid-template-columns:1fr 1fr}.st-row{grid-template-columns:24px 1fr 34px}.st-row .hide-m{display:none}}
 </style>
 </head>
@@ -259,6 +319,12 @@
   <div class="mb" id="mBody"></div>
   <div class="mf" id="mFoot"><span id="mInfo" style="margin-right:auto;color:var(--muted);font-size:12px"></span><button class="btn-sec" id="mCancel">Отмена</button><button class="btn-pri" id="mSave">Сохранить</button></div>
 </div>
+<div class="scrim2" id="scrim2"></div>
+<div class="modal sm m2" id="modal2">
+  <div class="mh"><h2 id="m2Title">—</h2><button class="x" id="m2Close">&times;</button></div>
+  <div class="mb" id="m2Body"></div>
+  <div class="mf"><button class="btn-sec" id="m2Cancel">Закрыть</button><button class="btn-pri" id="m2Save">Сохранить</button></div>
+</div>
 <div class="notifs" id="notifs"></div>
 <div class="toast" id="toast"></div>
 
@@ -299,8 +365,8 @@
     docFlow:{t:'Документы: СБИС / живьём',ok:d=>!!d.docFlow},
     sizes:{t:'Размеры',ok:d=>!!(d.sizes||'').trim()},
     materials:{t:'Материалы',ok:d=>!!(d.materials||'').trim()},
-    tz:{t:'ТЗ / фото от клиента',ok:d=>!!(d.tz||'').trim()},
-    mockupPath:{t:'Путь к макету (где лежит файл)',ok:d=>!!(d.mockupPath||'').trim()},
+    tz:{t:'ТЗ / ответы клиента',ok:d=>!!(d.tz||'').trim()||(d.quiz||[]).length>0},
+    mockupPath:{t:'Макет (файл в «Файлах» или путь)',ok:d=>!!(d.mockupPath||'').trim()||(d.files||[]).some(f=>f&&f.cat==='mockup')},
     items:{t:'Позиции заказа',ok:d=>(d.items||[]).length>0},
     total:{t:'Сумма заказа',ok:d=>dealTotal(d)>0},
     deadline:{t:'Срок сдачи',ok:d=>!!(d.deadline||'').trim()},
@@ -373,7 +439,7 @@
     const d=JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); if(!s) return d;
     return Object.assign(d,s,{company:Object.assign(d.company,s.company||{}),funnels:Object.assign(d.funnels,s.funnels||{})});
   }
-  function normDeal(d){ if(OLD_STATUS[d.status]&&(d.funnel||'sales')==='sales') d.status=OLD_STATUS[d.status]; d.funnel=d.funnel||'sales'; d.docs=d.docs||{}; d.log=d.log||[]; return d; }
+  function normDeal(d){ if(OLD_STATUS[d.status]&&(d.funnel||'sales')==='sales') d.status=OLD_STATUS[d.status]; d.funnel=d.funnel||'sales'; d.docs=d.docs||{}; d.log=d.log||[]; d.files=normFiles(d.files); return d; }
   async function save(col,rec){
     if(DEMO){ toast('Демо: сохранение отключено'); return rec; }
     const r=await api('save',col,{data:rec});
@@ -432,7 +498,7 @@
     api('notify',null,{chatId:m.tg,text:'Рикс+С CRM: сделка «'+(d.client||'')+'» → '+st.t+(ME?' (перевёл(а) '+ME+')':'')+'\n'+location.origin+'/admin.html'}).catch(()=>{}); }
   // фоновое обновление не должно сбивать работу: не перерисовываем, если открыта карточка, идёт ввод или открыт редактор
   function softRender(){
-    const busy=$('#modal').classList.contains('on')||$('#drawer').classList.contains('on')||/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||'')||['catalog','settings','clients'].includes(VIEW);
+    const busy=$('#modal').classList.contains('on')||$('#modal2').classList.contains('on')||$('#drawer').classList.contains('on')||/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||'')||['catalog','settings','clients'].includes(VIEW);
     if(busy) updateCounters(); else { const k=$('.kanban'); const sx=k?k.scrollLeft:0, sy=window.scrollY; render(); const k2=$('.kanban'); if(k2)k2.scrollLeft=sx; window.scrollTo(0,sy); }
   }
   $('#bell').onclick=()=>{
@@ -547,7 +613,7 @@
       (d?'<div class="linkbox">💼 Сделка на '+money(dealTotal(d))+' · <a id="dGoDeal">открыть →</a></div>':'')+
       (cl?'<div class="linkbox">👥 Уже есть в базе клиентов'+(cl.points?' · баллов: '+esc(cl.points):'')+(cl.paid?' · покупок на '+money(cl.paid):'')+'</div>':'')+
       '<div class="fld"><div class="k">Телефон</div><div class="v"><a href="tel:'+tel+'">'+esc(l.phone)+'</a></div></div>'+
-      (l.detail?'<div class="fld"><div class="k">Что хочет / ответы квиза</div><div class="v">'+esc(l.detail)+'</div></div>':'')+
+      (()=>{ const q=quizOfLead(l); return quizHTML(q)+(q.extra?'<div class="fld"><div class="k">'+((q.quiz||[]).length?'Дополнительно':'Что хочет')+'</div><div class="v">'+esc(q.extra)+'</div></div>':''); })()+
       '<div class="fld"><div class="k">Источник</div><div class="v"><span class="badge" style="background:'+s.c+'">'+esc(s.t)+'</span> <span style="color:var(--muted);font-size:12px">'+esc(l.source||'')+(l.utm?' · '+esc(typeof l.utm==='object'?JSON.stringify(l.utm):l.utm):'')+'</span></div></div>'+
       '<div class="fld"><div class="k">Страница · когда</div><div class="v">'+esc(l.page||'—')+' · '+fmt(l.ts)+'</div></div>'+
       '<div class="fld"><div class="k">Стадия</div><div class="stages" id="dStages">'+LEAD_STAGES.map(st=>'<button data-k="'+st.k+'">'+st.t+'</button>').join('')+'</div></div>'+
@@ -567,12 +633,16 @@
   $('#dSave').onclick=async()=>{ if(!curLead)return; curLead.stage=draftStage; curLead.note=$('#dNote').value; try{await save('leads',curLead);toast('Сохранено');}catch(e){} closeDrawer(); render(); };
 
   /* ---------- модалка ---------- */
-  function showModal(title,html,o){ o=o||{}; const m=$('#modal'); $('#mTitle').textContent=title; $('#mInfo').textContent=''; $('#mBody').innerHTML=html; m.classList.toggle('sm',!!o.sm); m.dataset.dirty='0';
+  function showModal(title,html,o){ o=o||{}; const m=$('#modal'); $('#mTitle').textContent=title; $('#mInfo').textContent=''; $('#mBody').innerHTML=html; m.classList.toggle('sm',!!o.sm); m.classList.toggle('xl',!!o.xl); m.dataset.dirty='0';
     $('#mSave').textContent=o.saveText||'Сохранить'; $('#mSave').style.display=o.noSave?'none':''; $('#scrim').classList.add('on'); m.classList.add('on');
     $('#mBody').oninput=()=>{m.dataset.dirty='1';}; }
   function hideModal(){ $('#modal').classList.remove('on'); $('#modal').dataset.dirty='0'; if(!$('#drawer').classList.contains('on'))$('#scrim').classList.remove('on'); $('#mSave').onclick=null; }
   $('#mClose').onclick=()=>{ if($('#modal').dataset.dirty==='1'&&!confirm('Закрыть без сохранения?'))return; hideModal(); };
   $('#mCancel').onclick=$('#mClose').onclick;
+  // второе окно поверх карточки (ссылка, загрузка документа) — не закрывает сделку
+  function dialog(title,html,o){ o=o||{}; $('#m2Title').textContent=title; $('#m2Body').innerHTML=html; $('#m2Save').textContent=o.saveText||'Сохранить'; $('#m2Save').style.display=o.noSave?'none':''; $('#m2Save').onclick=null; $('#scrim2').classList.add('on'); $('#modal2').classList.add('on'); }
+  function closeDialog(){ $('#modal2').classList.remove('on'); $('#scrim2').classList.remove('on'); }
+  $('#m2Close').onclick=closeDialog; $('#m2Cancel').onclick=closeDialog; $('#scrim2').onclick=closeDialog;
   $('#scrim').onclick=()=>{ if($('#modal').classList.contains('on')) $('#mClose').onclick(); else closeDrawer(); };
 
   /* ---------- Лид: редактор ---------- */
@@ -596,80 +666,190 @@
   const SIGN_DOCS=[['measure','Замер выполнен (размеры, крепление)'],['facade','Фото фасада + адрес'],['photoBind','Макет + фотопривязка к фасаду'],['preApproval','Предсогласование УАиГ получено'],['minCult','Минкультуры (если исторический центр)'],['passport','Паспорт ИК распечатан (2–3 экз.)'],['statement','Заявление заполнено'],['ownerConsent','Согласие собственника'],['power','Доверенность на агентство'],['duty','Госпошлина 10 000 ₽ (рекл. конструкция, после предсогласования)'],['passportOk','Паспорт ИК получен']];
   const TRANS_DOCS=[['legal','Юр. заключение: не нарушает закон о рекламе'],['pttContract','Клиент заключил договор аренды с троллейбусным парком (6 мес.)']];
   const BASE_DOCS=[['contract','Договор подписан'],['invoice','Счёт выставлен'],['offer','Физлицо: договор-оферта принят'],['updSent','УПД отправлен (СБИС / живьём)']];
+  const DOC_NAME=Object.fromEntries(SIGN_DOCS.concat(TRANS_DOCS,BASE_DOCS));
+  const kindDocList=k=>k==='Наружная реклама'?SIGN_DOCS:k==='Реклама на транспорте'?TRANS_DOCS:[];
+  // в какую папку класть файл, прикреплённый к пункту документов
+  const DOC_CAT={contract:'contract',offer:'contract',invoice:'invoice',updSent:'upd',measure:'photo',facade:'photo',photoBind:'mockup'};
 
-  function editDeal(id, fromLead, funnelKey, targetStage){
-    const d=id?dealOf(id):null; const e=d?JSON.parse(JSON.stringify(d)):{funnel:funnelKey||'sales',status:'new',docs:{},log:[]};
-    if(fromLead&&!id){ e.client=fromLead.name; e.phone=fromLead.phone; e.source=srcOf(fromLead.source).t; e.leadId=fromLead.id; e.tz=fromLead.detail||''; e.kind=guessKind(fromLead.service+' '+fromLead.page); }
+  /* ---------- ФАЙЛЫ (Vercel Blob, закрытое хранилище) ---------- */
+  const FCATS=[['mockup','📐','Макет'],['client','📥','От клиента: ТЗ, логотип'],['photo','📷','Фото объекта / замер'],['contract','📑','Договор'],['invoice','💳','Счёт'],['upd','🧾','УПД / акт'],['approval','🏛','Согласование'],['done','✅','Фото готовой работы'],['other','📎','Прочее']];
+  const fcat=k=>FCATS.find(x=>x[0]===k)||FCATS[FCATS.length-1];
+  const fsize=n=>!n?'':n<1048576?Math.max(1,Math.round(n/1024))+' КБ':(n/1048576).toFixed(n<1e7?1:0)+' МБ';
+  const ficon=f=>f.link?'🔗':(/^image\//.test(f.type||'')||/\.(jpe?g|png|webp|gif|heic|bmp)$/i.test(f.name||''))?'🖼':(/pdf/i.test(f.type||'')||/\.pdf$/i.test(f.name||''))?'📕':/\.(cdr|ai|eps|psd|svg|tiff?)$/i.test(f.name||'')?'🎨':/\.(docx?|odt|rtf|txt)$/i.test(f.name||'')?'📘':/\.(xlsx?|csv|ods)$/i.test(f.name||'')?'📗':/\.(zip|rar|7z)$/i.test(f.name||'')?'🗜':fcat(f.cat)[1];
+  const normFiles=a=>(Array.isArray(a)?a:[]).map(x=>typeof x==='string'?{id:'f'+genId(),name:x.replace(/^https?:\/\//,'').slice(0,90),link:x,cat:'other',ts:''}:x).filter(x=>x&&(x.path||x.link));
+  let FILES_READY=null, BLOBLIB=null;
+  async function filesReady(){ if(DEMO) return false; if(FILES_READY===true) return true;
+    try{ const j=await (await fetch('/api/files',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pass:PASS,op:'status'})})).json(); FILES_READY=!!j.ready; }catch(e){ FILES_READY=false; } return FILES_READY; }
+  const safeName=n=>String(n||'file').replace(/[\\/:*?"<>|#%{}^~\[\]`]+/g,'_').replace(/\s+/g,' ').trim().slice(-120)||'file';
+  async function uploadOne(file,owner,meta,onProg){
+    BLOBLIB=BLOBLIB||await import('./assets/blob-client.js');
+    const path='riks/'+owner+'/'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)+'-'+safeName(file.name);
+    const o={access:'private',handleUploadUrl:'/api/files',clientPayload:JSON.stringify({pass:PASS}),multipart:file.size>40*1048576,onUploadProgress:ev=>onProg&&onProg(ev.percentage)};
+    if(file.type) o.contentType=file.type;
+    let r; try{ r=await BLOBLIB.uploadPresigned(path,file,o); }catch(e1){ try{ r=await BLOBLIB.upload(path,file,o); }catch(e2){ throw e1; } }
+    return Object.assign({id:'f'+genId(),name:file.name,size:file.size,type:file.type||'',path:(r&&r.pathname)||path,cat:'other',doc:'',who:ME||'—',ts:new Date().toISOString()},meta||{});
+  }
+  // загрузить список файлов с прогрессом в элемент box; вернуть загруженные
+  async function uploadMany(list,owner,meta,box){
+    list=[...(list||[])]; if(!list.length) return [];
+    if(DEMO){ toast('Демо: загрузка файлов отключена'); return []; }
+    if(!(await filesReady())){ dialog('Хранилище файлов не подключено','<div class="note red">Чтобы загружать файлы в CRM, нужно один раз подключить хранилище в Vercel: <b>Storage → Create → Blob → Private</b> → подключить к проекту riks-s. После этого обновите страницу.</div><p style="color:var(--muted);font-size:13px">Пока можно добавить <b>ссылку</b> (Яндекс Диск, путь на сервере) — кнопка «🔗 Ссылка».</p>',{noSave:true}); return []; }
+    const out=[];
+    for(const f of list){
+      const row=document.createElement('div'); row.className='file up'; row.innerHTML='<div class="fi">⏫</div><div style="flex:1;min-width:0"><div class="fn">'+esc(f.name)+'</div><div class="prog"><i></i></div></div><div class="fm">'+fsize(f.size)+'</div>';
+      if(box) box.prepend(row);
+      try{ out.push(await uploadOne(f,owner,meta,p=>{const i=row.querySelector('.prog i'); if(i)i.style.width=Math.round(p||0)+'%';})); row.remove(); }
+      catch(err){ row.querySelector('.fi').textContent='⚠'; row.querySelector('.prog').outerHTML='<div class="fm" style="color:var(--bad)">не загрузился: '+esc(String(err&&err.message||err).slice(0,120))+'</div>'; }
+    }
+    if(out.length) toast('Загружено файлов: '+out.length);
+    return out;
+  }
+  async function openFile(f){
+    if(f.link){ if(/^https?:\/\//i.test(f.link)) window.open(f.link,'_blank','noopener'); else { try{navigator.clipboard.writeText(f.link);}catch(e){} toast('Путь скопирован: '+f.link); } return; }
+    if(DEMO){ toast('Демо'); return; }
+    const w=window.open('about:blank','_blank');
+    try{ const j=await (await fetch('/api/files',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pass:PASS,op:'link',path:f.path})})).json();
+      if(j.ok&&j.url){ if(w) w.location.href=j.url; else location.href=j.url; } else { if(w)w.close(); toast(j.note==='files-not-configured'?'Хранилище файлов не подключено':'Не удалось открыть файл'); } }
+    catch(e){ if(w)w.close(); toast('Не удалось открыть файл'); }
+  }
+  async function deleteBlob(f){ if(!f||!f.path||DEMO) return; try{ await fetch('/api/files',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pass:PASS,op:'delete',path:f.path})}); }catch(e){} }
+  function pickFiles(cb,multiple=true){ const i=document.createElement('input'); i.type='file'; i.multiple=multiple; i.onchange=()=>cb(i.files); i.click(); }
+  function addLinkDialog(cb){
+    dialog('Добавить ссылку на файл','<div class="fld"><div class="k">Ссылка или путь</div><input class="inp" id="lk_url" placeholder="https://disk.yandex.ru/… или \\\\server\\Макеты\\…"></div><div class="fld"><div class="k">Название</div><input class="inp" id="lk_name" placeholder="напр. Макет вывески, финал"></div><div class="fld"><div class="k">Тип</div><select class="inp" id="lk_cat">'+FCATS.map(x=>'<option value="'+x[0]+'">'+x[1]+' '+x[2]+'</option>').join('')+'</select></div>',{saveText:'Добавить'});
+    $('#m2Save').onclick=()=>{ const u=$('#lk_url').value.trim(); if(!u){toast('Вставьте ссылку');return;} const f={id:'f'+genId(),name:$('#lk_name').value.trim()||u.replace(/^https?:\/\//,'').slice(0,90),link:u,cat:$('#lk_cat').value,who:ME||'—',ts:new Date().toISOString()}; closeDialog(); cb(f); };
+  }
+  function fileRow(f,o){ o=o||{}; const c=fcat(f.cat);
+    return '<div class="file" data-fid="'+esc(f.id)+'"><div class="fi">'+ficon(f)+'</div><div style="min-width:0;flex:1"><div class="fn">'+esc(f.name)+'</div><div class="fm">'+
+      (o.ctx?o.ctx(f)+' · ':'')+esc(c[2])+(f.doc&&DOC_NAME[f.doc]?' → '+esc(DOC_NAME[f.doc]):'')+(f.size?' · '+fsize(f.size):'')+(f.who?' · '+esc(f.who):'')+(f.ts?' · '+fmt(f.ts):'')+'</div></div>'+
+      '<div class="fa">'+(o.edit?'<select class="inp f-cat" title="Тип файла">'+FCATS.map(x=>'<option value="'+x[0]+'"'+(x[0]===f.cat?' selected':'')+'>'+x[1]+' '+x[2]+'</option>').join('')+'</select>':'')+
+      '<button class="btn-sec btn-sm f-open">'+(f.link?'Перейти':'Открыть')+'</button>'+(o.edit?'<button class="ic-btn del f-rm" title="Удалить файл">🗑</button>':'')+'</div></div>'; }
+  function bindDrop(el,cb){ if(!el) return;
+    el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('over');}); el.addEventListener('dragleave',()=>el.classList.remove('over'));
+    el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('over'); if(e.dataTransfer.files.length) cb(e.dataTransfer.files);}); }
+
+  /* ---------- ответы опросника (квиза) ---------- */
+  function parseQuiz(text){
+    const m=String(text||'').match(/^(📞 Просит перезвонить\. )?Квиз «([^»]+)»(?:: ([\s\S]*?))?(?: \(без ответов\))?(?: ⚠ ([\s\S]*?))?(?: \| ([\s\S]*))?$/);
+    if(!m) return null;
+    const quiz=(m[3]||'').split('; ').map(s=>{const i=s.indexOf(' — ');return i>0?{q:s.slice(0,i).trim(),a:s.slice(i+3).trim()}:null;}).filter(Boolean);
+    return {callback:!!m[1],title:m[2],quiz,warn:(m[4]||'').trim(),extra:(m[5]||'').trim()};
+  }
+  // из лида: структурированные ответы + флаги
+  function quizOfLead(l){ const p=parseQuiz(l.detail)||{};
+    const quiz=Array.isArray(l.quiz)&&l.quiz.length?l.quiz:(p.quiz||[]);
+    return {quiz,quizTitle:p.title||'',quizCallback:!!(l.callback||p.callback),quizContact:l.contact||'',quizWarn:p.warn||'',extra:p.title?(p.extra||''):(l.detail||'')}; }
+  function quizHTML(o){ if(!o||!((o.quiz||[]).length||o.quizCallback)) return '';
+    return '<div class="qa-box"><div class="qa-h">📝 Ответы клиента'+(o.quizTitle?' <span>опросник «'+esc(o.quizTitle)+'»</span>':'')+'</div>'+
+      ((o.quizCallback||o.quizContact||o.quizWarn)?'<div class="qa-flags">'+(o.quizCallback?'<span class="flag warn">📞 Просил перезвонить</span>':'')+(o.quizContact?'<span class="flag">💬 Связаться: '+esc(o.quizContact)+'</span>':'')+(o.quizWarn?'<span class="flag warn">⚠ '+esc(o.quizWarn)+'</span>':'')+'</div>':'')+
+      ((o.quiz||[]).length?'<div class="qa">'+o.quiz.map(x=>'<div class="qi"><div class="qq">'+esc(x.q)+'</div><div class="qv">'+esc(x.a)+'</div></div>').join('')+'</div>':'')+'</div>'; }
+
+  /* ---------- клиент ↔ заказы ---------- */
+  const dealsOfClient=c=>{ const n=normPhone(c.phone); return DATA.deals.filter(d=>d.funnel!=='supply'&&(d.clientId===c.id||(n&&!d.clientId&&normPhone(d.phone)===n))); };
+  async function linkClient(rec){
+    if(rec.funnel==='supply'||DEMO) return;
+    let c=rec.clientId?DATA.clients.find(x=>x.id===rec.clientId):null;
+    if(!c) c=clientByPhone(rec.phone)||(rec.inn?DATA.clients.find(x=>x.inn&&x.inn===rec.inn):null);
+    if(!c&&!normPhone(rec.phone)&&!rec.client) return;
+    const isNew=!c; const cc=Object.assign({id:'c-'+(normPhone(rec.phone)||genId()),src:'crm',reg:new Date().toISOString().slice(0,10)},c||{});
+    let changed=isNew; [['name','client'],['phone','phone'],['company','company'],['inn','inn'],['ctype','ctype']].forEach(([a,b])=>{ if(!cc[a]&&rec[b]){cc[a]=rec[b];changed=true;} });
+    rec.clientId=cc.id;
+    if(changed){ try{ const it=await save('clients',cc); const i=DATA.clients.findIndex(x=>x.id===it.id); if(i>=0)DATA.clients[i]=it; else DATA.clients.unshift(it); }catch(e){} }
+  }
+
+  function editDeal(id, fromLead, funnelKey, targetStage, openTab){
+    const d=id?dealOf(id):null; const e=d?JSON.parse(JSON.stringify(d)):{id:genId(),funnel:funnelKey||'sales',status:'new',docs:{},log:[],_new:true};
+    if(fromLead&&!id){ const q=quizOfLead(fromLead);
+      Object.assign(e,{client:fromLead.name,phone:fromLead.phone,source:srcOf(fromLead.source).t,leadId:fromLead.id,kind:guessKind(fromLead.service+' '+fromLead.page),
+        quiz:q.quiz,quizTitle:q.quizTitle,quizCallback:q.quizCallback,quizContact:q.quizContact,quizWarn:q.quizWarn,tz:q.extra});
+      ['clientId','company','inn','ctype'].forEach(k=>{ if(fromLead[k]) e[k]=fromLead[k]; }); if(!fromLead.id) delete e.leadId; }
+    // старые сделки: ответы квиза лежали одной строкой в ТЗ — раскладываем
+    if(!(e.quiz||[]).length){ const p=parseQuiz(e.tz); if(p){ Object.assign(e,{quiz:p.quiz,quizTitle:p.title,quizCallback:p.callback,quizWarn:p.warn,tz:p.extra}); } }
     if(targetStage) e.status=targetStage;
-    const st=stagesOf(e.funnel);
+    const isNew=!d; delete e._new;
+    const st=stagesOf(e.funnel), sup=e.funnel==='supply';
+    let FILES=normFiles(e.files); const DOCS=Object.assign({},e.docs||{});
     const items=(e.items||[]).map(x=>Object.assign({},x)); if(!items.length) items.push({name:'',spec:'',qty:1,price:0});
     const groups={}; DATA.catalog.forEach(c=>{(groups[c.category||'Прочее']=groups[c.category||'Прочее']||[]).push(c);});
-    const catOpts='<option value="">— из прайса —</option>'+Object.keys(groups).map(g=>'<optgroup label="'+esc(g)+'">'+groups[g].map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+' — '+money(c.price)+'</option>').join('')+'</optgroup>').join('');
+    const catOpts='<option value="">— выбрать из прайса —</option>'+Object.keys(groups).map(g=>'<optgroup label="'+esc(g)+'">'+groups[g].map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+' — '+money(c.price)+'</option>').join('')+'</optgroup>').join('');
     const pills=(fid,opts,val)=>'<div class="pillsel" data-f="'+fid+'" id="p_'+fid+'">'+opts.map(o=>'<button type="button" data-v="'+esc(o)+'" class="'+(o===val?'on':'')+'">'+esc(o)+'</button>').join('')+'</div>';
-    const chk=(k,t)=>'<label class="chk" data-f="'+k+'"><input type="checkbox" data-doc="'+k+'"'+((e.docs||{})[k]?' checked':'')+'><span>'+esc(t)+'</span></label>';
-    const sup=e.funnel==='supply';
-    showModal((id?'Сделка':'Новая сделка')+(sup?' · поставщик':''),
-      '<div class="sec"><h4>Клиент'+(sup?' / поставщик':'')+'</h4><div class="grid3">'+
-        '<div class="fld"><div class="k">'+(sup?'Поставщик':'Клиент')+'</div><input class="inp" id="o_client" value="'+esc(e.client||'')+'"></div>'+
-        '<div class="fld"><div class="k">Телефон</div><input class="inp" id="o_phone" value="'+esc(e.phone||'')+'"></div>'+
-        '<div class="fld"><div class="k">Тип</div><select class="inp" id="o_ctype">'+['','Юрлицо / ИП','Физлицо'].map(o=>'<option'+(o===(e.ctype||'')?' selected':'')+'>'+o+'</option>').join('')+'</select></div></div>'+
-        '<div class="grid2"><div class="fld"><div class="k">Организация (для документов)</div><input class="inp" id="o_company" value="'+esc(e.company||'')+'" placeholder="ООО «…»"></div>'+
-        '<div class="fld"><div class="k">ИНН / реквизиты</div><input class="inp" id="o_inn" value="'+esc(e.inn||'')+'"></div></div></div>'+
+    const inp=(id,f,val,ph,extra)=>'<input class="inp" id="'+id+'"'+(f?' data-f="'+f+'"':'')+' value="'+esc(val||'')+'"'+(ph?' placeholder="'+esc(ph)+'"':'')+(extra||'')+'>';
+    const fld=(k,html,req)=>'<div class="fld"><div class="k">'+k+(req?' <span class="rq">*</span>':'')+'</div>'+html+'</div>';
+    const owner='d-'+e.id;
+    const cl=!sup?(e.clientId&&DATA.clients.find(x=>x.id===e.clientId))||clientByPhone(e.phone):null;
 
-      '<div class="sec"><h4>Заказ <span class="hint" id="o_gateHint"></span></h4><div class="grid3">'+
-        '<div class="fld"><div class="k">Стадия</div><select class="inp" id="o_status">'+st.map(s=>'<option value="'+s.k+'"'+(s.k===e.status?' selected':'')+'>'+esc(s.t)+(s.owner?' · '+esc(s.owner):'')+'</option>').join('')+'</select></div>'+
-        '<div class="fld"><div class="k">Направление</div><select class="inp" id="o_kind" data-f="kind"><option value=""></option>'+KINDS.map(o=>'<option'+(o===e.kind?' selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
-        '<div class="fld"><div class="k">Источник</div><select class="inp" id="o_source" data-f="source"><option value=""></option>'+SRC_OPTS.concat(e.source&&!SRC_OPTS.includes(e.source)?[e.source]:[]).map(o=>'<option'+(o===e.source?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select></div></div>'+
-        '<div class="grid2"><div class="fld"><div class="k">Срок сдачи</div><input class="inp" id="o_deadline" data-f="deadline" value="'+esc(e.deadline||'')+'" placeholder="25.11"></div>'+
-        '<div class="fld"><div class="k">Ответственный за стадию</div><div class="v" id="o_owner" style="padding-top:8px;font-weight:700"></div></div></div></div>'+
-
-      (sup?'':'<div class="sec"><h4>ТЗ — что собрать до дизайна <span class="hint">Ксюша не начинает без этого</span></h4><div class="grid2">'+
-        '<div class="fld"><div class="k">Размеры</div><input class="inp" id="o_sizes" data-f="sizes" value="'+esc(e.sizes||'')+'" placeholder="напр. 3000×600 мм, высота 3 м"></div>'+
-        '<div class="fld"><div class="k">Материалы</div><input class="inp" id="o_materials" data-f="materials" value="'+esc(e.materials||'')+'" placeholder="акрил, композит, плёнка…"></div></div>'+
-        '<div class="fld"><div class="k">ТЗ / пожелания / фото (ссылки)</div><textarea class="inp" id="o_tz" data-f="tz">'+esc(e.tz||'')+'</textarea></div>'+
-        '<div class="fld"><div class="k">Путь к макету (где лежит файл)</div><input class="inp" id="o_mockupPath" data-f="mockupPath" value="'+esc(e.mockupPath||'')+'" placeholder="\\\\server\\Макеты\\2026\\Клиент или ссылка на диск"></div>'+
-        '<div class="fld"><div class="k">Файлы (ссылки, по одной в строке)</div><textarea class="inp" id="o_files" placeholder="https://disk… или \\\\server\\…">'+esc((e.files||[]).join('\n'))+'</textarea></div></div>')+
-
-      '<div class="sec" data-f="items"><h4>Позиции</h4><div class="items" id="o_items"></div><button class="btn-sec btn-sm" id="o_add" style="margin-bottom:10px">+ позиция</button></div>'+
-
-      '<div class="sec"><h4>Оплата и документы</h4><div class="grid2">'+
-        '<div class="fld"><div class="k">Оплата</div>'+pills('payType',['Нал','Безнал'],e.payType)+'</div>'+
-        '<div class="fld"><div class="k">Документы</div>'+pills('docFlow',['СБИС','Живьём'],e.docFlow)+'</div></div>'+
-        '<div class="grid3"><div class="fld"><div class="k">Предоплата, ₽</div><input class="inp" id="o_prepaid" data-f="prepaid" type="number" min="0" value="'+(Number(e.prepaid)||0)+'"></div>'+
-        '<div class="fld"><div class="k">Доплачено, ₽</div><input class="inp" id="o_paidMore" type="number" min="0" value="'+(Number(e.paidMore)||0)+'"></div>'+
-        '<div class="fld"><div class="k">УПД подписан (дата)</div><input class="inp" id="o_updDate" data-f="updDate" type="date" value="'+esc(e.updDate||'')+'"></div></div>'+
-        '<div class="grid2"><label class="chk" data-f="paidFull"><input type="checkbox" id="o_paidFull"'+(e.paidFull?' checked':'')+'><span><b>Оплачено полностью</b></span></label><div class="totals" id="o_totals"></div></div>'+
-        '<div class="checks" style="margin-top:8px">'+BASE_DOCS.map(x=>chk(x[0],x[1])).join('')+'</div>'+
-        '<div id="o_kindDocs"></div>'+
-        (sup?'':'<div style="display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px"><button class="btn-sec btn-sm" data-print="invoice">🖨 Счёт</button><button class="btn-sec btn-sm" data-print="contract">🖨 Договор</button><button class="btn-sec btn-sm" data-print="act">🖨 Акт</button></div>')+'</div>'+
-
-      '<div class="sec"><h4>Заметка</h4><textarea class="inp" id="o_note" style="margin-bottom:10px">'+esc(e.note||'')+'</textarea>'+
-        ((e.log||[]).length?'<div class="k sm-l">История</div><div class="log">'+e.log.map(x=>fmt(x.ts)+' · '+esc(x.who)+' · '+esc(x.t)).join('<br>')+'</div>':'')+'</div>'+
-      (id?'<button class="btn-sec btn-sm" id="o_del" style="color:var(--bad)">Удалить сделку</button>':''));
+    const TABS=[['main','Заказ'],['files','Файлы'],['docs','Документы'],['log','История']];
+    showModal((isNew?'Новая сделка':'Сделка')+(sup?' · поставщик':''),
+      '<div class="dl-head"><div class="dl-sum" id="o_sum"></div><div class="dl-tabs">'+TABS.map(([k,t])=>'<button type="button" data-tab="'+k+'">'+t+'<span class="n" id="tn_'+k+'"></span><span class="dot" id="td_'+k+'" hidden></span></button>').join('')+'</div></div>'+
+      '<div class="dl-body">'+
+      // ===== ЗАКАЗ =====
+      '<div class="dl-pane" data-pane="main"><div class="dl-grid"><div>'+
+        '<div class="sec"><h4>👤 '+(sup?'Поставщик':'Клиент')+(cl?' <a class="hint lnk" id="o_toClient">в базе клиентов · все заказы и файлы →</a>':'')+'</h4><div class="grid3">'+
+          fld(sup?'Поставщик':'Имя / название',inp('o_client','',e.client))+fld('Телефон',inp('o_phone','',e.phone,'+7 …'))+
+          fld('Тип','<select class="inp" id="o_ctype">'+['','Юрлицо / ИП','Физлицо'].map(o=>'<option'+(o===(e.ctype||'')?' selected':'')+'>'+o+'</option>').join('')+'</select>')+'</div>'+
+          '<div class="grid2">'+fld('Организация (для документов)',inp('o_company','',e.company,'ООО «…»'))+fld('ИНН',inp('o_inn','',e.inn))+'</div></div>'+
+        '<div class="sec"><h4>📋 Заказ</h4><div class="grid3">'+
+          fld('Стадия','<select class="inp" id="o_status">'+st.map(s=>'<option value="'+s.k+'"'+(s.k===e.status?' selected':'')+'>'+esc(s.t)+(s.owner?' · '+esc(s.owner):'')+'</option>').join('')+'</select>')+
+          fld('Направление','<select class="inp" id="o_kind" data-f="kind"><option value=""></option>'+KINDS.map(o=>'<option'+(o===e.kind?' selected':'')+'>'+o+'</option>').join('')+'</select>')+
+          fld('Источник','<select class="inp" id="o_source" data-f="source"><option value=""></option>'+SRC_OPTS.concat(e.source&&!SRC_OPTS.includes(e.source)?[e.source]:[]).map(o=>'<option'+(o===e.source?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select>')+'</div>'+
+          '<div class="grid2">'+fld('Срок сдачи',inp('o_deadline','deadline',e.deadline,'напр. 25.11'))+fld('Адрес объекта (монтаж, вывеска)',inp('o_addr','',e.addr,'ул. Ленина, 12'))+'</div></div>'+
+        (sup?'':'<div class="sec"><h4>✏️ ТЗ — что собрать до дизайна <span class="hint">Ксюша не начинает без этого</span></h4>'+quizHTML(e)+
+          '<div class="grid2">'+fld('Размеры',inp('o_sizes','sizes',e.sizes,'напр. 3000×600 мм, высота 3 м'))+fld('Материалы',inp('o_materials','materials',e.materials,'акрил, композит, плёнка…'))+'</div>'+
+          fld('Пожелания, детали'+((e.quiz||[]).length?' (дополнительно к ответам)':''),'<textarea class="inp" id="o_tz" data-f="tz" placeholder="Что важно клиенту, цвета, сроки, пожелания…">'+esc(e.tz||'')+'</textarea>')+
+          fld('Путь к макету, если файл не в CRM',inp('o_mockupPath','mockupPath',e.mockupPath,'\\\\server\\Макеты\\2026\\Клиент — или загрузите макет во вкладку «Файлы»'))+'</div>')+
+        '<div class="sec" data-f="items"><h4>🧾 Позиции</h4><div class="items" id="o_items"></div><button class="btn-sec btn-sm" id="o_add" style="margin-bottom:10px">+ позиция</button></div>'+
+      '</div><div class="dl-side">'+
+        '<div class="sec"><h4>💰 Оплата</h4><div class="totals" id="o_totals" style="text-align:left;margin-bottom:10px"></div>'+
+          fld('Оплата',pills('payType',['Нал','Безнал'],e.payType))+fld('Документы',pills('docFlow',['СБИС','Живьём'],e.docFlow))+
+          '<div class="grid2">'+fld('Предоплата, ₽','<input class="inp" id="o_prepaid" data-f="prepaid" type="number" min="0" value="'+(Number(e.prepaid)||0)+'">')+fld('Доплачено, ₽','<input class="inp" id="o_paidMore" type="number" min="0" value="'+(Number(e.paidMore)||0)+'">')+'</div>'+
+          '<label class="chk" data-f="paidFull" style="margin-bottom:10px"><input type="checkbox" id="o_paidFull"'+(e.paidFull?' checked':'')+'><span><b>Оплачено полностью</b></span></label></div>'+
+        '<div class="sec"><h4>📎 Файлы заказа <a class="hint lnk" data-go-tab="files">все →</a></h4><div class="drop sm" id="o_dropMini">Перетащите файлы сюда или <b>выберите</b></div><div class="files" id="o_filesMini" style="margin:8px 0 10px"></div></div>'+
+        '<div class="sec"><h4>🗒 Заметка</h4><textarea class="inp" id="o_note" style="margin-bottom:10px" placeholder="Что обсудили, о чём договорились…">'+esc(e.note||'')+'</textarea></div>'+
+      '</div></div></div>'+
+      // ===== ФАЙЛЫ =====
+      '<div class="dl-pane" data-pane="files"><div class="drop" id="o_drop"><div style="font-size:26px">📂</div>Перетащите сюда макеты, договоры, сканы, фото — или <b>выберите файлы</b><div style="font-size:12px;margin-top:4px">до 500 МБ на файл · видны только в CRM</div></div>'+
+        '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px"><span class="k sm-l">Загружать как</span><select class="inp" id="o_upCat" style="width:auto">'+FCATS.map(x=>'<option value="'+x[0]+'">'+x[1]+' '+x[2]+'</option>').join('')+'</select><div class="spacer"></div><button class="btn-sec btn-sm" id="o_addLink">🔗 Ссылка</button></div>'+
+        '<div class="chips" id="o_fchips"></div><div class="files" id="o_files"></div></div>'+
+      // ===== ДОКУМЕНТЫ =====
+      '<div class="dl-pane" data-pane="docs"><div class="dl-grid"><div>'+
+        '<div class="sec"><h4>📑 Основные документы</h4><div id="o_baseDocs"></div></div>'+
+        '<div class="sec" id="o_kindSec"><h4 id="o_kindH"></h4><div id="o_kindDocs"></div></div>'+
+      '</div><div class="dl-side">'+
+        '<div class="sec"><h4>🧾 УПД</h4><div class="grid2">'+fld('Номер УПД',inp('o_updNo','',e.updNo,'№'))+fld('Подписан (дата)','<input class="inp" id="o_updDate" data-f="updDate" type="date" value="'+esc(e.updDate||'')+'">')+'</div><div class="hint" id="o_updDue" style="margin:-4px 0 10px;font-size:12px"></div></div>'+
+        '<div class="sec" id="o_passSec"><h4>🏛 Паспорт ИК</h4><div class="grid2">'+fld('Выдан (дата)','<input class="inp" id="o_passDate" type="date" value="'+esc(e.passDate||'')+'">')+fld('Действует до','<input class="inp" id="o_passUntil" type="date" value="'+esc(e.passUntil||'')+'">')+'</div><div class="hint" style="margin:-4px 0 10px;font-size:12px">Срок — 5 лет. За 2 месяца до конца CRM напомнит в «Документах»: повод позвонить клиенту.</div></div>'+
+        (sup?'':'<div class="sec"><h4>🖨 Распечатать</h4><div class="printbar">'+[['invoice','Счёт'],['contract','Договор'],['act','Акт'],['tz','Бланк ТЗ'],['statement','Заявление (вывеска)'],['consent','Согласие собственника'],['power','Доверенность']].map(([k,t])=>'<button class="btn-sec btn-sm" data-print="'+k+'">'+t+'</button>').join('')+'</div><div class="hint" style="margin:8px 0 10px;font-size:12px">Заполняется из сделки и реквизитов. Заявление, согласие и доверенность — шаблоны: сверяйте с формой УАиГ.</div></div>')+
+      '</div></div></div>'+
+      // ===== ИСТОРИЯ =====
+      '<div class="dl-pane" data-pane="log"><div class="sec"><h4>🕓 История</h4>'+((e.log||[]).length?'<div class="log" style="max-height:none">'+e.log.map(x=>'<div>'+fmt(x.ts)+' · <b>'+esc(x.who)+'</b> · '+esc(x.t)+'</div>').join('')+'</div>':'<div class="empty" style="padding:16px">Пока пусто</div>')+'</div>'+
+        (e.leadId?'<div class="linkbox">🔗 Сделка создана из лида · <a id="o_toLead">открыть лид →</a></div>':'')+
+        (isNew?'':'<button class="btn-sec btn-sm" id="o_del" style="color:var(--bad)">Удалить сделку</button>')+'</div>'+
+      '</div>',{xl:true});
     if(e.leadId) $('#mInfo').textContent='🔗 из лида';
 
-    // пилюли
-    $$('.pillsel button').forEach(b=>b.onclick=()=>{ $$('button',b.parentNode).forEach(x=>x.classList.remove('on')); b.classList.add('on'); $('#modal').dataset.dirty='1'; liveGate(); });
-    const kindDocs=()=>{ const k=$('#o_kind').value; const list=k==='Наружная реклама'?SIGN_DOCS:k==='Реклама на транспорте'?TRANS_DOCS:[];
-      $('#o_kindDocs').innerHTML=list.length?'<div class="k sm-l" style="margin:6px 0">'+(k==='Наружная реклама'?'Согласование вывески':'Реклама на транспорте')+'</div><div class="checks">'+list.map(x=>chk(x[0],x[1])).join('')+'</div>':'';
-      $$('#o_kindDocs input').forEach(i=>i.onchange=liveGate); };
-    kindDocs(); $('#o_kind').onchange=()=>{kindDocs();liveGate();};
+    // ---- вкладки ----
+    let TAB=openTab||'main';
+    const showTab=k=>{ TAB=k; $$('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===k)); $$('.dl-pane').forEach(p=>p.classList.toggle('on',p.dataset.pane===k)); $('.dl-body').scrollTop=0; };
+    $$('[data-tab]').forEach(b=>b.onclick=()=>showTab(b.dataset.tab)); $$('[data-go-tab]').forEach(a=>a.onclick=()=>showTab(a.dataset.goTab));
+    showTab(TAB);
+    const dirty=()=>{$('#modal').dataset.dirty='1';};
 
-    // позиции
+    // ---- пилюли ----
+    $$('.pillsel button').forEach(b=>b.onclick=()=>{ $$('button',b.parentNode).forEach(x=>x.classList.remove('on')); b.classList.add('on'); dirty(); liveGate(); });
+
+    // ---- позиции ----
     const wrap=$('#o_items');
     const itHTML=it=>'<div class="it"><select class="inp o-cat">'+catOpts+'</select><div class="r2">'+
         '<div><div class="sm-l">наименование</div><input class="inp o-name" value="'+esc(it.name||'')+'"></div>'+
         '<div><div class="sm-l">кол-во</div><input class="inp o-qty" type="number" min="0" step="0.1" value="'+(it.qty||1)+'"></div>'+
         '<div><div class="sm-l">цена</div><input class="inp o-price" type="number" min="0" value="'+(Number(it.price)||0)+'"></div>'+
         '<div><div class="sm-l">сумма</div><div class="it-sum o-sum">0 ₽</div></div>'+
-        '<div><button class="ic-btn del o-rm" type="button">🗑</button></div></div>'+
+        '<div><button class="ic-btn del o-rm" type="button" title="Убрать позицию">🗑</button></div></div>'+
       '<div style="margin-top:6px"><input class="inp o-spec" value="'+esc(it.spec||'')+'" placeholder="характеристики: тираж, размер, материал, макет…"></div>'+
       '<input type="hidden" class="o-catg" value="'+esc(it.cat||'')+'"></div>';
     function recalc(){ let t=0; $$('.it',wrap).forEach(it=>{const q=Number(it.querySelector('.o-qty').value)||0,p=Number(it.querySelector('.o-price').value)||0;it.querySelector('.o-sum').textContent=money(q*p);t+=q*p;});
       const pre=(Number($('#o_prepaid').value)||0)+(Number($('#o_paidMore').value)||0);
-      $('#o_totals').innerHTML='Итого: <span class="big">'+money(t)+'</span>'+(pre>0?'<br>Оплачено: '+money(pre)+(t-pre>0?' · <span class="rem">остаток '+money(t-pre)+'</span>':''):''); return t; }
+      $('#o_totals').innerHTML='Итого<br><span class="big">'+money(t)+'</span>'+(pre>0?'<br>Оплачено: <b>'+money(pre)+'</b>'+(t-pre>0?' · <span class="rem">остаток '+money(t-pre)+'</span>':' · <span style="color:var(--ok);font-weight:700">всё оплачено</span>'):''); return t; }
     function wireIt(it){
-      it.querySelector('.o-cat').onchange=ev=>{const c=DATA.catalog.find(x=>x.id===ev.target.value);if(c){it.querySelector('.o-name').value=c.name;it.querySelector('.o-price').value=c.price;it.querySelector('.o-catg').value=c.category||'';if(!$('#o_kind').value&&KINDS.includes(c.category)){$('#o_kind').value=c.category;kindDocs();}recalc();liveGate();}};
+      it.querySelector('.o-cat').onchange=ev=>{const c=DATA.catalog.find(x=>x.id===ev.target.value);if(c){it.querySelector('.o-name').value=c.name;it.querySelector('.o-price').value=c.price;it.querySelector('.o-catg').value=c.category||'';if(!$('#o_kind').value&&KINDS.includes(c.category)){$('#o_kind').value=c.category;drawDocs();}recalc();liveGate();}};
       $$('.o-qty,.o-price',it).forEach(i=>i.oninput=()=>{recalc();liveGate();});
       it.querySelector('.o-name').oninput=liveGate;
       it.querySelector('.o-rm').onclick=()=>{it.remove();recalc();liveGate();};
@@ -678,41 +858,99 @@
     $('#o_add').onclick=()=>{wrap.insertAdjacentHTML('beforeend',itHTML({qty:1,price:0}));wireIt(wrap.lastElementChild);recalc();};
     ['#o_prepaid','#o_paidMore'].forEach(s=>$(s).oninput=()=>{recalc();liveGate();});
 
-    // сборка записи из формы
+    // ---- файлы ----
+    let FCHIP='all';
+    // уже сохранённую сделку дописываем сразу — файл не потеряется, даже если закрыть окно без «Сохранить»
+    async function persistFiles(){ const cur=dealOf(e.id); if(!cur||DEMO) { dirty(); return; }
+      try{ const it=normDeal(await save('deals',Object.assign({},cur,{files:FILES,docs:Object.assign({},cur.docs||{},DOCS)}))); Object.assign(cur,it); }catch(err){} }
+    async function addFiles(list,meta,box){ const got=await uploadMany(list,owner,meta,box); if(!got.length) return got;
+      FILES=got.concat(FILES); got.forEach(f=>{ if(f.doc&&!DOCS[f.doc]) DOCS[f.doc]={at:f.ts,by:ME||'—'}; }); drawFiles(); drawDocs(); await persistFiles(); liveGate(); return got; }
+    function bindFileRows(box){ $$('.file[data-fid]',box).forEach(r=>{ const f=FILES.find(x=>x.id===r.dataset.fid); if(!f) return;
+      r.querySelector('.f-open').onclick=()=>openFile(f);
+      const c=r.querySelector('.f-cat'); if(c) c.onchange=async()=>{ f.cat=c.value; drawFiles(); await persistFiles(); liveGate(); };
+      const rm=r.querySelector('.f-rm'); if(rm) rm.onclick=async()=>{ if(!confirm('Удалить файл «'+f.name+'»? Восстановить будет нельзя.'))return; FILES=FILES.filter(x=>x!==f); drawFiles(); drawDocs(); await persistFiles(); deleteBlob(f); liveGate(); }; }); }
+    function drawFiles(){
+      const cnt={}; FILES.forEach(f=>cnt[f.cat||'other']=(cnt[f.cat||'other']||0)+1);
+      $('#o_fchips').innerHTML=FILES.length?'<button data-fc="all" class="'+(FCHIP==='all'?'on':'')+'">Все · '+FILES.length+'</button>'+FCATS.filter(x=>cnt[x[0]]).map(x=>'<button data-fc="'+x[0]+'" class="'+(FCHIP===x[0]?'on':'')+'">'+x[1]+' '+x[2]+' · '+cnt[x[0]]+'</button>').join(''):'';
+      $$('#o_fchips [data-fc]').forEach(b=>b.onclick=()=>{FCHIP=b.dataset.fc;drawFiles();});
+      const list=FILES.filter(f=>FCHIP==='all'||(f.cat||'other')===FCHIP);
+      $('#o_files').innerHTML=list.length?list.map(f=>fileRow(f,{edit:true})).join(''):'<div class="empty" style="padding:22px">Файлов пока нет</div>';
+      $('#o_filesMini').innerHTML=FILES.slice(0,4).map(f=>fileRow(f)).join('')+(FILES.length>4?'<a class="lnk" data-go-tab="files" style="font-size:12px">ещё '+(FILES.length-4)+' →</a>':'');
+      $$('#o_filesMini [data-go-tab]').forEach(a=>a.onclick=()=>showTab('files'));
+      bindFileRows($('#o_files')); bindFileRows($('#o_filesMini'));
+      $('#tn_files').textContent=FILES.length||'';
+    }
+    $('#o_drop').onclick=()=>pickFiles(fl=>addFiles(fl,{cat:$('#o_upCat').value},$('#o_files')));
+    bindDrop($('#o_drop'),fl=>addFiles(fl,{cat:$('#o_upCat').value},$('#o_files')));
+    $('#o_dropMini').onclick=()=>pickFiles(fl=>addFiles(fl,{cat:'other'},$('#o_filesMini')));
+    bindDrop($('#o_dropMini'),fl=>addFiles(fl,{cat:'other'},$('#o_filesMini')));
+    $('#o_addLink').onclick=()=>addLinkDialog(async f=>{ FILES.unshift(f); drawFiles(); await persistFiles(); liveGate(); });
+
+    // ---- документы: галочки с «кто и когда» + файл к пункту ----
+    function dchk(k,t){ const v=DOCS[k], on=!!v, fl=FILES.filter(f=>f.doc===k);
+      const meta=v&&typeof v==='object'?esc(v.by||'')+(v.at?' · '+fdate(v.at):''):'отмечено';
+      return '<div class="dchk'+(on?' done':'')+'" data-f="'+k+'"><input type="checkbox" data-doc="'+k+'"'+(on?' checked':'')+'><div class="dt">'+esc(t)+
+        '<div class="dm">'+(on?'✓ '+meta:'не сделано')+(fl.length?' · '+fl.map(f=>'<a data-open="'+esc(f.id)+'">'+ficon(f)+' '+esc(f.name)+'</a>').join(', '):'')+'</div></div>'+
+        '<button class="btn-sec btn-sm" type="button" data-att="'+k+'" title="Прикрепить файл к этому пункту">📎</button></div>'; }
+    function drawDocs(){
+      const k=$('#o_kind').value, list=kindDocList(k);
+      $('#o_baseDocs').innerHTML=BASE_DOCS.map(x=>dchk(x[0],x[1])).join('');
+      $('#o_kindSec').style.display=list.length?'':'none';
+      $('#o_kindH').innerHTML=k==='Наружная реклама'?'🪧 Согласование вывески <span class="hint">по порядку, как говорила Катя</span>':'🚎 Реклама на транспорте';
+      $('#o_kindDocs').innerHTML=list.map(x=>dchk(x[0],x[1])).join('');
+      $('#o_passSec').style.display=k==='Наружная реклама'?'':'none';
+      $$('#modal [data-doc]').forEach(i=>i.onchange=()=>{ const key=i.dataset.doc; if(i.checked) DOCS[key]={at:new Date().toISOString(),by:ME||'—'}; else delete DOCS[key]; dirty(); drawDocs(); liveGate(); });
+      $$('#modal [data-att]').forEach(b=>b.onclick=()=>{ const key=b.dataset.att; pickFiles(fl=>addFiles(fl,{cat:DOC_CAT[key]||'approval',doc:key},$('#o_files'))); });
+      $$('#modal .dchk [data-open]').forEach(a=>a.onclick=()=>{ const f=FILES.find(x=>x.id===a.dataset.open); if(f) openFile(f); });
+      const all=BASE_DOCS.concat(list); const done=all.filter(x=>DOCS[x[0]]).length; $('#tn_docs').textContent=done+'/'+all.length;
+    }
+    $('#o_kind').onchange=()=>{drawDocs();liveGate();};
+    $('#o_passDate').onchange=()=>{ const v=$('#o_passDate').value; if(v&&!$('#o_passUntil').value){ const x=new Date(v); x.setFullYear(x.getFullYear()+5); $('#o_passUntil').value=x.toISOString().slice(0,10); } };
+    const updDue=()=>{ const v=$('#o_updDate').value; if(!v){$('#o_updDue').textContent='';return;} const x=new Date(v); x.setDate(x.getDate()+30); $('#o_updDue').innerHTML='Юрлицо оплачивает до <b>'+x.toLocaleDateString('ru-RU')+'</b> (30 дней)'; };
+    $('#o_updDate').addEventListener('change',updDue); updDue();
+
+    // ---- сборка записи ----
     const v=s=>{const el=$(s);return el?el.value.trim():'';};
     function collect(){
       const rows=$$('.it',wrap).map(it=>({name:it.querySelector('.o-name').value.trim(),spec:it.querySelector('.o-spec').value.trim(),qty:Number(it.querySelector('.o-qty').value)||0,price:Number(it.querySelector('.o-price').value)||0,cat:it.querySelector('.o-catg').value})).filter(r=>r.name);
-      const docs={}; $$('[data-doc]').forEach(i=>{ if(i.checked) docs[i.dataset.doc]=true; });
       const pv=f=>{const b=$('#p_'+f+' button.on');return b?b.dataset.v:'';};
-      return Object.assign({},e,{id:e.id||genId(),client:v('#o_client'),phone:v('#o_phone'),ctype:v('#o_ctype'),company:v('#o_company'),inn:v('#o_inn'),
-        status:v('#o_status'),kind:v('#o_kind'),source:v('#o_source'),deadline:v('#o_deadline'),
-        sizes:v('#o_sizes'),materials:v('#o_materials'),tz:v('#o_tz'),mockupPath:v('#o_mockupPath'),files:v('#o_files').split('\n').map(x=>x.trim()).filter(Boolean),
+      return Object.assign({},e,{id:e.id,client:v('#o_client'),phone:v('#o_phone'),ctype:v('#o_ctype'),company:v('#o_company'),inn:v('#o_inn'),
+        status:v('#o_status'),kind:v('#o_kind'),source:v('#o_source'),deadline:v('#o_deadline'),addr:v('#o_addr'),
+        sizes:v('#o_sizes'),materials:v('#o_materials'),tz:v('#o_tz'),mockupPath:v('#o_mockupPath'),files:FILES,
         items:rows,total:rows.reduce((a,r)=>a+r.qty*r.price,0),payType:pv('payType'),docFlow:pv('docFlow'),
-        prepaid:Number(v('#o_prepaid'))||0,paidMore:Number(v('#o_paidMore'))||0,updDate:v('#o_updDate'),paidFull:$('#o_paidFull').checked,
-        docs,note:v('#o_note'),leadId:e.leadId||'',ts:e.ts||new Date().toISOString()});
+        prepaid:Number(v('#o_prepaid'))||0,paidMore:Number(v('#o_paidMore'))||0,updDate:v('#o_updDate'),updNo:v('#o_updNo'),passDate:v('#o_passDate'),passUntil:v('#o_passUntil'),paidFull:$('#o_paidFull').checked,
+        docs:Object.assign({},DOCS),note:v('#o_note'),leadId:e.leadId||'',ts:e.ts||new Date().toISOString()});
     }
     function liveGate(){
       const rec=collect(); const miss=missingFor(rec,rec.status);
       $$('#modal .miss').forEach(x=>x.classList.remove('miss'));
-      miss.forEach(f=>{ const map={contract:'[data-f=contract]',preApproval:'[data-f=preApproval]',legal:'[data-f=legal]',total:'[data-f=items]'}; const el=$('#modal '+(map[f]||'[data-f='+f+']')); if(el)el.classList.add('miss'); });
-      const s=stOf(st,rec.status); $('#o_owner').textContent=s.owner||'—';
-      $('#o_gateHint').innerHTML=miss.length?'<span style="color:var(--bad)">для стадии «'+esc(s.t)+'» не хватает: '+miss.map(f=>esc(FIELDS[f].t)).join(', ')+'</span>':'<span style="color:var(--ok)">✓ всё нужное заполнено</span>';
+      miss.forEach(f=>{ const map={total:'[data-f=items]'}; const el=$('#modal '+(map[f]||'[data-f='+f+']')); if(el)el.classList.add('miss'); });
+      TABS.forEach(([k])=>{ const p=$('.dl-pane[data-pane='+k+']'); $('#td_'+k).hidden=!(p&&p.querySelector('.miss')); });
+      const s=stOf(st,rec.status), t=dealTotal(rec), rem=t-(rec.prepaid||0)-(rec.paidMore||0);
+      $('#o_sum').innerHTML='<span class="st-pill" style="background:'+s.col+'">'+esc(s.t)+'</span>'+(s.owner?'<span class="chip">👤 отвечает '+esc(s.owner)+'</span>':'')+
+        (t?'<span class="chip">'+money(t)+(rec.prepaid&&rem>0?' · остаток '+money(rem):'')+'</span>':'')+(rec.deadline?'<span class="chip">⏰ до '+esc(rec.deadline)+'</span>':'')+
+        '<span class="chip gate '+(miss.length?'bad':'ok')+'" id="o_gateHint">'+(miss.length?'⚠ для «'+esc(s.t)+'» не хватает: '+miss.map(f=>esc(FIELDS[f].t)).join(', '):'✓ всё нужное заполнено')+'</span>';
       return miss;
     }
-    $('#o_status').onchange=liveGate; $('#mBody').addEventListener('input',()=>liveGate()); $('#mBody').addEventListener('change',()=>liveGate());
-    recalc(); liveGate();
+    $('#mBody').addEventListener('input',()=>liveGate()); $('#mBody').addEventListener('change',()=>liveGate());
+    drawFiles(); drawDocs(); recalc(); liveGate();
 
     $$('[data-print]').forEach(b=>b.onclick=()=>printDoc(b.dataset.print,collect()));
-    if(id)$('#o_del').onclick=async()=>{ if(!confirm('Удалить сделку?'))return; await remove('deals',id); DATA.deals=DATA.deals.filter(x=>x.id!==id);
-      const lk=DATA.leads.find(x=>x.dealId===id); if(lk){lk.dealId='';try{await save('leads',lk);}catch(err){}} hideModal(); render(); };
+    const tc=$('#o_toClient'); if(tc) tc.onclick=()=>{ if($('#modal').dataset.dirty==='1'&&!confirm('Есть несохранённые изменения. Перейти без сохранения?'))return; hideModal(); VIEW='clients'; render(); openClient(cl.id); };
+    const tl=$('#o_toLead'); if(tl) tl.onclick=()=>{ hideModal(); VIEW='leads'; render(); openLead(e.leadId); };
+    if(!isNew)$('#o_del').onclick=async()=>{ if(!confirm('Удалить сделку? Её файлы тоже будут удалены.'))return; await remove('deals',e.id); FILES.forEach(deleteBlob); DATA.deals=DATA.deals.filter(x=>x.id!==e.id);
+      const lk=DATA.leads.find(x=>x.dealId===e.id); if(lk){lk.dealId='';try{await save('leads',lk);}catch(err){}} hideModal(); render(); };
 
     $('#mSave').onclick=async()=>{
       const rec=collect(); const miss=liveGate();
-      if(!rec.client&&!rec.items.length){toast('Заполните клиента или позиции');return;}
-      if(miss.length){ toast('Не заполнено: '+miss.map(f=>FIELDS[f].t).join(', ')); const first=$('#modal .miss'); if(first)first.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+      if(!rec.client&&!rec.items.length){toast('Заполните клиента или позиции');showTab('main');return;}
+      if(miss.length){ toast('Не заполнено: '+miss.map(f=>FIELDS[f].t).join(', ')); const first=$('#modal .miss'); if(first){ const p=first.closest('.dl-pane'); if(p) showTab(p.dataset.pane); setTimeout(()=>first.scrollIntoView({behavior:'smooth',block:'center'}),50);} return; }
       const prevSt=d?d.status:null;
       rec.log=[{ts:new Date().toISOString(),who:ME||'—',t:!d?'создал(а) сделку':(prevSt!==rec.status?'→ '+stOf(st,rec.status).t:'изменил(а)')}].concat(rec.log||[]).slice(0,60);
+      // что изменилось в документах — в историю
+      if(d){ Object.keys(rec.docs).filter(k=>!(d.docs||{})[k]).forEach(k=>rec.log.unshift({ts:new Date().toISOString(),who:ME||'—',t:'✓ '+(DOC_NAME[k]||k)})); Object.keys(d.docs||{}).filter(k=>!rec.docs[k]).forEach(k=>rec.log.unshift({ts:new Date().toISOString(),who:ME||'—',t:'снял(а) отметку: '+(DOC_NAME[k]||k)})); rec.log=rec.log.slice(0,80); }
       try{
+        await linkClient(rec);
         const it=normDeal(await save('deals',rec)); const i=DATA.deals.findIndex(x=>x.id===rec.id);
         if(i>=0)DATA.deals[i]=it;else DATA.deals.unshift(it);
         if(rec.leadId){ const lead=DATA.leads.find(x=>x.id===rec.leadId); if(lead&&lead.dealId!==it.id){lead.dealId=it.id; lead.stage='won'; try{await save('leads',lead);}catch(err){}} }
@@ -742,22 +980,53 @@
   function printDoc(type,d){
     const c=S().company, no=(d.id||'').slice(-6).toUpperCase(), today=new Date().toLocaleDateString('ru-RU'), total=dealTotal(d);
     const buyer=esc(d.company||d.client||'')+(d.inn?', ИНН '+esc(d.inn):'');
+    const blank=n=>'<span class="bl" style="min-width:'+(n||180)+'px"></span>';
+    const val=(x,n)=>x?'<b>'+esc(x)+'</b>':blank(n);
     const rows=(d.items||[]).map((r,i)=>'<tr><td>'+(i+1)+'</td><td>'+esc(r.name)+(r.spec?'<br><small>'+esc(r.spec)+'</small>':'')+'</td><td>'+esc(r.qty)+'</td><td>шт</td><td>'+money(r.price)+'</td><td>'+money(r.qty*r.price)+'</td></tr>').join('');
     const tbl='<table class="t"><tr><th>№</th><th>Наименование</th><th>Кол-во</th><th>Ед.</th><th>Цена</th><th>Сумма</th></tr>'+rows+'</table><p style="text-align:right"><b>Итого: '+money(total)+'</b><br>'+esc(c.tax)+'</p><p>Всего наименований '+(d.items||[]).length+', на сумму '+money(total)+'<br><b>'+rubWords(total)+'</b></p>';
     const seller='<b>'+esc(c.name)+'</b>, ИНН/КПП '+esc(c.inn)+'/'+esc(c.kpp)+', '+esc(c.addr)+', тел. '+esc(c.phone);
-    let body='';
-    if(type==='invoice') body='<table class="bank"><tr><td colspan="2">'+esc(c.bank)+'<br><small>Банк получателя</small></td><td>БИК<br>Сч. №</td><td>'+esc(c.bik)+'<br>'+esc(c.ks)+'</td></tr><tr><td>ИНН '+esc(c.inn)+'</td><td>КПП '+esc(c.kpp)+'</td><td rowspan="2">Сч. №</td><td rowspan="2">'+esc(c.rs)+'</td></tr><tr><td colspan="2">'+esc(c.name)+'<br><small>Получатель</small></td></tr></table>'+
-      '<h1>Счёт на оплату № '+no+' от '+today+'</h1><p>Поставщик: '+seller+'</p><p>Покупатель: '+buyer+'</p>'+tbl+'<p class="sign">Руководитель ____________ / '+esc(c.director)+' /</p>';
-    else if(type==='act') body='<h1>Акт № '+no+' от '+today+'</h1><p>Исполнитель: '+seller+'</p><p>Заказчик: '+buyer+'</p>'+tbl+'<p>Вышеперечисленные работы (услуги) выполнены полностью и в срок. Заказчик претензий по объёму, качеству и срокам оказания услуг не имеет.</p><table class="sg"><tr><td>Исполнитель ____________ / '+esc(c.director)+' /</td><td>Заказчик ____________ /______________/</td></tr></table>';
-    else body='<h1>Договор № '+no+'</h1><p style="display:flex;justify-content:space-between"><span>г. Йошкар-Ола</span><span>'+today+'</span></p>'+
+    const construct=(d.items||[]).map(r=>esc(r.name)+(r.spec?' ('+esc(r.spec)+')':'')).join('; ');
+    const tplNote='<div class="noprint tpl">Шаблон из CRM. Перед подачей сверьте с действующей формой УАиГ администрации г. Йошкар-Олы и впишите недостающее от руки.</div>';
+    let body='', title=type;
+    if(type==='invoice'){ title='Счёт'; body='<table class="bank"><tr><td colspan="2">'+esc(c.bank)+'<br><small>Банк получателя</small></td><td>БИК<br>Сч. №</td><td>'+esc(c.bik)+'<br>'+esc(c.ks)+'</td></tr><tr><td>ИНН '+esc(c.inn)+'</td><td>КПП '+esc(c.kpp)+'</td><td rowspan="2">Сч. №</td><td rowspan="2">'+esc(c.rs)+'</td></tr><tr><td colspan="2">'+esc(c.name)+'<br><small>Получатель</small></td></tr></table>'+
+      '<h1>Счёт на оплату № '+no+' от '+today+'</h1><p>Поставщик: '+seller+'</p><p>Покупатель: '+buyer+'</p>'+tbl+'<p class="sign">Руководитель ____________ / '+esc(c.director)+' /</p>'; }
+    else if(type==='act'){ title='Акт'; body='<h1>Акт № '+no+' от '+today+'</h1><p>Исполнитель: '+seller+'</p><p>Заказчик: '+buyer+'</p>'+tbl+'<p>Вышеперечисленные работы (услуги) выполнены полностью и в срок. Заказчик претензий по объёму, качеству и срокам оказания услуг не имеет.</p><table class="sg"><tr><td>Исполнитель ____________ / '+esc(c.director)+' /</td><td>Заказчик ____________ /______________/</td></tr></table>'; }
+    else if(type==='contract'){ title='Договор'; body='<h1>Договор № '+no+'</h1><p style="display:flex;justify-content:space-between"><span>г. Йошкар-Ола</span><span>'+today+'</span></p>'+
       '<p>'+esc(c.name)+', именуемое в дальнейшем «Исполнитель», в лице директора '+esc(c.director)+', действующего на основании Устава, с одной стороны, и '+buyer+', именуемый(ое) в дальнейшем «Заказчик», с другой стороны, заключили настоящий договор о нижеследующем:</p>'+
       '<h3>1. Предмет договора</h3><p>1.1. Исполнитель обязуется изготовить и передать Заказчику рекламную продукцию (оказать услуги) согласно спецификации, а Заказчик — принять и оплатить её.</p>'+tbl+
       '<h3>2. Сроки и порядок</h3><p>2.1. Работы начинаются после согласования макета и внесения предоплаты'+(d.prepaid?' в размере '+money(d.prepaid):'')+'. Срок изготовления: '+esc(d.deadline||'по согласованию')+'.</p><p>2.2. Макет согласуется Заказчиком письменно (мессенджер, e-mail). После согласования изменения макета оплачиваются отдельно.</p>'+
       '<h3>3. Оплата</h3><p>3.1. Стоимость работ: '+money(total)+' ('+rubWords(total)+'). '+esc(c.tax)+'.</p><p>3.2. Окончательный расчёт — '+(d.ctype==='Физлицо'?'при получении продукции':'в течение 30 календарных дней с даты подписания УПД')+'.</p>'+
       '<h3>4. Приёмка</h3><p>4.1. Приёмка подтверждается подписанием УПД / акта'+(d.docFlow==='СБИС'?' через ЭДО (СБИС)':'')+'.</p>'+
-      '<h3>5. Реквизиты сторон</h3><table class="sg"><tr><td><b>Исполнитель</b><br>'+esc(c.name)+'<br>'+esc(c.addr)+'<br>ИНН/КПП '+esc(c.inn)+'/'+esc(c.kpp)+'<br>ОГРН '+esc(c.ogrn)+'<br>р/с '+esc(c.rs)+'<br>'+esc(c.bank)+'<br>к/с '+esc(c.ks)+', БИК '+esc(c.bik)+'<br><br>____________ / '+esc(c.director)+' /</td><td><b>Заказчик</b><br>'+buyer+'<br>'+esc(d.phone||'')+'<br><br><br><br><br><br>____________ /______________/</td></tr></table>';
+      '<h3>5. Реквизиты сторон</h3><table class="sg"><tr><td><b>Исполнитель</b><br>'+esc(c.name)+'<br>'+esc(c.addr)+'<br>ИНН/КПП '+esc(c.inn)+'/'+esc(c.kpp)+'<br>ОГРН '+esc(c.ogrn)+'<br>р/с '+esc(c.rs)+'<br>'+esc(c.bank)+'<br>к/с '+esc(c.ks)+', БИК '+esc(c.bik)+'<br><br>____________ / '+esc(c.director)+' /</td><td><b>Заказчик</b><br>'+buyer+'<br>'+esc(d.phone||'')+'<br><br><br><br><br><br>____________ /______________/</td></tr></table>'; }
+    else if(type==='tz'){ title='Бланк ТЗ';
+      const qa=(d.quiz||[]).map(x=>'<tr><td>'+esc(x.q)+'</td><td><b>'+esc(x.a)+'</b></td></tr>').join('');
+      body='<h1>Техническое задание № '+no+'</h1><p style="display:flex;justify-content:space-between"><span>'+esc(c.name)+'</span><span>'+today+'</span></p>'+
+        '<table class="t kv"><tr><td>Клиент</td><td>'+val(d.company||d.client,260)+(d.phone?' · '+esc(d.phone):'')+'</td></tr><tr><td>Направление</td><td>'+val(d.kind)+'</td></tr><tr><td>Адрес объекта</td><td>'+val(d.addr,300)+'</td></tr>'+
+        '<tr><td>Размеры</td><td>'+val(d.sizes,300)+'</td></tr><tr><td>Материалы</td><td>'+val(d.materials,300)+'</td></tr><tr><td>Срок</td><td>'+val(d.deadline)+'</td></tr><tr><td>Позиции</td><td>'+(construct||blank(300))+'</td></tr></table>'+
+        (qa?'<h3>Ответы клиента (опросник'+(d.quizTitle?' «'+esc(d.quizTitle)+'»':'')+')</h3><table class="t kv">'+qa+'</table>':'')+
+        '<h3>Пожелания и детали</h3><div class="box">'+(d.tz?esc(d.tz).replace(/\n/g,'<br>'):'')+'</div>'+
+        '<h3>Что нужно от клиента</h3><p>☐ логотип в векторе (cdr, ai, eps, pdf) &nbsp; ☐ фото фасада / места &nbsp; ☐ размеры и способ крепления &nbsp; ☐ тексты &nbsp; ☐ фирменные цвета</p>'+
+        '<table class="sg"><tr><td>Менеджер ____________ /'+esc(ME||'______________')+'/</td><td>ТЗ согласовано, клиент ____________ /______________/</td></tr></table>'; }
+    else if(type==='statement'){ title='Заявление';
+      body=tplNote+'<div class="to">В Управление архитектуры и градостроительства<br>администрации городского округа «Город Йошкар-Ола»<br><br>от '+val(d.company||d.client,260)+'<br>'+(d.inn?'ИНН '+esc(d.inn)+'<br>':'')+'тел. '+val(d.phone,160)+'</div>'+
+        '<h1 style="text-align:center">Заявление</h1><p>Прошу согласовать паспорт информационной (рекламной) конструкции и выдать разрешение на её установку и эксплуатацию.</p>'+
+        '<table class="t kv"><tr><td>Адрес установки</td><td>'+val(d.addr,320)+'</td></tr><tr><td>Вид конструкции</td><td>'+(construct||blank(320))+'</td></tr><tr><td>Размеры</td><td>'+val(d.sizes,320)+'</td></tr><tr><td>Материалы, подсветка</td><td>'+val(d.materials,320)+'</td></tr></table>'+
+        '<h3>Приложения</h3><ol><li>Паспорт информационной конструкции — 2–3 экз.</li><li>Фотофиксация места установки, эскиз (фотопривязка).</li><li>Согласие собственника (законного владельца) недвижимого имущества.</li><li>Доверенность на представителя (если подаёт агентство).</li><li>Документ об оплате государственной пошлины (для рекламной конструкции).</li><li>'+blank(300)+'</li></ol>'+
+        '<p>Интересы заявителя представляет '+esc(c.name)+', тел. '+esc(c.phone)+'.</p><table class="sg"><tr><td>«___» ____________ 20__ г.</td><td>Подпись ____________ /______________/</td></tr></table>'; }
+    else if(type==='consent'){ title='Согласие собственника';
+      body=tplNote+'<h1 style="text-align:center">Согласие собственника<br><small>на установку и эксплуатацию информационной (рекламной) конструкции</small></h1>'+
+        '<p>Я (мы), '+blank(360)+',<br><small>ФИО / наименование собственника (законного владельца), паспорт или ИНН/ОГРН</small></p>'+
+        '<p>являясь собственником (законным владельцем) недвижимого имущества по адресу: '+val(d.addr,320)+',</p>'+
+        '<p>даю(ём) согласие '+val(d.company||d.client,260)+(d.inn?' (ИНН '+esc(d.inn)+')':'')+' на установку и эксплуатацию конструкции: '+(construct||blank(300))+(d.sizes?', размеры '+esc(d.sizes):'')+', на фасаде (стене, крыше) указанного объекта сроком на '+blank(120)+'.</p>'+
+        '<p>Основание права собственности (владения): '+blank(320)+'</p><table class="sg"><tr><td>«___» ____________ 20__ г.</td><td>Подпись ____________ /______________/<br><small>М.П. (для организаций)</small></td></tr></table>'; }
+    else if(type==='power'){ title='Доверенность';
+      body=tplNote+'<h1 style="text-align:center">Доверенность № ____</h1><p style="display:flex;justify-content:space-between"><span>г. Йошкар-Ола</span><span>«___» ____________ 20__ г.</span></p>'+
+        '<p>'+val(d.company||d.client,280)+(d.inn?', ИНН '+esc(d.inn):'')+', в лице '+blank(260)+', действующего на основании '+blank(160)+', настоящей доверенностью уполномочивает</p>'+
+        '<p><b>'+esc(c.name)+'</b> (ИНН '+esc(c.inn)+', ОГРН '+esc(c.ogrn)+', адрес: '+esc(c.addr)+'), в лице директора '+esc(c.director)+' и/или '+blank(240)+',</p>'+
+        '<p>представлять интересы доверителя в администрации городского округа «Город Йошкар-Ола», Управлении архитектуры и градостроительства, Министерстве культуры Республики Марий Эл и иных органах по вопросам согласования паспорта информационной (рекламной) конструкции и получения разрешения на её установку по адресу: '+val(d.addr,300)+'; для этого подавать и получать документы, подписывать заявления, вносить изменения и исправления.</p>'+
+        '<p>Доверенность выдана сроком на '+blank(120)+' без права передоверия.</p><table class="sg"><tr><td>Руководитель ____________ /______________/<br><small>М.П.</small></td><td>Подпись представителя удостоверяю</td></tr></table>'; }
     const w=window.open('','_blank'); if(!w){toast('Разрешите всплывающие окна');return;}
-    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+type+' '+no+'</title><style>body{font:13px/1.45 Arial,sans-serif;color:#111;max-width:780px;margin:24px auto;padding:0 16px}h1{font-size:19px;margin:18px 0 10px}h3{font-size:14px;margin:14px 0 6px}table{width:100%;border-collapse:collapse;margin:8px 0}.t td,.t th,.bank td{border:1px solid #333;padding:5px 7px;vertical-align:top}.t th{background:#f2f2f2}.sg td{width:50%;vertical-align:top;padding:8px 8px 8px 0}small{color:#555}.sign{margin-top:30px}@media print{.noprint{display:none}}</style></head><body><button class="noprint" onclick="print()" style="padding:8px 16px;margin-bottom:10px">🖨 Печать / PDF</button>'+body+'</body></html>');
+    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+' '+no+' — '+esc(d.client||'')+'</title><style>body{font:13px/1.5 Arial,sans-serif;color:#111;max-width:780px;margin:24px auto;padding:0 16px}h1{font-size:19px;margin:18px 0 10px}h1 small{font-size:13px;font-weight:400}h3{font-size:14px;margin:14px 0 6px}table{width:100%;border-collapse:collapse;margin:8px 0}.t td,.t th,.bank td{border:1px solid #333;padding:5px 7px;vertical-align:top}.t th{background:#f2f2f2}.kv td:first-child{width:34%;color:#444}.sg td{width:50%;vertical-align:top;padding:18px 8px 8px 0}small{color:#555}.sign{margin-top:30px}.bl{display:inline-block;border-bottom:1px solid #333;height:1.1em;vertical-align:bottom}.box{border:1px solid #333;min-height:90px;padding:8px}.to{margin-left:50%;margin-bottom:20px}.tpl{background:#fff6e5;border:1px solid #ffe0a3;color:#7a5a00;padding:8px 12px;border-radius:6px;margin-bottom:12px}ol{margin:4px 0 0 20px}@media print{.noprint{display:none}}</style></head><body><button class="noprint" onclick="print()" style="padding:8px 16px;margin-bottom:10px">🖨 Печать / PDF</button>'+body+'</body></html>');
     w.document.close();
   }
 
@@ -766,20 +1035,55 @@
   const clientByPhone=p=>{const n=normPhone(p);return n?DATA.clients.find(c=>normPhone(c.phone)===n):null;};
   function clientsView(){
     const rows=filt(DATA.clients);
-    $('#main').innerHTML=head('Клиенты','<span class="tag">'+DATA.clients.length+'</span><div class="spacer"></div><label class="btn-or" style="cursor:pointer">⬆ Импорт из UDS / Битрикс (Excel, CSV)<input type="file" id="impFile" accept=".xlsx,.xls,.csv" hidden></label>'+refreshBtn)+storeNote()+
-      '<div class="note">База клиентов. Выгрузите клиентов из UDS («Kunden» → «Export in Excel») или из Битрикса и загрузите файл сюда — колонки (имя, телефон, оплачено, баллы, теги, откуда пришёл) распознаются сами. Повторная загрузка обновит данные по телефону.</div>'+
-      (rows.length?'<div class="table"><table><thead><tr><th>Клиент</th><th>Телефон</th><th>Сфера / теги</th><th>Покупок на</th><th>Баллы</th><th>Откуда</th><th>Сделок</th></tr></thead><tbody>'+
-        rows.slice(0,500).map(c=>{const n=normPhone(c.phone);const deals=n?DATA.deals.filter(d=>normPhone(d.phone)===n).length:0;
-          return '<tr class="click" data-id="'+esc(c.id)+'"><td class="nm">'+(esc(c.name)||'—')+(c.note?'<div style="font-weight:400;color:var(--muted);font-size:12px">'+esc(c.note)+'</div>':'')+'</td><td class="ph">'+esc(c.phone)+'</td><td>'+esc(c.tags||'')+'</td><td>'+(c.paid?money(c.paid):'—')+'</td><td>'+(esc(c.points)||'—')+'</td><td>'+esc(c.from||'')+'</td><td>'+(deals||'')+'</td></tr>';}).join('')+'</tbody></table></div>':'<div class="empty">Клиентов пока нет — загрузите выгрузку из UDS.</div>');
+    $('#main').innerHTML=head('Клиенты','<span class="tag">'+DATA.clients.length+'</span><div class="spacer"></div><button class="btn-pri" id="addClient">+ Клиент</button><label class="btn-or" style="cursor:pointer">⬆ Импорт из UDS / Битрикс (Excel, CSV)<input type="file" id="impFile" accept=".xlsx,.xls,.csv" hidden></label>'+refreshBtn)+storeNote()+
+      '<div class="note">Клиент — центр всего: у него <b>заказы</b>, а у заказов — макеты, договоры, УПД, согласования. Открыв клиента, видно все его заказы и все файлы. Новые клиенты появляются сами, когда сохраняется сделка. Выгрузку из UDS («Kunden» → «Export in Excel») или Битрикса можно загрузить файлом — колонки распознаются сами, повторная загрузка обновит данные по телефону.</div>'+
+      (rows.length?'<div class="table"><table><thead><tr><th>Клиент</th><th>Телефон</th><th>Организация / ИНН</th><th>Заказов</th><th>Файлов</th><th>Покупок на</th><th>Откуда</th></tr></thead><tbody>'+
+        rows.slice(0,500).map(c=>{const ds=dealsOfClient(c), nf=ds.reduce((a,d)=>a+normFiles(d.files).length,0)+normFiles(c.files).length;
+          return '<tr class="click" data-id="'+esc(c.id)+'"><td class="nm">'+(esc(c.name)||'—')+(c.note?'<div style="font-weight:400;color:var(--muted);font-size:12px">'+esc(c.note)+'</div>':'')+'</td><td class="ph">'+esc(c.phone)+'</td><td>'+esc(c.company||'')+(c.inn?'<div style="color:var(--muted);font-size:12px">ИНН '+esc(c.inn)+'</div>':'')+'</td><td>'+(ds.length||'')+'</td><td>'+(nf?'📎 '+nf:'')+'</td><td>'+(c.paid?money(c.paid):'—')+'</td><td>'+esc(c.from||(c.src==='crm'?'из сделки':''))+'</td></tr>';}).join('')+'</tbody></table></div>':'<div class="empty">Клиентов пока нет — они появятся из сделок, или загрузите выгрузку из UDS.</div>');
     bindCommon();
     $('#impFile').onchange=ev=>importClients(ev.target.files[0]);
-    $$('tr[data-id]').forEach(tr=>tr.onclick=()=>{ const c=DATA.clients.find(x=>x.id===tr.dataset.id); const n=normPhone(c.phone); const ds=DATA.deals.filter(d=>n&&normPhone(d.phone)===n);
-      showModal(c.name||c.phone,'<div class="fld"><div class="k">Телефон</div><div class="v">'+esc(c.phone)+'</div></div><div class="grid3"><div class="fld"><div class="k">Покупок на</div><div class="v">'+money(c.paid)+'</div></div><div class="fld"><div class="k">Баллы</div><div class="v">'+esc(c.points||0)+'</div></div><div class="fld"><div class="k">С нами с</div><div class="v">'+esc(c.reg||'')+'</div></div></div>'+
-        '<div class="fld"><div class="k">Сделки</div>'+(ds.length?ds.map(d=>'<div class="linkbox">'+esc(d.kind||'')+' · '+money(dealTotal(d))+' · '+esc(stOf(stagesOf(d.funnel),d.status).t)+' <a data-deal="'+esc(d.id)+'">открыть →</a></div>').join(''):'<div class="v">—</div>')+'</div>'+
-        '<button class="btn-pri" id="cNewDeal">+ Сделка для клиента</button>',{sm:true,noSave:true});
-      $$('[data-deal]').forEach(a=>a.onclick=()=>{hideModal();editDeal(a.dataset.deal);});
-      $('#cNewDeal').onclick=()=>{hideModal();editDeal(null,{name:c.name,phone:c.phone,source:'Повторный',detail:''});};
-    });
+    $('#addClient').onclick=()=>openClient(null);
+    $$('tr[data-id]').forEach(tr=>tr.onclick=()=>openClient(tr.dataset.id));
+  }
+  function openClient(id){
+    const c0=id?DATA.clients.find(x=>x.id===id):null; const c=c0?JSON.parse(JSON.stringify(c0)):{id:'c-'+genId(),src:'crm',reg:new Date().toISOString().slice(0,10)};
+    let CF=normFiles(c.files); const ds=c0?dealsOfClient(c0):[];
+    const allDealFiles=[]; ds.forEach(d=>normFiles(d.files).forEach(f=>allDealFiles.push({f,d})));
+    const inp=(k,ph)=>'<input class="inp" data-ck="'+k+'" value="'+esc(c[k]||'')+'"'+(ph?' placeholder="'+esc(ph)+'"':'')+'>';
+    const fld=(k,h)=>'<div class="fld"><div class="k">'+k+'</div>'+h+'</div>';
+    showModal(c0?(c.name||c.company||c.phone||'Клиент'):'Новый клиент',
+      '<div class="sec"><h4>👤 Данные</h4><div class="grid3">'+fld('Имя / контакт',inp('name'))+fld('Телефон',inp('phone','+7 …'))+fld('Тип','<select class="inp" data-ck="ctype">'+['','Юрлицо / ИП','Физлицо'].map(o=>'<option'+(o===(c.ctype||'')?' selected':'')+'>'+o+'</option>').join('')+'</select>')+'</div>'+
+        '<div class="grid3">'+fld('Организация',inp('company','ООО «…»'))+fld('ИНН',inp('inn'))+fld('E-mail',inp('email'))+'</div>'+
+        '<div class="grid2">'+fld('Адрес',inp('addr'))+fld('Заметка',inp('note','сфера, особенности, кто решает…'))+'</div>'+
+        (c.paid||c.points?'<div class="hint" style="margin-bottom:10px">Из UDS: покупок на '+money(c.paid)+' · баллов '+esc(c.points||0)+(c.reg?' · с нами с '+esc(c.reg):'')+'</div>':'')+'</div>'+
+      (c0?'<div class="sec"><h4>💼 Заказы · '+ds.length+' <span class="spacer"></span><button class="btn-pri btn-sm" id="cNewDeal">+ Заказ</button></h4>'+(ds.length?'<div class="files" style="margin-bottom:10px">'+ds.map(d=>{const s=stOf(stagesOf(d.funnel),d.status);const nf=normFiles(d.files).length;
+          return '<div class="file click" data-deal="'+esc(d.id)+'"><div class="fi">💼</div><div style="flex:1;min-width:0"><div class="fn">'+esc(d.kind||'Заказ')+(d.items&&d.items[0]?' · '+esc(d.items[0].name):'')+'</div><div class="fm">'+fdate(d.ts)+(d.addr?' · '+esc(d.addr):'')+(nf?' · 📎 '+nf:'')+'</div></div><span class="st-pill" style="background:'+s.col+'">'+esc(s.t)+'</span><b style="white-space:nowrap">'+money(dealTotal(d))+'</b></div>';}).join('')+'</div>':'<div class="empty" style="padding:14px">Заказов пока нет</div>')+'</div>':'')+
+      '<div class="sec"><h4>📎 Постоянные файлы клиента <span class="hint">карточка предприятия, логотип, брендбук, доверенность</span></h4><div class="drop sm" id="c_drop">Перетащите файлы или <b>выберите</b></div><div class="files" id="c_files" style="margin:8px 0 10px"></div></div>'+
+      (allDealFiles.length?'<div class="sec"><h4>🗂 Все файлы по заказам · '+allDealFiles.length+'</h4><div class="chips" id="c_chips"></div><div class="files" id="c_dfiles" style="margin-bottom:10px"></div></div>':''),{});
+    const dirty=()=>{$('#modal').dataset.dirty='1';};
+    async function persist(){ if(!c0||DEMO){dirty();return;} try{ const it=await save('clients',Object.assign({},c0,{files:CF})); Object.assign(c0,it);}catch(e){} }
+    function drawCF(){ $('#c_files').innerHTML=CF.length?CF.map(f=>fileRow(f,{edit:true})).join(''):'';
+      $$('#c_files .file').forEach(r=>{ const f=CF.find(x=>x.id===r.dataset.fid); r.querySelector('.f-open').onclick=()=>openFile(f);
+        r.querySelector('.f-cat').onchange=async ev=>{f.cat=ev.target.value;await persist();};
+        r.querySelector('.f-rm').onclick=async()=>{ if(!confirm('Удалить файл «'+f.name+'»?'))return; CF=CF.filter(x=>x!==f); drawCF(); await persist(); deleteBlob(f); }; }); }
+    const addCF=async fl=>{ const got=await uploadMany(fl,'c-'+c.id,{cat:'client'},$('#c_files')); if(got.length){ CF=got.concat(CF); drawCF(); await persist(); } };
+    $('#c_drop').onclick=()=>pickFiles(addCF); bindDrop($('#c_drop'),addCF); drawCF();
+    if(allDealFiles.length){ let ch='all';
+      const draw=()=>{ const cnt={}; allDealFiles.forEach(x=>cnt[x.f.cat||'other']=(cnt[x.f.cat||'other']||0)+1);
+        $('#c_chips').innerHTML='<button data-fc="all" class="'+(ch==='all'?'on':'')+'">Все · '+allDealFiles.length+'</button>'+FCATS.filter(x=>cnt[x[0]]).map(x=>'<button data-fc="'+x[0]+'" class="'+(ch===x[0]?'on':'')+'">'+x[1]+' '+x[2]+' · '+cnt[x[0]]+'</button>').join('');
+        $$('#c_chips [data-fc]').forEach(b=>b.onclick=()=>{ch=b.dataset.fc;draw();});
+        const list=allDealFiles.filter(x=>ch==='all'||(x.f.cat||'other')===ch);
+        $('#c_dfiles').innerHTML=list.map((x,i)=>fileRow(x.f,{ctx:()=>'💼 '+esc(x.d.kind||'заказ')+' '+fdate(x.d.ts)})).join('');
+        $$('#c_dfiles .file').forEach((r,i)=>r.querySelector('.f-open').onclick=()=>openFile(list[i].f)); };
+      draw(); }
+    $$('[data-deal]').forEach(a=>a.onclick=()=>{ if($('#modal').dataset.dirty==='1'&&!confirm('Есть несохранённые изменения клиента. Перейти без сохранения?'))return; hideModal(); VIEW='deals'; render(); editDeal(a.dataset.deal); });
+    const nd=$('#cNewDeal'); if(nd) nd.onclick=()=>{ hideModal(); VIEW='deals'; render(); editDeal(null,{name:c.name||c.company,phone:c.phone,source:'Повторный',detail:'',clientId:c.id,company:c.company,inn:c.inn,ctype:c.ctype}); };
+    $('#mSave').onclick=async()=>{
+      $$('[data-ck]').forEach(i=>c[i.dataset.ck]=i.value.trim());
+      if(!c.name&&!c.phone&&!c.company){toast('Заполните имя, телефон или организацию');return;}
+      c.files=CF;
+      try{ const it=await save('clients',c); const i=DATA.clients.findIndex(x=>x.id===it.id); if(i>=0)DATA.clients[i]=it; else DATA.clients.unshift(it); toast('Клиент сохранён'); hideModal(); render(); }catch(e){}
+    };
   }
   function loadScript(src){ return new Promise((ok,err)=>{ const s=document.createElement('script'); s.src=src; s.onload=ok; s.onerror=err; document.head.appendChild(s); }); }
   async function importClients(file){
@@ -804,22 +1108,80 @@
     const r=await api('bulk','clients',{items:out}); if(r.ok){ toast('Загружено: '+r.saved); await loadAll(); VIEW='clients'; render(); } else toast('Ошибка загрузки');
   }
 
-  /* ---------- ДОКУМЕНТЫ (сводка) ---------- */
+  /* ---------- ДОКУМЕНТЫ ---------- */
+  let DOC_TAB='control', ARCH_CAT='all', ARCH_Q='';
+  function allFiles(){ const out=[];
+    DATA.deals.forEach(d=>normFiles(d.files).forEach(f=>out.push({f,d,who:d.client||d.company||'—'})));
+    DATA.clients.forEach(c=>normFiles(c.files).forEach(f=>out.push({f,c,who:c.name||c.company||c.phone||'—'})));
+    return out.sort((a,b)=>String(b.f.ts||'').localeCompare(String(a.f.ts||''))); }
   function docsView(){
-    const act=DATA.deals.filter(d=>d.funnel!=='supply'&&!stOf(stagesOf('sales'),d.status).lost);
+    const lost=k=>stOf(stagesOf('sales'),k).lost;
+    const act=DATA.deals.filter(d=>d.funnel!=='supply'&&!lost(d.status));
     const sign=act.filter(d=>d.kind==='Наружная реклама'&&d.status!=='done');
     const trans=act.filter(d=>d.kind==='Реклама на транспорте'&&d.status!=='done');
-    const noUpd=act.filter(d=>['mount','docs'].includes(d.status)&&!d.updDate);
-    const row=(d,extra)=>'<tr class="click" data-id="'+esc(d.id)+'"><td class="nm">'+esc(d.client||'—')+'</td><td>'+esc(stOf(stagesOf('sales'),d.status).t)+'</td><td>'+extra+'</td><td>'+money(dealTotal(d))+'</td></tr>';
-    const signProg=d=>{const done=SIGN_DOCS.filter(x=>(d.docs||{})[x[0]]).length;const next=SIGN_DOCS.find(x=>!(d.docs||{})[x[0]]);return '<b>'+done+'/'+SIGN_DOCS.length+'</b>'+(next?' · дальше: '+esc(next[1]):' · всё готово');};
-    const tbl=(h,rows)=>'<div class="table" style="margin-bottom:16px"><table><thead><tr><th>Клиент</th><th>Стадия</th><th>'+h+'</th><th>Сумма</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
-    $('#main').innerHTML=head('Документы',refreshBtn)+
-      '<div class="note">Порядок по вывескам: <b>замер → фото фасада → макет + фотопривязка → предсогласование (УАиГ, в историческом центре — Минкультуры) → пакет: паспорт ИК 2–3 экз., заявление, согласие собственника, доверенность → (рекл. конструкция: госпошлина 10 000 ₽ на 5 лет) → изготовление → монтаж</b>. Транспорт — только после юр. заключения о соответствии закону о рекламе. Под каждый заказ — УПД; оплата юрлиц — 30 дней после подписания УПД.</div>'+
-      '<h3 class="cat-h">🪧 Согласование вывесок</h3>'+(sign.length?tbl('Пакет документов',sign.map(d=>row(d,signProg(d))).join('')):'<div class="empty" style="padding:16px">Нет вывесок в работе</div>')+
-      '<h3 class="cat-h">🚎 Транспорт</h3>'+(trans.length?tbl('Документы',trans.map(d=>row(d,((d.docs||{}).legal?'✓ юр. заключение':'<span style="color:var(--bad)">нет юр. заключения</span>')+' · '+((d.docs||{}).pttContract?'✓ договор с ПТТ':'договор с ПТТ ?'))).join('')):'<div class="empty" style="padding:16px">Нет</div>')+
-      '<h3 class="cat-h">🧾 Сдано, но УПД не подписан</h3>'+(noUpd.length?tbl('Документы',noUpd.map(d=>row(d,esc(d.docFlow||'СБИС/живьём ?'))).join('')):'<div class="empty" style="padding:16px">Нет</div>')+
-      '<div class="chart"><h3>Реквизиты для документов</h3><p style="color:var(--muted)">Счёт, договор и акт печатаются из карточки сделки (кнопки 🖨). Реквизиты компании — в «Настройках».</p></div>';
-    bindCommon(); $$('tr[data-id]').forEach(tr=>tr.onclick=()=>editDeal(tr.dataset.id));
+    const today=new Date(), iso=today.toISOString().slice(0,10);
+    const updRows=act.filter(d=>['mount','docs','done'].includes(d.status)||d.updDate||d.updNo).map(d=>{ let due=null,over=0; if(d.updDate){due=new Date(d.updDate);due.setDate(due.getDate()+30);over=Math.floor((today-due)/864e5);} return {d,due,over}; })
+      .sort((a,b)=>(a.d.updDate?1:0)-(b.d.updDate?1:0)||b.over-a.over);
+    const pass=DATA.deals.filter(d=>d.passUntil).map(d=>({d,left:Math.floor((new Date(d.passUntil)-today)/864e5)})).sort((a,b)=>a.left-b.left);
+    const soon=pass.filter(x=>x.left<=60);
+    const row=(d,extra)=>'<tr class="click" data-id="'+esc(d.id)+'"><td class="nm">'+esc(d.client||'—')+(d.addr?'<div style="font-weight:400;color:var(--muted);font-size:12px">'+esc(d.addr)+'</div>':'')+'</td><td>'+esc(stOf(stagesOf('sales'),d.status).t)+'</td><td>'+extra+'</td><td>'+money(dealTotal(d))+'</td><td style="text-align:right"><button class="btn-sec btn-sm" data-up="'+esc(d.id)+'" title="Загрузить файл в этот заказ">📎 Файл</button></td></tr>';
+    const signProg=d=>{const docs=d.docs||{};const done=SIGN_DOCS.filter(x=>docs[x[0]]).length;const next=SIGN_DOCS.find(x=>!docs[x[0]]);return '<div class="prog" style="width:120px;margin:0 0 4px"><i style="width:'+Math.round(done/SIGN_DOCS.length*100)+'%"></i></div><b>'+done+'/'+SIGN_DOCS.length+'</b>'+(next?' · дальше: '+esc(next[1]):' · всё готово');};
+    const tbl=(h,rows)=>'<div class="table" style="margin-bottom:16px"><table><thead><tr><th>Клиент</th><th>Стадия</th><th>'+h+'</th><th>Сумма</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+    const files=allFiles();
+    const tabs='<div class="tabs"><button data-dt="control" class="'+(DOC_TAB==='control'?'on':'')+'">Контроль</button><button data-dt="archive" class="'+(DOC_TAB==='archive'?'on':'')+'">Архив файлов · '+files.length+'</button></div>';
+    let body='';
+    if(DOC_TAB==='control'){
+      body='<div class="note">Порядок по вывескам: <b>замер → фото фасада → макет + фотопривязка → предсогласование (УАиГ, в историческом центре — Минкультуры) → пакет: паспорт ИК 2–3 экз., заявление, согласие собственника, доверенность → (рекл. конструкция: госпошлина 10 000 ₽ на 5 лет) → изготовление → монтаж</b>. Транспорт — только после юр. заключения о соответствии закону о рекламе. Под каждый заказ — УПД; оплата юрлиц — 30 дней после подписания УПД. Заявление, согласие собственника и доверенность печатаются из сделки (вкладка «Документы»).</div>'+
+        (soon.length?'<div class="note red">🏛 Паспорт ИК заканчивается: '+soon.map(x=>'<a class="lnk" data-id="'+esc(x.d.id)+'">'+esc(x.d.client||'—')+'</a> — '+(x.left<0?'истёк '+(-x.left)+' дн. назад':'через '+x.left+' дн.')).join(', ')+'. Повод позвонить и продлить.</div>':'')+
+        '<h3 class="cat-h">🪧 Согласование вывесок</h3>'+(sign.length?tbl('Пакет документов',sign.map(d=>row(d,signProg(d))).join('')):'<div class="empty" style="padding:16px">Нет вывесок в работе</div>')+
+        '<h3 class="cat-h">🚎 Транспорт</h3>'+(trans.length?tbl('Документы',trans.map(d=>row(d,((d.docs||{}).legal?'✓ юр. заключение':'<span style="color:var(--bad)">нет юр. заключения</span>')+' · '+((d.docs||{}).pttContract?'✓ договор с ПТТ':'договор с ПТТ ?'))).join('')):'<div class="empty" style="padding:16px">Нет</div>')+
+        '<h3 class="cat-h">🧾 Журнал УПД</h3>'+(updRows.length?'<div class="table" style="margin-bottom:16px"><table><thead><tr><th>Клиент</th><th>УПД №</th><th>Как</th><th>Подписан</th><th>Оплатить до</th><th>Статус</th><th>Остаток</th><th></th></tr></thead><tbody>'+
+          updRows.map(x=>{const d=x.d,rem=dealRem(d);const stt=!d.updDate?'<span class="st-pill" style="background:#a59d96">не подписан</span>':(d.paidFull||rem<=0)?'<span class="st-pill" style="background:var(--ok)">оплачено</span>':x.over>0?'<span class="st-pill" style="background:var(--bad)">просрочка '+x.over+' дн.</span>':'<span class="st-pill" style="background:var(--or)">ждём, '+(-x.over)+' дн.</span>';
+            return '<tr class="click" data-id="'+esc(d.id)+'"><td class="nm">'+esc(d.client||'—')+'</td><td>'+esc(d.updNo||'—')+'</td><td>'+esc(d.docFlow||'?')+'</td><td>'+(d.updDate?fdate(d.updDate):'—')+'</td><td>'+(x.due?x.due.toLocaleDateString('ru-RU'):'—')+'</td><td>'+stt+'</td><td>'+(rem>0&&!d.paidFull?money(rem):'')+'</td><td style="text-align:right"><button class="btn-sec btn-sm" data-up="'+esc(d.id)+'" data-cat="upd">📎 УПД</button></td></tr>';}).join('')+'</tbody></table></div>':'<div class="empty" style="padding:16px">Нет сданных заказов</div>')+
+        (pass.length?'<h3 class="cat-h">🏛 Паспорта ИК — сроки</h3><div class="table" style="margin-bottom:16px"><table><thead><tr><th>Клиент</th><th>Адрес</th><th>Выдан</th><th>Действует до</th><th></th></tr></thead><tbody>'+pass.map(x=>'<tr class="click" data-id="'+esc(x.d.id)+'"><td class="nm">'+esc(x.d.client||'—')+'</td><td>'+esc(x.d.addr||'')+'</td><td>'+(x.d.passDate?fdate(x.d.passDate):'—')+'</td><td>'+fdate(x.d.passUntil)+'</td><td>'+(x.left<0?'<span class="st-pill" style="background:var(--bad)">истёк</span>':x.left<=60?'<span class="st-pill" style="background:var(--or)">через '+x.left+' дн.</span>':'<span class="st-pill" style="background:var(--ok)">ещё '+Math.round(x.left/30)+' мес.</span>')+'</td></tr>').join('')+'</tbody></table></div>':'');
+    } else {
+      const q=ARCH_Q.trim().toLowerCase(); const cnt={}; files.forEach(x=>cnt[x.f.cat||'other']=(cnt[x.f.cat||'other']||0)+1);
+      const list=files.filter(x=>(ARCH_CAT==='all'||(x.f.cat||'other')===ARCH_CAT)&&(!q||(x.f.name+' '+x.who+' '+(x.d?(x.d.kind||'')+' '+(x.d.addr||''):'')).toLowerCase().includes(q)));
+      body='<div class="note">Все файлы всех клиентов и заказов в одном месте. Клик по строке — открыть заказ, «Открыть» — сам файл.</div>'+
+        '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><input class="inp" id="archQ" style="max-width:320px" placeholder="Поиск: файл, клиент, адрес…" value="'+esc(ARCH_Q)+'"><div class="chips" style="margin:0">'+'<button data-ac="all" class="'+(ARCH_CAT==='all'?'on':'')+'">Все · '+files.length+'</button>'+FCATS.filter(x=>cnt[x[0]]).map(x=>'<button data-ac="'+x[0]+'" class="'+(ARCH_CAT===x[0]?'on':'')+'">'+x[1]+' '+x[2]+' · '+cnt[x[0]]+'</button>').join('')+'</div></div>'+
+        (list.length?'<div class="files" id="archList" style="margin-top:12px">'+list.slice(0,400).map(x=>fileRow(x.f,{ctx:()=>'<b>'+esc(x.who)+'</b>'+(x.d?' · 💼 '+esc(x.d.kind||'заказ'):' · 👤 клиент')})).join('')+'</div>':'<div class="empty">'+(files.length?'Ничего не найдено':'Файлов пока нет. Загружайте их в сделку (вкладка «Файлы») или здесь — кнопкой «⬆ Загрузить документ».')+'</div>');
+    }
+    $('#main').innerHTML=head('Документы',tabs+'<div class="spacer"></div><button class="btn-pri" id="docUp">⬆ Загрузить документ</button>'+refreshBtn)+body;
+    bindCommon();
+    $$('[data-dt]').forEach(b=>b.onclick=()=>{DOC_TAB=b.dataset.dt;docsView();});
+    $$('tr[data-id]').forEach(tr=>tr.onclick=ev=>{ if(ev.target.closest('[data-up]'))return; editDeal(tr.dataset.id,null,null,null,'docs'); });
+    $$('a.lnk[data-id]').forEach(a=>a.onclick=()=>editDeal(a.dataset.id,null,null,null,'docs'));
+    $$('[data-up]').forEach(b=>b.onclick=ev=>{ ev.stopPropagation(); uploadToDeal(b.dataset.up,b.dataset.cat); });
+    $('#docUp').onclick=()=>uploadToDeal(null);
+    if(DOC_TAB==='archive'){
+      const qi=$('#archQ'); qi.oninput=()=>{ARCH_Q=qi.value;clearTimeout(qi._t);qi._t=setTimeout(()=>{docsView();const n=$('#archQ');n.focus();n.setSelectionRange(n.value.length,n.value.length);},250);};
+      $$('[data-ac]').forEach(b=>b.onclick=()=>{ARCH_CAT=b.dataset.ac;docsView();});
+      const q=ARCH_Q.trim().toLowerCase(); const list=files.filter(x=>(ARCH_CAT==='all'||(x.f.cat||'other')===ARCH_CAT)&&(!q||(x.f.name+' '+x.who+' '+(x.d?(x.d.kind||'')+' '+(x.d.addr||''):'')).toLowerCase().includes(q))).slice(0,400);
+      $$('#archList .file').forEach((r,i)=>{ const x=list[i]; r.querySelector('.f-open').onclick=ev=>{ev.stopPropagation();openFile(x.f);};
+        r.classList.add('click'); r.onclick=ev=>{ if(ev.target.closest('button'))return; if(x.d) editDeal(x.d.id,null,null,null,'files'); else { VIEW='clients'; render(); openClient(x.c.id); } }; });
+    }
+  }
+  // загрузка документа в заказ прямо со страницы «Документы»
+  function uploadToDeal(dealId,cat){
+    const deals=DATA.deals.filter(d=>d.funnel!=='supply').sort((a,b)=>String(b.ts||'').localeCompare(String(a.ts||'')));
+    if(!deals.length){ toast('Сначала создайте сделку'); return; }
+    const sel=dealId||deals[0].id;
+    const docOpts=d=>'<option value="">— не привязывать —</option>'+BASE_DOCS.concat(kindDocList(d&&d.kind)).map(x=>'<option value="'+x[0]+'">'+esc(x[1])+'</option>').join('');
+    dialog('Загрузить документ в заказ',
+      '<div class="fld"><div class="k">Заказ</div><select class="inp" id="u_deal">'+deals.map(d=>'<option value="'+esc(d.id)+'"'+(d.id===sel?' selected':'')+'>'+esc(d.client||'—')+' · '+esc(d.kind||'заказ')+' · '+esc(stOf(stagesOf(d.funnel),d.status).t)+' · '+fdate(d.ts)+'</option>').join('')+'</select></div>'+
+      '<div class="grid2"><div class="fld"><div class="k">Тип файла</div><select class="inp" id="u_cat">'+FCATS.map(x=>'<option value="'+x[0]+'"'+(x[0]===(cat||'contract')?' selected':'')+'>'+x[1]+' '+x[2]+'</option>').join('')+'</select></div>'+
+      '<div class="fld"><div class="k">Это пункт чек-листа?</div><select class="inp" id="u_doc">'+docOpts(dealOf(sel))+'</select></div></div>'+
+      '<div class="drop" id="u_drop">Перетащите файлы сюда или <b>выберите</b></div><div class="files" id="u_list" style="margin-top:8px"></div>',{noSave:true});
+    $('#u_deal').onchange=()=>{ $('#u_doc').innerHTML=docOpts(dealOf($('#u_deal').value)); };
+    $('#u_doc').onchange=()=>{ const k=$('#u_doc').value; if(k&&DOC_CAT[k]) $('#u_cat').value=DOC_CAT[k]; else if(k) $('#u_cat').value='approval'; };
+    const go=async fl=>{ const d=dealOf($('#u_deal').value); if(!d) return; const doc=$('#u_doc').value;
+      const got=await uploadMany(fl,'d-'+d.id,{cat:$('#u_cat').value,doc},$('#u_list')); if(!got.length) return;
+      const docs=Object.assign({},d.docs||{}); if(doc&&!docs[doc]) docs[doc]={at:new Date().toISOString(),by:ME||'—'};
+      const log=[{ts:new Date().toISOString(),who:ME||'—',t:'📎 загрузил(а): '+got.map(f=>f.name).join(', ')}].concat(d.log||[]).slice(0,80);
+      try{ const it=normDeal(await save('deals',Object.assign({},d,{files:got.concat(normFiles(d.files)),docs,log}))); Object.assign(d,it); }catch(e){}
+      $('#u_list').insertAdjacentHTML('afterbegin',got.map(f=>'<div class="file"><div class="fi">✅</div><div class="fn">'+esc(f.name)+'</div><div class="fm" style="margin-left:auto">в заказ «'+esc(d.client||'')+'»</div></div>').join(''));
+      if(VIEW==='docs') docsView(); };
+    $('#u_drop').onclick=()=>pickFiles(go); bindDrop($('#u_drop'),go);
   }
 
   /* ---------- ПРАЙС ---------- */
@@ -946,8 +1308,9 @@
   $('#enter').onclick=enter; $('#pass').addEventListener('keydown',e=>{if(e.key==='Enter')enter();});
   $('#exit').onclick=()=>{try{localStorage.removeItem('riks_leads_pass');}catch(e){}location.reload();};
 
-  if(/[?&]demo=1/.test(location.search)){ DEMO=true; DATA.settings=normSettings(null); DATA.leads=[{id:'d1',name:'Андрей',phone:'+7 902 100-11-22',service:'Вывеска',detail:'Квиз: объёмные буквы, 1 этаж, ~3 м',source:'Авито',stage:'new',ts:new Date().toISOString()}];
-    DATA.deals=[normDeal({id:'k1',client:'Кофейня «Зерно»',phone:'+7 927 333-44-55',kind:'Наружная реклама',source:'ВКонтакте',status:'design',items:[{name:'Объёмные световые буквы',qty:6,price:4500}],ts:new Date().toISOString()})];
+  if(/[?&]demo=1/.test(location.search)){ DEMO=true; DATA.settings=normSettings(null); DATA.leads=[{id:'d1',name:'Андрей',phone:'+7 902 100-11-22',service:'Вывеска',source:'сайт · квиз',stage:'new',contact:'WhatsApp',ts:new Date().toISOString(),detail:'Квиз «Вывеска»: Что вас интересует? — Вывеска; Коротко, что нужно? — Объёмные световые буквы; Где будет вывеска? — На фасаде, 1 этаж; Примерный размер — 3000×600 мм; Что уже есть? — Логотип в векторе; Когда нужно? — В течение месяца | Хочу как у соседей, но ярче',quiz:[{q:'Что вас интересует?',a:'Вывеска'},{q:'Коротко, что нужно?',a:'Объёмные световые буквы'},{q:'Где будет вывеска?',a:'На фасаде, 1 этаж'},{q:'Примерный размер',a:'3000×600 мм'},{q:'Что уже есть?',a:'Логотип в векторе'},{q:'Когда нужно?',a:'В течение месяца'}]}];
+    DATA.deals=[normDeal({id:'k1',client:'Кофейня «Зерно»',phone:'+7 927 333-44-55',kind:'Наружная реклама',source:'ВКонтакте',status:'design',addr:'ул. Комсомольская, 134',items:[{name:'Объёмные световые буквы',qty:6,price:4500}],docs:{measure:{at:new Date().toISOString(),by:'Катя'},facade:true},files:[{id:'fx1',name:'Макет вывески v2 (Яндекс Диск)',link:'https://disk.yandex.ru/',cat:'mockup',who:'Ксюша',ts:new Date().toISOString()},{id:'fx2',name:'Фото фасада',link:'\\\\server\\Объекты\\Зерно',cat:'photo',doc:'facade',who:'Катя',ts:new Date().toISOString()}],ts:new Date().toISOString()})];
+    DATA.clients=[{id:'c-79273334455',name:'Кофейня «Зерно»',phone:'+7 927 333-44-55',company:'ИП Зернов',src:'crm'}];
     started(); render(); return; }
 
   const saved=ls.get('riks_leads_pass','');

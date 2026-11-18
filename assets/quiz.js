@@ -116,15 +116,30 @@
   .qz-top{padding:16px 20px 0;display:flex;align-items:center;gap:10px}
   .qz-top b{font-size:15px;font-weight:800}
   .qz-top .qz-x{margin-left:auto;width:36px;height:36px;border-radius:10px;font-size:22px;color:#8a817a;background:#f6f1ed}
-  .qz-run{position:relative;height:66px;margin:6px 20px 0}
+  .qz-run{position:relative;height:118px;margin:2px 20px 0}
   .qz-ground{position:absolute;left:0;right:0;bottom:10px;height:8px;border-radius:8px;background:repeating-linear-gradient(90deg,#f3d9c8 0 14px,#fbe9de 14px 28px)}
   .qz-fill{position:absolute;left:0;bottom:10px;height:8px;border-radius:8px;background:linear-gradient(90deg,#FF8A00,#E3241B);transition:width .5s cubic-bezier(.2,.7,.2,1)}
   .qz-coin{position:absolute;bottom:22px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:#F7941D;border:2px solid #fff;box-shadow:0 0 0 2px #F7941D;transition:all .3s}
   .qz-coin.got{transform:translateY(-14px) scale(.2);opacity:0}
   .qz-flag{position:absolute;right:-4px;bottom:18px;font-size:22px}
-  .qz-tiger{position:absolute;bottom:12px;width:50px;height:50px;margin-left:-25px;transition:left .55s cubic-bezier(.2,.7,.2,1);z-index:2}
-  .qz-tiger img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 4px rgba(0,0,0,.25))}
-  .qz-tiger.hop{animation:qzhop .55s ease}
+  .qz-tiger{position:absolute;bottom:13px;width:66px;height:102px;margin-left:-33px;transition:left .6s cubic-bezier(.3,.6,.3,1);z-index:2}
+  .qz-face{width:100%;height:100%;transform:scaleX(-1);transition:transform .25s}
+  .qz-tiger.back .qz-face{transform:none}
+  .qz-arch svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 4px 4px rgba(0,0,0,.22))}
+  .qz-arch .qz-bd{animation:qzBob 2.6s ease-in-out infinite}
+  @keyframes qzBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  .qz-wr{transform-origin:184px 214px;animation:qzWr .55s ease-in-out infinite}
+  @keyframes qzWr{0%,100%{transform:rotate(0)}25%{transform:rotate(-2.5deg) translate(-1px,1px)}50%{transform:rotate(1deg)}75%{transform:rotate(-1.5deg) translate(1px,0)}}
+  .qz-ln{stroke-dasharray:46;stroke-dashoffset:46;animation:qzLn 4s linear infinite}
+  .qz-ln:nth-child(2){animation-delay:.9s}.qz-ln:nth-child(3){animation-delay:1.8s}.qz-ln:nth-child(4){animation-delay:2.7s}
+  @keyframes qzLn{0%{stroke-dashoffset:46}22%,88%{stroke-dashoffset:0}100%{stroke-dashoffset:46}}
+  .qz-l1{transform-origin:133px 336px}.qz-l2{transform-origin:170px 336px}
+  .qz-tiger.walk .qz-l1{animation:qzStep .2s ease-in-out 3 alternate}
+  .qz-tiger.walk .qz-l2{animation:qzStep .2s ease-in-out 3 alternate-reverse}
+  .qz-tiger.walk .qz-bd{animation:qzWalk .2s ease-in-out 3 alternate}
+  .qz-tiger.walk .qz-wr{animation:none}
+  @keyframes qzStep{from{transform:rotate(-22deg)}to{transform:rotate(22deg)}}
+  @keyframes qzWalk{from{transform:translateY(0)}to{transform:translateY(-6px)}}
   @keyframes qzhop{0%{transform:translateY(0)}35%{transform:translateY(-22px) rotate(-8deg)}70%{transform:translateY(0) rotate(4deg)}85%{transform:translateY(-4px)}100%{transform:none}}
   .qz-body{padding:8px 22px 6px;overflow-y:auto;flex:1}
   .qz-step{font-size:12px;font-weight:700;color:#E3241B;text-transform:uppercase;letter-spacing:.06em}
@@ -149,16 +164,39 @@
   .qz-call{width:100%;height:46px;border-radius:12px;background:#fff5ec;color:#B5161A;font-weight:800;font-size:14px;border:2px dashed #F7941D;order:9}
   .qz-call:hover{background:#ffe9d6}
   .qz-done{text-align:center;padding:26px 10px}
-  .qz-done img{width:110px;animation:qzhop 1s ease infinite}
+  .qz-done .qz-arch{width:110px;height:170px;margin:0 auto}
   .qz-done h3{font-size:24px;font-weight:900;margin-top:10px}
   .qz-done p{color:#7a6f67;margin-top:8px}
   .qz-why{font-size:13px;color:#E3241B;font-weight:700;text-decoration:underline;margin-top:12px;display:inline-block;cursor:pointer}
-  @media(max-width:560px){.qz-opts{grid-template-columns:1fr}.qz-q{font-size:19px}.qz{border-radius:18px}.qz-btn{padding:0 16px}}`;
+  @media(max-width:560px){.qz-run{height:96px}.qz-tiger{width:54px;height:83px;margin-left:-27px}.qz-opts{grid-template-columns:1fr}.qz-q{font-size:19px}.qz{border-radius:18px}.qz-btn{padding:0 16px}}`;
   const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+
+  // тигр-архитектор: голова из логотипа, белый халат, планшет и карандаш (смотрит влево; в беговой дорожке зеркалится)
+  const ARCH = `<svg viewBox="0 0 260 400" aria-hidden="true"><defs><linearGradient id="qzFl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8A00"/><stop offset=".5" stop-color="#FF5A1F"/><stop offset="1" stop-color="#E3241B"/></linearGradient></defs><g class="qz-bd">
+    <path d="M198 318 C230 314 244 288 234 262 C228 246 238 234 246 238" fill="none" stroke="#1A1513" stroke-width="15" stroke-linecap="round"/><path d="M198 318 C230 314 244 288 234 262 C228 246 238 234 246 238" fill="none" stroke="#FF7A1A" stroke-width="9" stroke-linecap="round"/><path d="M222 310l-4 10M236 288l-10 4M233 264l-10-2" stroke="#1A1513" stroke-width="4" stroke-linecap="round"/>
+    <g class="qz-l1"><path d="M122 330 L118 378 L142 378 L144 330 Z" fill="#2A2320" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/><path d="M112 374 h30 a6 6 0 0 1 6 6 v8 h-42 v-6 a8 8 0 0 1 6-8z" fill="url(#qzFl)" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/></g>
+    <g class="qz-l2"><path d="M158 330 L160 378 L184 378 L182 330 Z" fill="#2A2320" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/><path d="M156 374 h30 a6 6 0 0 1 6 6 v8 h-42 v-6 a8 8 0 0 1 6-8z" fill="url(#qzFl)" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/></g>
+    <image href="img/logo-mark.png" x="22" y="18" width="190" height="205"/>
+    <path d="M114 200 C100 250 96 300 90 342 Q150 352 208 342 C202 300 204 250 190 200 Z" fill="#fff" stroke="#1A1513" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M128 202 L150 262 L174 202 Z" fill="url(#qzFl)" stroke="#1A1513" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M146 206 h8 l3 34 l-7 9 l-7-9z" fill="#1A1513"/>
+    <path d="M124 200 L134 226 L124 232 L150 264 L176 232 L166 226 L178 200" fill="none" stroke="#1A1513" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M150 264 V347" stroke="#1A1513" stroke-width="3"/><circle cx="150" cy="284" r="3.5" fill="#1A1513"/><circle cx="150" cy="308" r="3.5" fill="#1A1513"/>
+    <path d="M173 274 v-15" stroke="#E3241B" stroke-width="5" stroke-linecap="round"/><path d="M182 274 v-18" stroke="#FF8A00" stroke-width="5" stroke-linecap="round"/>
+    <path d="M165 270 h28 v18 h-28z" fill="#fff" stroke="#1A1513" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M104 312 h24 M172 312 h26" stroke="#1A1513" stroke-width="3" stroke-linecap="round"/>
+    <path d="M122 214 C108 240 100 268 100 290" fill="none" stroke="#1A1513" stroke-width="26" stroke-linecap="round"/><path d="M122 214 C108 240 100 268 100 290" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round"/>
+    <g transform="rotate(-10 80 262)"><rect x="44" y="222" width="70" height="84" rx="6" fill="#FFB43A" stroke="#1A1513" stroke-width="4"/><rect x="51" y="232" width="56" height="66" rx="2" fill="#fff" stroke="#1A1513" stroke-width="2.5"/><rect x="66" y="216" width="26" height="12" rx="3" fill="#2A2320" stroke="#1A1513" stroke-width="3"/>
+      <g stroke="#8a817a" stroke-width="3.5" stroke-linecap="round"><path class="qz-ln" d="M58 246 h42"/><path class="qz-ln" d="M58 259 h36"/><path class="qz-ln" d="M58 272 h42"/><path class="qz-ln" d="M58 285 h26"/></g></g>
+    <circle cx="100" cy="292" r="12" fill="#fff" stroke="#1A1513" stroke-width="4"/>
+    <g class="qz-wr"><path d="M186 214 C178 250 150 262 120 256" fill="none" stroke="#1A1513" stroke-width="26" stroke-linecap="round"/><path d="M186 214 C178 250 150 262 120 256" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round"/><path d="M168 244l-3 11M152 252l-2 11" stroke="#1A1513" stroke-width="4" stroke-linecap="round"/>
+      <path d="M128 236 L100 266" stroke="#1A1513" stroke-width="10" stroke-linecap="round"/><path d="M128 236 L104 262" stroke="#FF7A1A" stroke-width="5" stroke-linecap="round"/><circle cx="99" cy="267" r="2.5" fill="#1A1513"/>
+      <circle cx="116" cy="252" r="12" fill="#fff" stroke="#1A1513" stroke-width="4"/></g>
+  </g></svg>`;
 
   const root = document.createElement('div'); root.className = 'qz-scrim';
   root.innerHTML = '<div class="qz" role="dialog" aria-modal="true"><div class="qz-top"><b id="qzTitle"></b><button class="qz-x" aria-label="Закрыть">×</button></div>' +
-    '<div class="qz-run"><div class="qz-ground"></div><div class="qz-fill"></div><div class="qz-coins"></div><div class="qz-flag">🏁</div><div class="qz-tiger"><img src="img/logo-mark.png" alt=""></div></div>' +
+    '<div class="qz-run"><div class="qz-ground"></div><div class="qz-fill"></div><div class="qz-coins"></div><div class="qz-flag">🏁</div><div class="qz-tiger"><div class="qz-face qz-arch">' + ARCH + '</div></div></div>' +
     '<div class="qz-body"></div><div class="qz-foot"></div></div>';
   document.body.appendChild(root);
   const body = $('.qz-body', root), foot = $('.qz-foot', root), tiger = $('.qz-tiger', root), fill = $('.qz-fill', root), coins = $('.qz-coins', root);
@@ -175,11 +213,18 @@
     out.push({ t: 'contact' });
     return out;
   }
+  let lastPct = 0, walkT = 0;
+  function walk(pct) {
+    if (pct === lastPct) return;
+    tiger.classList.toggle('back', pct < lastPct); lastPct = pct;
+    tiger.classList.remove('walk'); void tiger.offsetWidth; tiger.classList.add('walk');
+    clearTimeout(walkT); walkT = setTimeout(() => tiger.classList.remove('walk', 'back'), 650);
+  }
   function progress() {
     const all = steps(), n = all.length - 1, i = Math.min(S.i, n);
     const pct = n ? i / n : 0;
     tiger.style.left = `calc(${pct * 100}% * .92 + 4%)`; fill.style.width = (pct * 100) + '%';
-    tiger.classList.remove('hop'); void tiger.offsetWidth; tiger.classList.add('hop');
+    walk(pct);
     coins.innerHTML = all.slice(1, -1).map((_, k) => `<i class="qz-coin${k + 1 <= i - 0 && i > k + 1 ? ' got' : ''}" style="left:calc(${((k + 1) / n) * 100}% * .92 + 4%)"></i>`).join('');
   }
   const answerText = q => { const a = S.ans[q.id]; if (a == null || a === '') return ''; if (Array.isArray(a)) return a.join(', '); if (typeof a === 'object') return q.type === 'size' ? (a.w || '?') + '×' + (a.h || '?') + ' ' + (q.unit || '') + (a.unknown ? ' (не знаю — нужен замер)' : '') : q.type === 'pockets' ? (a.n ? a.n + ' шт., ' + (a.f || '') : 'без карманов') : JSON.stringify(a); return String(a); };
@@ -297,9 +342,9 @@
     const answers = collect(); const title = S.branch ? QUIZZES[S.branch].title : QUIZZES[S.key].title;
     const detail = (callback ? '📞 Просит перезвонить. ' : '') + 'Квиз «' + title + '»' + (answers.length ? ': ' + answers.map(x => x.q + ' — ' + x.a).join('; ') : ' (без ответов)') + (S.warn ? ' ⚠ ' + S.warn : '') + (S.extraDetail ? ' | ' + S.extraDetail : '');
     const extra = { name: S.name || '', phone: S.phone, service: S.service || title, detail, quiz: answers, contact: S.contact || '', callback };
-    body.innerHTML = '<div class="qz-done"><img src="img/logo-mark.png" alt=""><h3>' + (callback ? 'Перезвоним!' : 'Финиш! Заявка у менеджера') + '</h3><p>' + (callback ? 'Менеджер свяжется с вами в рабочее время.' : 'Менеджер посмотрит ответы и свяжется с вами' + (S.contact && S.contact !== 'Не важно' ? ' — ' + esc(S.contact) : '') + '.') + '</p></div>';
+    body.innerHTML = '<div class="qz-done"><div class="qz-arch">' + ARCH.replace(/qzFl/g, 'qzFl2') + '</div><h3>' + (callback ? 'Перезвоним!' : 'Финиш! Заявка у менеджера') + '</h3><p>' + (callback ? 'Менеджер свяжется с вами в рабочее время.' : 'Менеджер посмотрит ответы и свяжется с вами' + (S.contact && S.contact !== 'Не важно' ? ' — ' + esc(S.contact) : '') + '.') + '</p></div>';
     foot.innerHTML = '<button type="button" class="qz-btn qz-next">Отлично</button>'; $('.qz-next', foot).onclick = close;
-    tiger.style.left = '96%'; fill.style.width = '100%'; $$('.qz-coin', coins).forEach(c => c.classList.add('got'));
+    walk(1); tiger.style.left = '96%'; fill.style.width = '100%'; $$('.qz-coin', coins).forEach(c => c.classList.add('got'));
     if (S.onDone) S.onDone(extra);
     else {
       const SRC = window.RiksSRC || {}; const lbl = window.RiksSrcLabel ? window.RiksSrcLabel() : 'сайт';
@@ -316,6 +361,7 @@
     open(o) {
       o = o || {};
       const key = o.key || fromService(o.service) || pageKey();
+      lastPct = 0;
       S = { key: QUIZZES[key] ? key : 'general', i: o.skipIntro ? 1 : 0, ans: {}, name: o.name || '', phone: o.phone || '', service: o.service || '', onDone: o.onDone, branch: null, contact: '', extraDetail: o.detail || '' };
       root.classList.add('on'); document.documentElement.style.overflow = 'hidden'; draw();
     },

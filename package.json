@@ -1,0 +1,8 @@
+{
+  "name": "riks-s",
+  "private": true,
+  "description": "Сайт и CRM «Рикс+С»: статические страницы + функции api/ на Vercel",
+  "dependencies": {
+    "@vercel/blob": "2.8.2"
+  }
+}
