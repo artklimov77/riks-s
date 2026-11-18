@@ -117,7 +117,7 @@
   .kpi{background:#fff;border:1px solid var(--line);border-radius:11px;padding:15px 17px}
   .kpi b{display:block;font-size:24px;font-weight:800;letter-spacing:-.02em}
   .kpi span{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
-  .kpi.click{cursor:pointer}.kpi.click:hover{border-color:var(--or)}
+  .kpi.click{cursor:pointer}.kpi.click:hover{border-color:var(--or)}.kpi.on{border-color:var(--red)!important;box-shadow:0 0 0 3px #fdeeea}
   .chart{background:#fff;border:1px solid var(--line);border-radius:11px;padding:16px 18px;margin-bottom:16px}
   .chart h3{font-size:15px;font-weight:800;margin-bottom:12px}
   .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
@@ -1212,7 +1212,11 @@
     const inP=ts=>{ const t=String(ts||'').slice(0,10); return (!PERIOD.from||t>=PERIOD.from)&&(!PERIOD.to||t<=PERIOD.to); };
     const L=DATA.leads.filter(l=>inP(l.ts)), D=DATA.deals.filter(d=>d.funnel!=='supply'&&inP(d.ts));
     const lostK=k=>stOf(stagesOf('sales'),k).lost;
-    const done=D.filter(d=>d.status==='done'), open=D.filter(d=>d.status!=='done'&&!lostK(d.status));
+    // выручка — по дате закрытия (взяли в октябре, закрыли в ноябре → выручка ноября)
+    const doneT='→ '+stOf(stagesOf('sales'),'done').t;
+    const closedAt=d=>{ const x=(d.log||[]).find(e=>e.t===doneT); return (x&&x.ts)||d.updDate||d.upd||d.ts; };
+    const done=DATA.deals.filter(d=>d.funnel!=='supply'&&d.status==='done'&&inP(closedAt(d))).sort((a,b)=>String(closedAt(b)).localeCompare(String(closedAt(a))));
+    const open=D.filter(d=>d.status!=='done'&&!lostK(d.status)), lostD=D.filter(d=>lostK(d.status));
     const conv=L.length?Math.round(L.filter(l=>l.dealId||l.stage==='won').length/L.length*100):0;
     const revenue=done.reduce((a,d)=>a+dealTotal(d),0), pipeline=open.reduce((a,d)=>a+dealTotal(d),0);
     const advList=DATA.deals.filter(d=>d.funnel!=='supply'&&d.status!=='done'&&!lostK(d.status)&&(Number(d.prepaid)||0)>0);
@@ -1227,13 +1231,15 @@
     const st=stagesOf('sales'); const bySt={}; st.forEach(s=>bySt[s.k]={n:0,s:0}); D.forEach(d=>{if(bySt[d.status]){bySt[d.status].n++;bySt[d.status].s+=dealTotal(d);}});
     $('#main').innerHTML=head('Аналитика','<div class="spacer"></div><span style="color:var(--muted);font-size:13px">период</span><input type="date" class="inp" id="pFrom" style="width:150px" value="'+PERIOD.from+'"><input type="date" class="inp" id="pTo" style="width:150px" value="'+PERIOD.to+'"><div class="tabs"><button data-p="m">Месяц</button><button data-p="y">Год</button><button data-p="all">Всё</button></div>'+refreshBtn)+
       '<div class="cards-row">'+
-        '<div class="kpi"><b>'+L.length+'</b><span>Лидов</span></div><div class="kpi"><b>'+conv+'%</b><span>Конверсия в сделку</span></div>'+
-        '<div class="kpi"><b>'+money(pipeline)+'</b><span>В работе</span></div><div class="kpi"><b>'+money(revenue)+'</b><span>Выручка (закрыто)</span></div>'+
+        '<div class="kpi click" data-dr="leads"><b>'+L.length+'</b><span>Лидов ↓</span></div><div class="kpi click" data-dr="conv"><b>'+conv+'%</b><span>Конверсия в сделку ↓</span></div>'+
+        '<div class="kpi click" data-dr="open"><b>'+money(pipeline)+'</b><span>В работе · '+open.length+' ↓</span></div><div class="kpi click" data-dr="done" style="border-color:#cfe9d7"><b style="color:var(--ok)">'+money(revenue)+'</b><span>Выручка · закрыто '+done.length+' ↓</span></div>'+
+        '<div class="kpi click" data-dr="lost"><b>'+lostD.length+'</b><span>Отказы ↓</span></div>'+
         '<div class="kpi click" id="kAdv"><b>'+money(advances)+'</b><span>Авансы · '+advList.length+' ↓</span></div>'+
         '<div class="kpi click" id="kDebt" style="'+(debtors.some(x=>x.over>0)?'border-color:var(--bad)':'')+'"><b style="color:'+(debt?'var(--bad)':'inherit')+'">'+money(debt)+'</b><span>Должники · '+debtors.length+' ↓</span></div></div>'+
+      '<div class="chart" id="drillBox" hidden></div>'+
       '<div class="chart" id="advBox"><h3>💰 Получены авансы — от кого</h3>'+(advList.length?'<div class="table"><table><tbody>'+advList.map(d=>'<tr class="click" data-id="'+esc(d.id)+'"><td class="nm">'+esc(d.client)+'</td><td>'+esc(stOf(st,d.status).t)+'</td><td>аванс <b>'+money((Number(d.prepaid)||0)+(Number(d.paidMore)||0))+'</b></td><td>остаток '+money(dealRem(d))+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty" style="padding:14px">Нет</div>')+'</div>'+
       '<div class="chart" id="debtBox"><h3>⏰ Должники — УПД подписан, оплата 30 дней</h3>'+(debtors.length?'<div class="table"><table><thead><tr><th>Клиент</th><th>УПД</th><th>Оплатить до</th><th>Долг</th><th></th></tr></thead><tbody>'+debtors.map(x=>'<tr class="click" data-id="'+esc(x.d.id)+'"><td class="nm">'+esc(x.d.client)+'</td><td>'+fdate(x.d.updDate)+'</td><td>'+x.due.toLocaleDateString('ru-RU')+'</td><td><b>'+money(dealRem(x.d))+'</b></td><td>'+(x.over>0?'<span class="st-pill" style="background:var(--bad)">просрочка '+x.over+' дн.</span>':'<span class="st-pill" style="background:var(--ok)">ещё '+(-x.over)+' дн.</span>')+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty" style="padding:14px">Должников нет</div>')+'</div>'+
-      '<div class="chart"><h3>📦 Сколько продукции за период</h3>'+(Object.keys(byKind).length?'<div class="table"><table><thead><tr><th>Направление</th><th>Кол-во</th><th>Сумма</th><th>Что именно</th></tr></thead><tbody>'+Object.entries(byKind).sort((a,b)=>b[1].s-a[1].s).map(([k,g])=>'<tr><td class="nm">'+esc(k)+'</td><td>'+g.q+'</td><td>'+money(g.s)+'</td><td style="font-size:12px;color:var(--muted)">'+Object.entries(g.n).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([n,q])=>esc(n)+' — '+q).join('; ')+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty" style="padding:14px">Нет позиций в сделках за период</div>')+'</div>'+
+      '<div class="chart"><h3>📦 Сколько продукции за период</h3>'+(Object.keys(byKind).length?'<div class="table"><table><thead><tr><th>Направление</th><th>Кол-во</th><th>Сумма</th><th>Что именно</th></tr></thead><tbody>'+Object.entries(byKind).sort((a,b)=>b[1].s-a[1].s).map(([k,g])=>'<tr class="click" data-kind="'+esc(k)+'"><td class="nm">'+esc(k)+' <span class="lnk" style="font-size:11px">сделки →</span></td><td>'+g.q+'</td><td>'+money(g.s)+'</td><td style="font-size:12px;color:var(--muted)">'+Object.entries(g.n).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([n,q])=>esc(n)+' — '+q).join('; ')+'</td></tr>').join('')+'</tbody></table></div>':'<div class="empty" style="padding:14px">Нет позиций в сделках за период</div>')+'</div>'+
       '<div class="chart"><h3>Деньги по источникам (закрытые сделки)</h3>'+bars(revBySrc,money)+'</div>'+
       '<div class="chart"><h3>Лиды по источникам</h3>'+bars(leadsBySrc,n=>n)+'</div>'+
       '<div class="chart"><h3>Воронка продаж</h3><div class="funnel">'+st.map(s=>'<div class="fstep" style="background:'+s.col+'"><b>'+bySt[s.k].n+'</b><span>'+esc(s.t)+'</span><div class="fm">'+money(bySt[s.k].s)+'</div></div>').join('')+'</div></div>';
@@ -1243,6 +1249,30 @@
     $$('[data-p]').forEach(b=>b.onclick=()=>{const n=new Date();const iso=x=>x.toISOString().slice(0,10);if(b.dataset.p==='all')setP('','');else if(b.dataset.p==='m')setP(iso(new Date(n.getFullYear(),n.getMonth(),1)),'');else setP(iso(new Date(n.getFullYear(),0,1)),'');});
     $('#kAdv').onclick=()=>$('#advBox').scrollIntoView({behavior:'smooth'}); $('#kDebt').onclick=()=>$('#debtBox').scrollIntoView({behavior:'smooth'});
     $$('tr[data-id]').forEach(tr=>tr.onclick=()=>editDeal(tr.dataset.id));
+    // ---- расшифровка любой цифры: клик по плашке или строке → список, клик по строке списка → карточка ----
+    const won=L.filter(l=>l.dealId||l.stage==='won');
+    const dealRows=(rows,dateT,dateF)=>'<div class="table"><table><thead><tr><th>Клиент</th><th>Направление</th><th>Стадия</th><th>'+dateT+'</th><th>Источник</th><th style="text-align:right">Сумма</th></tr></thead><tbody>'+
+      rows.map(d=>{const s=stOf(stagesOf(d.funnel),d.status),sr=srcOf(d.source);return '<tr class="click" data-dd="'+esc(d.id)+'"><td class="nm">'+esc(d.client||'—')+(d.note&&s.lost?'<div style="font-weight:400;color:var(--muted);font-size:12px">'+esc(d.note)+'</div>':'')+'</td><td>'+esc(d.kind||'—')+'</td><td><span class="st-pill" style="background:'+s.col+'">'+esc(s.t)+'</span></td><td style="white-space:nowrap">'+fdate(dateF(d))+'</td><td><span class="badge" style="background:'+sr.c+'">'+esc(sr.t)+'</span></td><td style="text-align:right;font-weight:800;white-space:nowrap">'+money(dealTotal(d))+'</td></tr>';}).join('')+
+      '</tbody><tfoot><tr><td colspan="5" style="text-align:right;color:var(--muted)">Итого · '+rows.length+' сд.</td><td style="text-align:right;font-weight:800;white-space:nowrap">'+money(rows.reduce((a,d)=>a+dealTotal(d),0))+'</td></tr></tfoot></table></div>';
+    const leadRows=rows=>'<div class="table"><table><thead><tr><th>Имя</th><th>Телефон</th><th>Запрос</th><th>Источник</th><th>Стадия</th><th>Когда</th><th>Сделка</th></tr></thead><tbody>'+
+      rows.map(l=>{const sr=srcOf(l.source),s=stOf(LEAD_STAGES,l.stage||'new'),d=l.dealId?dealOf(l.dealId):null;return '<tr class="click" data-ll="'+esc(l.id)+'"><td class="nm">'+(esc(l.name)||'—')+'</td><td class="ph">'+esc(l.phone)+'</td><td>'+(esc(l.service)||'—')+'</td><td><span class="badge" style="background:'+sr.c+'">'+esc(sr.t)+'</span></td><td><span class="st-pill" style="background:'+s.col+'">'+s.t+'</span></td><td style="white-space:nowrap;color:var(--muted)">'+fmt(l.ts)+'</td><td>'+(d?money(dealTotal(d)):'')+'</td></tr>';}).join('')+'</tbody></table></div>';
+    const DR={
+      leads:()=>['📥 Лиды за период · '+L.length,leadRows(L)],
+      conv:()=>['✅ Лиды, ставшие сделками · '+won.length+' из '+L.length+' ('+conv+'%)',leadRows(won)],
+      open:()=>['⚙️ Сделки в работе · '+open.length,dealRows(open,'Создана',d=>d.ts)],
+      done:()=>['💚 Закрытые сделки — выручка '+money(revenue),dealRows(done,'Закрыта',closedAt)],
+      lost:()=>['✖ Отказы · '+lostD.length+' — причина в заметке',dealRows(lostD,'Создана',d=>d.ts)]
+    };
+    let cur='';
+    const drill=(key,title,html)=>{ const box=$('#drillBox'); if(cur===key&&!box.hidden){ box.hidden=true; cur=''; $$('[data-dr]').forEach(k=>k.classList.remove('on')); return; } cur=key;
+      box.hidden=false; box.innerHTML='<h3 style="display:flex;align-items:center;gap:10px">'+title+'<button class="btn-sec btn-sm" id="drClose" style="margin-left:auto">Скрыть</button></h3>'+html;
+      $$('[data-dr]').forEach(k=>k.classList.toggle('on',k.dataset.dr===key));
+      $('#drClose').onclick=()=>{box.hidden=true;cur='';$$('[data-dr]').forEach(k=>k.classList.remove('on'));};
+      $$('#drillBox [data-dd]').forEach(tr=>tr.onclick=()=>editDeal(tr.dataset.dd)); $$('#drillBox [data-ll]').forEach(tr=>tr.onclick=()=>openLead(tr.dataset.ll));
+      box.scrollIntoView({behavior:'smooth',block:'start'}); };
+    $$('[data-dr]').forEach(k=>k.onclick=()=>{ const [t,h]=DR[k.dataset.dr](); drill(k.dataset.dr,t,h); });
+    $$('tr[data-kind]').forEach(tr=>tr.onclick=()=>{ const k=tr.dataset.kind; const rows=D.filter(d=>!lostK(d.status)&&((d.items||[]).some(it=>(it.cat||d.kind||'Прочее')===k)));
+      drill('kind:'+k,'📦 '+esc(k)+' — сделки · '+rows.length,dealRows(rows,'Создана',d=>d.ts)); });
   }
 
   /* ---------- НАСТРОЙКИ ---------- */
