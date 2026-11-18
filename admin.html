@@ -1220,7 +1220,7 @@
     const label=(G,i)=>{ let n=i.name||''; if(G.items.length>1&&G.name&&n.toLowerCase().startsWith(G.name.toLowerCase())) n=n.slice(G.name.length).replace(/^[\s,.:–-]+/,''); return n||i.name||'—'; };
     const byCat={}; groups.forEach(G=>(byCat[G.cat]=byCat[G.cat]||[]).push(G));
     const card=G=>{ const min=Math.min(...G.items.map(i=>Number(i.price)||0));
-      return '<div class="pc">'+(G.photo?'<div class="pc-ph"><img src="'+esc(G.photo)+'" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>':'')+
+      return '<div class="pc">'+(G.photo?'<div class="pc-ph" hidden><img src="'+esc(G.photo)+'" alt="" loading="lazy" referrerpolicy="no-referrer" onload="this.parentNode.hidden=false" onerror="this.parentNode.remove()"></div>':'')+
         '<div class="pc-b"><div class="pc-h"><b>'+esc(G.name)+'</b>'+(G.items.length>1?'<span class="pc-from">от '+money(min)+'</span>':'')+'</div>'+
         (G.desc?'<details class="pc-d"><summary>описание</summary><div>'+esc(G.desc)+'</div></details>':'')+
         '<div class="pc-v">'+G.items.map(i=>'<div class="pv'+(i.src&&i.src!=='uds'?' ed':'')+'" data-id="'+esc(i.id)+'"><span class="pv-n">'+esc(label(G,i))+(i.src&&i.src!=='uds'?' <span class="tag" title="изменено вручную">правка</span>':'')+'</span><span class="pv-p">'+money(i.price)+' <small>'+unitT(i.unit)+'</small></span><button class="ic-btn pv-e" title="Изменить">✎</button></div>').join('')+'</div></div></div>'; };
