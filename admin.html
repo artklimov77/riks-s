@@ -267,6 +267,36 @@
   .pv-p{font-weight:800;font-size:14px;white-space:nowrap}.pv-p small{font-weight:400;color:var(--muted);font-size:11px}
   .pv .pv-e{width:28px;height:28px;font-size:13px;opacity:.35}.pv:hover .pv-e{opacity:1}.pv:hover{background:#fdf7f4}
   .pv.ed .pv-p{color:var(--red-d)}
+  .fn-prev{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:14px}
+  .fn-pill{color:#fff;font-weight:700;font-size:12px;padding:6px 10px;border-radius:8px;display:flex;flex-direction:column;line-height:1.2;text-align:left}
+  .fn-pill small{font-weight:400;opacity:.85;font-size:10px}.fn-arr{color:var(--muted2);font-size:18px}
+  .st-list{display:flex;flex-direction:column;gap:8px}
+  .stc{background:#fff;border:1px solid var(--line);border-left:5px solid #ccc;border-radius:11px;transition:box-shadow .2s}
+  .stc.open{box-shadow:0 4px 18px rgba(0,0,0,.08)}.stc.lost{background:#fbf8f7}.stc.flash{box-shadow:0 0 0 3px var(--or)}
+  .stc-row{display:flex;align-items:center;gap:8px;padding:8px 10px;flex-wrap:wrap}
+  .stc-ord{display:flex;flex-direction:column}.stc-ord .ic-btn{width:24px;height:16px;font-size:9px;line-height:1}.stc-ord .ic-btn:disabled{opacity:.2;cursor:default}
+  .stc-col{position:relative;width:26px;height:26px;cursor:pointer}.stc-col span{display:block;width:26px;height:26px;border-radius:7px;border:2px solid #fff;box-shadow:0 0 0 1px var(--line2)}.stc-col input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .stc .s-t{flex:1;min-width:180px;font-weight:700;font-size:14px}
+  .stc-own{display:flex;align-items:center;gap:4px}.stc-own .inp{width:140px}
+  .stc-req{font-size:12px;padding:7px 11px;border-radius:8px;border:1.5px solid var(--line2);background:#fff;white-space:nowrap}.stc-req b{color:var(--red-d)}.stc-req span{color:var(--muted)}
+  .stc.open .stc-req{border-color:var(--red);color:var(--red-d)}
+  .stc-lost{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px;cursor:pointer}.stc-lost input{accent-color:var(--red)}
+  .stc-n{font-size:11px;color:var(--muted2);min-width:40px;text-align:right}
+  .stc-req-box{border-top:1px dashed var(--line);padding:10px 14px 12px 46px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+  .rq-h{font-size:12px;font-weight:800;margin-bottom:6px}.rq-p{display:flex;flex-wrap:wrap;gap:5px}
+  .rq-pill{font-size:12px;padding:5px 10px;border-radius:14px;border:1.5px solid var(--line2);background:#fff;color:var(--muted);font-weight:600}
+  .rq-pill.on{background:var(--red);border-color:var(--red);color:#fff}
+  .rq-pill.lock{background:#f3faf5;border-color:#cfe9d7;color:#1d6b35;display:inline-flex;flex-direction:column;line-height:1.2}.rq-pill.lock small{font-size:10px;font-weight:400;opacity:.8}
+  .set-bar{position:fixed;left:220px;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);box-shadow:0 -6px 20px rgba(0,0,0,.08);padding:10px 20px;display:flex;align-items:center;gap:10px;z-index:30;transform:translateY(110%);transition:transform .2s}
+  .set-bar.on{transform:none}.set-bar>span{color:var(--or-d);font-weight:700;font-size:13px}
+  .tm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:12px}
+  .tm{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;gap:12px;align-items:flex-start}
+  .tm-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--red));color:#fff;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;flex:0 0 46px}
+  .tm-b{flex:1;min-width:0}
+  .tm-add{border:2px dashed var(--line2);background:transparent;justify-content:center;align-items:center;color:var(--muted);font-weight:700;min-height:120px;cursor:pointer}.tm-add:hover{border-color:var(--or);color:var(--ink)}
+  .co-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;align-items:start}
+  .co-prev{font-size:13px;line-height:1.7;background:#fcfaf8;border:1px solid var(--line);border-radius:9px;padding:12px 14px}
+  @media(max-width:760px){.set-bar{left:0}.stc-req-box{padding-left:14px}.tm-grid{grid-template-columns:1fr}}
   .scrim2{position:fixed;inset:0;background:rgba(30,20,15,.35);z-index:85;display:none}.scrim2.on{display:block}
   .modal.m2{z-index:88}
   @media(max-width:900px){.dl-grid{grid-template-columns:1fr}.dl-side{position:static}.modal.xl{height:100vh;max-height:100vh;width:100vw;max-width:100vw;border-radius:0}}
@@ -1322,47 +1352,84 @@
   }
 
   /* ---------- НАСТРОЙКИ ---------- */
-  let SET_TAB='funnel';
+  let SET_TAB='funnel', SDRAFT=null, SDIRTY=false, ST_OPEN=null;
+  const FGROUPS=[['📋 Заказ',['source','kind','deadline']],['✏️ ТЗ и макет',['sizes','materials','tz','mockupPath']],['💰 Деньги',['items','total','payType','prepaid','paidFull']],['📑 Документы',['docFlow','contract','preApproval','legal','updDate']]];
+  const SCOLORS=['#F7941D','#ef7d1a','#e46a1d','#d9534f','#c0392b','#9b59b6','#6c5ce7','#2d3436','#00838f','#5d6d7e','#2e9e4f','#7a2620','#a59d96'];
   function settingsView(){
-    const s=JSON.parse(JSON.stringify(S()));
+    if(!SDRAFT){ SDRAFT=JSON.parse(JSON.stringify(S())); SDIRTY=false; }
+    const s=SDRAFT;
     const tabs='<div class="tabs">'+[['funnel','Воронка продаж'],['supply','Воронка поставщиков'],['team','Команда'],['company','Реквизиты'],['backup','Бэкапы']].map(([k,t])=>'<button data-st="'+k+'" class="'+(SET_TAB===k?'on':'')+'">'+t+'</button>').join('')+'</div>';
+    const ownerOpts=v=>'<option value="">— никто —</option>'+s.team.filter(m=>m.name).map(m=>'<option'+(m.name===v?' selected':'')+'>'+esc(m.name)+'</option>').join('');
     let body='';
     if(SET_TAB==='funnel'||SET_TAB==='supply'){
-      const fk=SET_TAB==='funnel'?'sales':'supply'; const F=s.funnels[fk];
-      body='<div class="note">Стадии в порядке слева направо. <b>Ответственный</b> получает уведомление, когда сделка попадает в его колонку. <b>Обязательные поля</b> — без них сделка не перейдёт на эту стадию и дальше (накопительно).</div><div class="chart" id="stEd">'+
-        F.stages.map((x,i)=>'<div class="st-row" data-i="'+i+'"><input type="color" class="s-col" value="'+x.col+'"><input class="inp s-t" value="'+esc(x.t)+'"><select class="inp s-ow hide-m"><option value="">— никто —</option>'+s.team.map(m=>'<option'+(m.name===x.owner?' selected':'')+'>'+esc(m.name)+'</option>').join('')+'</select>'+
-          '<label class="hide-m" style="font-size:12px;color:var(--muted);display:flex;gap:4px;align-items:center"><input type="checkbox" class="s-lost"'+(x.lost?' checked':'')+'> «отказ»</label><button class="ic-btn del s-rm" title="Удалить стадию">🗑</button>'+
-          (fk==='sales'?'<div class="req-box">обязательно: '+Object.keys(FIELDS).map(f=>'<label><input type="checkbox" class="s-req" value="'+f+'"'+((x.req||[]).includes(f)?' checked':'')+'>'+esc(FIELDS[f].t)+'</label>').join('')+'</div>':'')+'</div>').join('')+
-        '<button class="btn-sec" id="stAdd">+ стадия</button></div><button class="btn-pri" id="stSave">Сохранить воронку</button> <button class="btn-sec" id="stReset">Вернуть по умолчанию</button>';
+      const fk=SET_TAB==='funnel'?'sales':'supply'; const F=s.funnels[fk], sales=fk==='sales';
+      const prevReq=i=>{ const r=new Map(); F.stages.slice(0,i).forEach(x=>{ if(!x.lost)(x.req||[]).forEach(f=>{ if(!r.has(f)) r.set(f,x.t); }); }); return r; };
+      body='<div class="note">'+(sales?'Стадии идут сверху вниз так же, как колонки в «Сделках» слева направо. <b>Ответственный</b> получает уведомление, когда сделка попадает на его стадию. <b>Обязательные поля</b> — «шлагбаум»: без них сделку нельзя перенести на эту стадию и дальше.':'Стадии закупок у поставщиков. Ответственный получает уведомление, когда закупка попадает на его стадию.')+'</div>'+
+        '<div class="fn-prev">'+F.stages.map((x,i)=>'<button class="fn-pill" data-go="'+i+'" style="background:'+esc(x.col)+'">'+esc(x.t)+'<small>'+(x.owner?esc(x.owner):'—')+'</small></button>').join('<span class="fn-arr">›</span>')+'</div>'+
+        '<div class="st-list">'+F.stages.map((x,i)=>{ const pr=sales?prevReq(i):new Map(); const own=(x.req||[]).filter(f=>FIELDS[f]); const open=ST_OPEN===fk+':'+i; const cnt=deals=>DATA.deals.filter(d=>(d.funnel||'sales')===fk&&d.status===x.k).length;
+          return '<div class="stc'+(open?' open':'')+(x.lost?' lost':'')+'" data-i="'+i+'" style="border-left-color:'+esc(x.col)+'">'+
+            '<div class="stc-row"><div class="stc-ord"><button class="ic-btn s-up" title="Выше"'+(i?'':' disabled')+'>▲</button><button class="ic-btn s-dn" title="Ниже"'+(i<F.stages.length-1?'':' disabled')+'>▼</button></div>'+
+              '<label class="stc-col" title="Цвет колонки"><span style="background:'+esc(x.col)+'"></span><input type="color" class="s-col" value="'+esc(x.col)+'"></label>'+
+              '<input class="inp s-t" value="'+esc(x.t)+'" placeholder="Название стадии">'+
+              '<label class="stc-own"><span>👤</span><select class="inp s-ow">'+ownerOpts(x.owner)+'</select></label>'+
+              (sales?'<button class="stc-req s-open" type="button">'+(own.length?'<b>'+own.length+'</b> обязат.':'без обязательных')+(pr.size?' <span>+'+pr.size+' с прошлых</span>':'')+' ▾</button>':'')+
+              '<label class="stc-lost" title="Стадия-отказ: сделки здесь не считаются в работе"><input type="checkbox" class="s-lost"'+(x.lost?' checked':'')+'> отказ</label>'+
+              '<span class="stc-n" title="Сделок на стадии">'+cnt()+' сд.</span>'+
+              '<button class="ic-btn del s-rm" title="Удалить стадию">🗑</button></div>'+
+            (sales&&open?'<div class="stc-req-box">'+(x.lost?'<div class="hint">На стадии «отказ» обязательные поля не проверяются.</div>':
+              FGROUPS.map(([g,fs])=>'<div class="rq-g"><div class="rq-h">'+g+'</div><div class="rq-p">'+fs.map(f=>{ const from=pr.get(f); const on=own.includes(f);
+                return from&&!on?'<span class="rq-pill lock" title="Уже обязательно со стадии «'+esc(from)+'»">✓ '+esc(FIELDS[f].t)+'<small>с «'+esc(from)+'»</small></span>':'<button type="button" class="rq-pill'+(on?' on':'')+'" data-f="'+f+'">'+(on?'✓ ':'+ ')+esc(FIELDS[f].t)+'</button>'; }).join('')+'</div></div>').join(''))+'</div>':'')+
+            '</div>'; }).join('')+'</div>'+
+        '<div style="display:flex;gap:8px;margin:10px 0 70px"><button class="btn-sec" id="stAdd">+ стадия</button><div class="spacer"></div><button class="btn-sec" id="stReset">Вернуть по умолчанию</button></div>';
     } else if(SET_TAB==='team'){
-      body='<div class="note">Вход один на всех; при входе каждый выбирает себя — так видно, кто что двигал, и подсвечиваются «свои» уведомления. <b>Telegram chat id</b> — чтобы уведомления дублировались в личный Telegram (нужен бот: TELEGRAM_BOT_TOKEN в Vercel; сотрудник пишет боту /start, chat id можно узнать у @userinfobot).</div><div class="chart" id="tmEd">'+
-        s.team.map((m,i)=>'<div class="grid3" data-i="'+i+'" style="margin-bottom:8px"><input class="inp t-n" value="'+esc(m.name)+'" placeholder="Имя"><input class="inp t-r" value="'+esc(m.role||'')+'" placeholder="Роль"><div style="display:flex;gap:6px"><input class="inp t-tg" value="'+esc(m.tg||'')+'" placeholder="Telegram chat id"><button class="ic-btn" data-test="'+i+'" title="Проверить">📨</button><button class="ic-btn del t-rm">🗑</button></div></div>').join('')+
-        '<button class="btn-sec" id="tmAdd">+ сотрудник</button></div><button class="btn-pri" id="tmSave">Сохранить</button>';
+      const owns=n=>Object.values(s.funnels).flatMap(F=>F.stages.filter(x=>x.owner===n).map(x=>x.t));
+      body='<div class="note">Вход один на всех; при входе каждый выбирает себя — так видно, кто что двигал, и подсвечиваются «свои» уведомления. <b>Telegram</b> — чтобы уведомления приходили в личку: нужен бот (TELEGRAM_BOT_TOKEN в Vercel), сотрудник пишет боту /start, свой chat id узнаёт у @userinfobot.</div>'+
+        '<div class="tm-grid">'+s.team.map((m,i)=>{ const o=owns(m.name); return '<div class="tm" data-i="'+i+'"><div class="tm-av">'+esc((m.name||'?').slice(0,1).toUpperCase())+'</div><div class="tm-b">'+
+          '<div class="grid2"><div class="fld"><div class="k">Имя</div><input class="inp t-n" value="'+esc(m.name)+'" placeholder="Имя"></div><div class="fld"><div class="k">Роль</div><input class="inp t-r" value="'+esc(m.role||'')+'" placeholder="Менеджер, дизайнер…"></div></div>'+
+          '<div class="fld"><div class="k">Telegram chat id</div><div style="display:flex;gap:6px"><input class="inp t-tg" value="'+esc(m.tg||'')+'" placeholder="напр. 123456789"><button class="btn-sec btn-sm" data-test="'+i+'" title="Отправить тестовое сообщение">📨 Проверить</button></div></div>'+
+          '<div class="hint">'+(o.length?'Отвечает за: '+o.map(esc).join(', '):'Ни за одну стадию не отвечает')+'</div></div><button class="ic-btn del t-rm" title="Удалить">🗑</button></div>'; }).join('')+
+        '<button class="tm tm-add" id="tmAdd">+ сотрудник</button></div><div style="height:70px"></div>';
     } else if(SET_TAB==='company'){
-      const c=s.company; const F=[['name','Название'],['addr','Юр. адрес'],['phone','Телефон'],['email','E-mail'],['inn','ИНН'],['kpp','КПП'],['ogrn','ОГРН'],['bank','Банк'],['rs','Р/с'],['ks','К/с'],['bik','БИК'],['director','Директор (ФИО)'],['tax','Налоги (строка в документах)']];
-      body='<div class="chart" id="coEd"><div class="grid2">'+F.map(([k,t])=>'<div class="fld"><div class="k">'+t+'</div><input class="inp" data-k="'+k+'" value="'+esc(c[k]||'')+'"></div>').join('')+'</div></div><button class="btn-pri" id="coSave">Сохранить реквизиты</button>';
+      const c=s.company; const G=[['🏢 Организация',[['name','Название'],['director','Директор (ФИО, для подписи)'],['inn','ИНН'],['kpp','КПП'],['ogrn','ОГРН'],['tax','Налоги (строка в документах)']]],['📞 Контакты',[['addr','Юридический адрес'],['phone','Телефон'],['email','E-mail']]],['🏦 Банк',[['bank','Банк'],['bik','БИК'],['rs','Расчётный счёт'],['ks','Корр. счёт']]]];
+      body='<div class="note">Эти реквизиты подставляются в счёт, договор, акт, доверенность и заявление (кнопки 🖨 в сделке).</div><div class="co-grid">'+G.map(([g,fs])=>'<div class="chart"><h3>'+g+'</h3>'+fs.map(([k,t])=>'<div class="fld"><div class="k">'+t+'</div><input class="inp" data-k="'+k+'" value="'+esc(c[k]||'')+'"></div>').join('')+'</div>').join('')+'</div>'+
+        '<div class="chart"><h3>Так будет в документах</h3><div class="co-prev" id="coPrev"></div></div><div style="height:70px"></div>';
     } else {
-      body='<div class="chart"><h3>Скачать сейчас</h3><p style="color:var(--muted);margin-bottom:12px">Полная копия базы: лиды, сделки, клиенты, прайс, настройки.</p><button class="btn-pri" id="bkJson">⬇ Полный бэкап (JSON)</button> <button class="btn-sec" id="bkCsv">⬇ Сделки (CSV для Excel)</button> <button class="btn-sec" id="bkCsvL">⬇ Лиды (CSV)</button> <button class="btn-sec" id="bkCsvC">⬇ Клиенты (CSV)</button></div>'+
-        '<div class="chart"><h3>Автобэкап на сервер в офисе</h3><p style="color:var(--muted);line-height:1.7">На офисном сервере ставится скрипт <code>tools/riks-backup.ps1</code> (Windows) — он каждый час забирает копию базы в папку, хранит копии за 30 дней и <b>эталонную копию на каждый месяц</b> (1-го числа), которую никто не перезаписывает. Настраивается один раз через «Планировщик заданий».</p></div>';
+      body='<div class="co-grid"><div class="chart"><h3>⬇ Скачать сейчас</h3><p class="hint" style="margin-bottom:12px">Полная копия базы: лиды, сделки, клиенты, прайс, настройки. Файлы (макеты, сканы) хранятся отдельно в хранилище Vercel.</p><button class="btn-pri" id="bkJson" style="width:100%;margin-bottom:8px">Полный бэкап (JSON)</button><div class="grid3"><button class="btn-sec" id="bkCsv">Сделки CSV</button><button class="btn-sec" id="bkCsvL">Лиды CSV</button><button class="btn-sec" id="bkCsvC">Клиенты CSV</button></div><p class="hint" style="margin-top:8px">CSV открываются в Excel.</p></div>'+
+        '<div class="chart"><h3>🖥 Автобэкап на сервер в офисе</h3><p style="color:var(--muted);line-height:1.7">Скрипт <code>tools/riks-backup.ps1</code> на офисном сервере каждый час забирает копию базы, хранит копии за 30 дней и <b>эталон на каждый месяц</b> (1-го числа), который никто не перезаписывает. Настраивается один раз через «Планировщик заданий».</p></div></div>';
     }
-    $('#main').innerHTML=head('Настройки',tabs)+body; bindCommon();
-    $$('[data-st]').forEach(b=>b.onclick=()=>{SET_TAB=b.dataset.st;settingsView();});
-    const saveSettings=async(ns,msg)=>{ try{ const it=await save('settings',Object.assign(ns,{id:'main'})); DATA.settings=normSettings(it); toast(msg||'Сохранено'); settingsView(); }catch(e){} };
+    const dirtyBar='<div class="set-bar'+(SDIRTY?' on':'')+'" id="setBar"><span>● Есть несохранённые изменения</span><div class="spacer"></div><button class="btn-sec" id="setUndo">Отменить</button><button class="btn-pri" id="setSave">Сохранить</button></div>';
+    $('#main').innerHTML=head('Настройки',tabs)+body+(SET_TAB==='backup'?'':dirtyBar); bindCommon();
+    $$('[data-st]').forEach(b=>b.onclick=()=>{SET_TAB=b.dataset.st;ST_OPEN=null;settingsView();});
+    const markDirty=()=>{ SDIRTY=true; const b=$('#setBar'); if(b)b.classList.add('on'); };
+    const sb=$('#setSave'); if(sb) sb.onclick=async()=>{ if(SET_TAB==='team'&&s.team.some(m=>!m.name.trim())) s.team=s.team.filter(m=>m.name.trim());
+      try{ const it=await save('settings',Object.assign(JSON.parse(JSON.stringify(s)),{id:'main'})); DATA.settings=normSettings(it); SDRAFT=null; toast('Настройки сохранены'); settingsView(); }catch(e){} };
+    const ub=$('#setUndo'); if(ub) ub.onclick=()=>{ SDRAFT=null; ST_OPEN=null; settingsView(); toast('Изменения отменены'); };
     if(SET_TAB==='funnel'||SET_TAB==='supply'){
-      const fk=SET_TAB==='funnel'?'sales':'supply';
-      const read=()=>$$('#stEd .st-row').map(r=>{const old=s.funnels[fk].stages[r.dataset.i]||{};return {k:old.k||('s'+genId().slice(-5)),t:r.querySelector('.s-t').value.trim()||'Стадия',col:r.querySelector('.s-col').value,owner:r.querySelector('.s-ow').value,lost:r.querySelector('.s-lost').checked,req:$$('.s-req:checked',r).map(x=>x.value)};});
-      $('#stAdd').onclick=()=>{ s.funnels[fk].stages=read(); const st=s.funnels[fk].stages; const lostAt=st.findIndex(x=>x.lost); st.splice(lostAt<0?st.length:lostAt,0,{k:'s'+genId().slice(-5),t:'Новая стадия',col:'#888888',owner:'',req:[]}); DATA.settings=s; settingsView(); };
-      $$('#stEd .s-rm').forEach(b=>b.onclick=()=>{ const i=+b.closest('.st-row').dataset.i; const k=s.funnels[fk].stages[i].k; if(DATA.deals.some(d=>(d.funnel||'sales')===fk&&d.status===k)){toast('На этой стадии есть сделки — сначала перенесите их');return;} s.funnels[fk].stages=read().filter((_,j)=>j!==i); DATA.settings=s; settingsView(); });
-      $('#stSave').onclick=()=>{ s.funnels[fk].stages=read(); saveSettings(s,'Воронка сохранена'); };
-      $('#stReset').onclick=()=>{ if(!confirm('Вернуть стадии по умолчанию?'))return; s.funnels[fk]=JSON.parse(JSON.stringify(DEFAULT_SETTINGS.funnels[fk])); saveSettings(s); };
+      const fk=SET_TAB==='funnel'?'sales':'supply'; const st=s.funnels[fk].stages;
+      const card=el=>st[+el.closest('.stc').dataset.i];
+      $$('.stc .s-t').forEach(i=>i.oninput=()=>{ card(i).t=i.value; markDirty(); const p=$$('.fn-pill')[+i.closest('.stc').dataset.i]; if(p)p.firstChild.textContent=i.value; });
+      $$('.stc .s-ow').forEach(i=>i.onchange=()=>{ card(i).owner=i.value; markDirty(); settingsView(); });
+      $$('.stc .s-col').forEach(i=>i.oninput=()=>{ card(i).col=i.value; markDirty(); const c=i.closest('.stc'); c.style.borderLeftColor=i.value; i.previousElementSibling.style.background=i.value; const p=$$('.fn-pill')[+c.dataset.i]; if(p)p.style.background=i.value; });
+      $$('.stc .s-lost').forEach(i=>i.onchange=()=>{ card(i).lost=i.checked; markDirty(); settingsView(); });
+      $$('.stc .s-open').forEach(b=>b.onclick=()=>{ const k=fk+':'+b.closest('.stc').dataset.i; ST_OPEN=ST_OPEN===k?null:k; settingsView(); });
+      $$('.stc .rq-pill[data-f]').forEach(b=>b.onclick=()=>{ const x=card(b), f=b.dataset.f; x.req=x.req||[]; x.req=x.req.includes(f)?x.req.filter(y=>y!==f):x.req.concat(f); markDirty(); settingsView(); });
+      const move=(i,d)=>{ const j=i+d; if(j<0||j>=st.length)return; [st[i],st[j]]=[st[j],st[i]]; if(ST_OPEN===fk+':'+i) ST_OPEN=fk+':'+j; markDirty(); settingsView(); };
+      $$('.stc .s-up').forEach(b=>b.onclick=()=>move(+b.closest('.stc').dataset.i,-1)); $$('.stc .s-dn').forEach(b=>b.onclick=()=>move(+b.closest('.stc').dataset.i,1));
+      $$('.stc .s-rm').forEach(b=>b.onclick=()=>{ const i=+b.closest('.stc').dataset.i, x=st[i]; if(DATA.deals.some(d=>(d.funnel||'sales')===fk&&d.status===x.k)){toast('На стадии «'+x.t+'» есть сделки — сначала перенесите их');return;} if(!confirm('Удалить стадию «'+x.t+'»?'))return; st.splice(i,1); ST_OPEN=null; markDirty(); settingsView(); });
+      $$('.fn-pill').forEach(p=>p.onclick=()=>{ const el=$$('.stc')[+p.dataset.go]; if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),900); } });
+      $('#stAdd').onclick=()=>{ const lostAt=st.findIndex(x=>x.lost); const at=lostAt<0?st.length:lostAt; st.splice(at,0,{k:'s'+genId().slice(-5),t:'Новая стадия',col:SCOLORS[at%SCOLORS.length],owner:'',req:[]}); ST_OPEN=fk+':'+at; markDirty(); settingsView(); setTimeout(()=>{const i=$$('.stc .s-t')[at];if(i){i.focus();i.select();}},30); };
+      $('#stReset').onclick=()=>{ if(!confirm('Вернуть стадии по умолчанию? Ваши стадии и обязательные поля заменятся стандартными (после «Сохранить»).'))return; s.funnels[fk]=JSON.parse(JSON.stringify(DEFAULT_SETTINGS.funnels[fk])); ST_OPEN=null; markDirty(); settingsView(); };
     } else if(SET_TAB==='team'){
-      const read=()=>$$('#tmEd [data-i]').map(r=>({name:r.querySelector('.t-n').value.trim(),role:r.querySelector('.t-r').value.trim(),tg:r.querySelector('.t-tg').value.trim()})).filter(m=>m.name);
-      $('#tmAdd').onclick=()=>{ s.team=read().concat([{name:'',role:'',tg:''}]); DATA.settings=s; settingsView(); };
-      $$('#tmEd .t-rm').forEach(b=>b.onclick=()=>{ const i=+b.closest('[data-i]').dataset.i; s.team=read().filter((_,j)=>j!==i); DATA.settings=s; settingsView(); });
+      const m=el=>s.team[+el.closest('.tm').dataset.i];
+      $$('.tm .t-n').forEach(i=>i.oninput=()=>{ m(i).name=i.value; markDirty(); i.closest('.tm').querySelector('.tm-av').textContent=(i.value||'?').slice(0,1).toUpperCase(); });
+      $$('.tm .t-r').forEach(i=>i.oninput=()=>{ m(i).role=i.value; markDirty(); });
+      $$('.tm .t-tg').forEach(i=>i.oninput=()=>{ m(i).tg=i.value.trim(); markDirty(); });
+      $$('.tm .t-rm').forEach(b=>b.onclick=()=>{ const x=m(b); if(!confirm('Удалить «'+(x.name||'сотрудника')+'» из команды?'))return; s.team.splice(+b.closest('.tm').dataset.i,1); markDirty(); settingsView(); });
+      $('#tmAdd').onclick=()=>{ s.team.push({name:'',role:'',tg:''}); markDirty(); settingsView(); setTimeout(()=>{const a=$$('.tm .t-n');a[a.length-1].focus();},30); };
       $$('[data-test]').forEach(b=>b.onclick=async()=>{ const tg=b.parentNode.querySelector('.t-tg').value.trim(); if(!tg){toast('Укажите chat id');return;} const r=await api('notify',null,{chatId:tg,text:'Рикс+С CRM: тестовое уведомление ✅'}); toast(r.ok?'Отправлено в Telegram':(r.note==='telegram-not-configured'?'Бот не подключён (TELEGRAM_BOT_TOKEN)':'Не отправилось — проверьте chat id и /start боту')); });
-      $('#tmSave').onclick=()=>{ s.team=read(); saveSettings(s); };
     } else if(SET_TAB==='company'){
-      $('#coSave').onclick=()=>{ $$('#coEd [data-k]').forEach(i=>s.company[i.dataset.k]=i.value.trim()); saveSettings(s,'Реквизиты сохранены'); };
+      const prev=()=>{ const c=s.company; $('#coPrev').innerHTML='<b>'+esc(c.name)+'</b>, ИНН/КПП '+esc(c.inn)+'/'+esc(c.kpp)+', ОГРН '+esc(c.ogrn)+'<br>'+esc(c.addr)+', тел. '+esc(c.phone)+(c.email?', '+esc(c.email):'')+'<br>р/с '+esc(c.rs)+' в '+esc(c.bank)+', к/с '+esc(c.ks)+', БИК '+esc(c.bik)+'<br>Директор ____________ / '+esc(c.director)+' / · '+esc(c.tax); };
+      $$('[data-k]').forEach(i=>i.oninput=()=>{ s.company[i.dataset.k]=i.value.trim(); markDirty(); prev(); }); prev();
     } else {
       const dl=(name,text,type)=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type})); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),2000); };
       const stamp=()=>new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
@@ -1370,7 +1437,7 @@
       $('#bkJson').onclick=async()=>{ const r=await api('backup'); if(!r.ok){toast('Ошибка');return;} dl('riks-backup-'+stamp()+'.json',JSON.stringify(r.backup,null,1),'application/json'); };
       $('#bkCsv').onclick=()=>dl('riks-deals-'+stamp()+'.csv',csv(DATA.deals,[['Клиент',d=>d.client],['Телефон',d=>d.phone],['Воронка',d=>d.funnel],['Стадия',d=>stOf(stagesOf(d.funnel),d.status).t],['Направление',d=>d.kind],['Источник',d=>d.source],['Позиции',d=>(d.items||[]).map(i=>i.name+' ×'+i.qty).join(', ')],['Сумма',dealTotal],['Предоплата',d=>d.prepaid],['Остаток',dealRem],['Оплата',d=>d.payType],['Документы',d=>d.docFlow],['УПД',d=>d.updDate],['Срок',d=>d.deadline],['Создана',d=>fdate(d.ts)]]),'text/csv');
       $('#bkCsvL').onclick=()=>dl('riks-leads-'+stamp()+'.csv',csv(DATA.leads,[['Имя',l=>l.name],['Телефон',l=>l.phone],['Запрос',l=>l.service],['Подробности',l=>l.detail],['Источник',l=>l.source],['Стадия',l=>stOf(LEAD_STAGES,l.stage||'new').t],['Когда',l=>fmt(l.ts)]]),'text/csv');
-      $('#bkCsvC').onclick=()=>dl('riks-clients-'+stamp()+'.csv',csv(DATA.clients,[['Имя',c=>c.name],['Телефон',c=>c.phone],['Теги',c=>c.tags],['Покупок на',c=>c.paid],['Баллы',c=>c.points],['Откуда',c=>c.from]]),'text/csv');
+      $('#bkCsvC').onclick=()=>dl('riks-clients-'+stamp()+'.csv',csv(DATA.clients,[['Имя',c=>c.name],['Телефон',c=>c.phone],['Организация',c=>c.company],['ИНН',c=>c.inn],['Теги',c=>c.tags],['Покупок на',c=>c.paid],['Баллы',c=>c.points],['Откуда',c=>c.from]]),'text/csv');
     }
   }
 
