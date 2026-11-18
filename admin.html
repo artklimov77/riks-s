@@ -253,6 +253,20 @@
   .dchk .dm a{color:var(--red-d);font-weight:700;cursor:pointer}
   .dchk.miss{border-color:var(--bad)!important;background:#fff4f2}
   .printbar{display:flex;gap:6px;flex-wrap:wrap}
+  .pc-bar{display:flex;flex-direction:column;gap:10px;margin-bottom:6px;position:sticky;top:56px;z-index:5;background:var(--bg);padding:8px 0}
+  .pc-bar .inp{max-width:420px;height:40px;font-size:14px}
+  .pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-bottom:18px}
+  .pc{background:#fff;border:1px solid var(--line);border-radius:12px;display:flex;gap:12px;padding:12px;align-items:flex-start}
+  .pc-ph{flex:0 0 76px;height:76px;border-radius:9px;overflow:hidden;background:#f6efe9}.pc-ph img{width:100%;height:100%;object-fit:cover;display:block}
+  .pc-b{flex:1;min-width:0}
+  .pc-h{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}.pc-h b{font-size:14px;line-height:1.3}.pc-from{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap}
+  .pc-d{font-size:12px;color:var(--muted);margin-bottom:6px}.pc-d summary{cursor:pointer;color:var(--red-d);font-weight:700;font-size:11px}.pc-d div{margin-top:4px;line-height:1.45;max-height:140px;overflow:auto}
+  .pc-v{display:flex;flex-direction:column}
+  .pv{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px dashed var(--line)}.pv:first-child{border-top:none}
+  .pv-n{flex:1;font-size:13px;min-width:0}
+  .pv-p{font-weight:800;font-size:14px;white-space:nowrap}.pv-p small{font-weight:400;color:var(--muted);font-size:11px}
+  .pv .pv-e{width:28px;height:28px;font-size:13px;opacity:.35}.pv:hover .pv-e{opacity:1}.pv:hover{background:#fdf7f4}
+  .pv.ed .pv-p{color:var(--red-d)}
   .scrim2{position:fixed;inset:0;background:rgba(30,20,15,.35);z-index:85;display:none}.scrim2.on{display:block}
   .modal.m2{z-index:88}
   @media(max-width:900px){.dl-grid{grid-template-columns:1fr}.dl-side{position:static}.modal.xl{height:100vh;max-height:100vh;width:100vw;max-width:100vw;border-radius:0}}
@@ -1189,21 +1203,53 @@
   }
 
   /* ---------- ПРАЙС ---------- */
+  // Прайс: направления → карточки товаров (группа UDS) → варианты/тиражи. Цены — текстом, правка в окне ✎.
+  let CAT_SEL=ls.get('riks_cat','all'), CAT_Q='';
+  const CAT_ORDER=['Наружная реклама','Неоновые вывески','Реклама на транспорте','Стенды','Мобильные стойки','Полиграфия','Различные наклейки','Широкоформатная печать','Добрая сувенирка'];
   function catalogView(){
-    const rows=filt(DATA.catalog);
-    let html=head('Прайс','<span class="tag">'+DATA.catalog.length+' позиций</span><div class="spacer"></div><button class="btn-sec" id="reUds">⟳ Заново из UDS</button><button class="btn-pri" id="addItem">+ Позиция</button>'+refreshBtn)+storeNote()+
-      '<div class="note">Цены перенесены из UDS (снимок 17.11.2026). Правьте прямо здесь — 💾 сохраняет строку. «Заново из UDS» перезапишет прайс снимком.</div>';
-    const byCat={}; rows.forEach(i=>{(byCat[i.category||'Прочее']=byCat[i.category||'Прочее']||[]).push(i);});
-    html+='<div id="catWrap">'+Object.keys(byCat).map(cat=>'<div class="cat-h">'+esc(cat)+'</div><div class="table"><table><thead><tr><th>Позиция</th><th style="width:110px">Ед.</th><th style="width:120px">Цена</th><th style="width:80px"></th></tr></thead><tbody>'+
-      byCat[cat].map(i=>'<tr data-id="'+esc(i.id)+'"><td><input class="inp f-name" value="'+esc(i.name)+'">'+(i.desc?'<div style="color:var(--muted);font-size:11px;margin-top:3px;max-height:34px;overflow:hidden">'+esc(i.desc)+'</div>':'')+'</td><td><input class="inp f-unit" value="'+esc(i.unit||'шт')+'"></td><td><input class="inp f-price" type="number" min="0" value="'+(Number(i.price)||0)+'"></td><td style="white-space:nowrap"><button class="ic-btn save">💾</button><button class="ic-btn del">🗑</button></td></tr>').join('')+'</tbody></table></div>').join('')+'</div>';
-    $('#main').innerHTML=html; bindCommon();
-    $('#addItem').onclick=()=>{ DATA.catalog.unshift({id:genId(),name:'',category:'Прочее',unit:'шт',price:0}); catalogView(); };
+    const all=DATA.catalog, q=CAT_Q.trim().toLowerCase();
+    const cats={}; all.forEach(i=>{const c=i.category||'Прочее';cats[c]=(cats[c]||0)+1;});
+    const catList=Object.keys(cats).sort((a,b)=>(CAT_ORDER.indexOf(a)+1||99)-(CAT_ORDER.indexOf(b)+1||99));
+    if(CAT_SEL!=='all'&&!cats[CAT_SEL]) CAT_SEL='all';
+    const rows=all.filter(i=>(CAT_SEL==='all'||(i.category||'Прочее')===CAT_SEL)&&(!q||(i.name+' '+(i.group||'')+' '+(i.desc||'')).toLowerCase().includes(q)));
+    const unitT=u=>{u=u||'шт';return u==='шт'?'за шт':u==='м²'||u==='м2'?'за м²':'за '+u;};
+    // группы: одна карточка на товар UDS (тиражи и размеры — строками)
+    const groups=[]; const gi={};
+    rows.forEach(i=>{ const c=i.category||'Прочее', g=(i.group&&i.group.trim())||i.name, key=c+'|'+g; if(!gi[key]){gi[key]={cat:c,name:g,items:[],photo:'',desc:''};groups.push(gi[key]);} const G=gi[key]; G.items.push(i); if(!G.photo&&i.photo)G.photo=i.photo; if(!G.desc&&i.desc)G.desc=i.desc; });
+    groups.forEach(G=>G.items.sort((a,b)=>(Number(a.price)||0)-(Number(b.price)||0)));
+    const label=(G,i)=>{ let n=i.name||''; if(G.items.length>1&&G.name&&n.toLowerCase().startsWith(G.name.toLowerCase())) n=n.slice(G.name.length).replace(/^[\s,.:–-]+/,''); return n||i.name||'—'; };
+    const byCat={}; groups.forEach(G=>(byCat[G.cat]=byCat[G.cat]||[]).push(G));
+    const card=G=>{ const min=Math.min(...G.items.map(i=>Number(i.price)||0));
+      return '<div class="pc">'+(G.photo?'<div class="pc-ph"><img src="'+esc(G.photo)+'" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>':'')+
+        '<div class="pc-b"><div class="pc-h"><b>'+esc(G.name)+'</b>'+(G.items.length>1?'<span class="pc-from">от '+money(min)+'</span>':'')+'</div>'+
+        (G.desc?'<details class="pc-d"><summary>описание</summary><div>'+esc(G.desc)+'</div></details>':'')+
+        '<div class="pc-v">'+G.items.map(i=>'<div class="pv'+(i.src&&i.src!=='uds'?' ed':'')+'" data-id="'+esc(i.id)+'"><span class="pv-n">'+esc(label(G,i))+(i.src&&i.src!=='uds'?' <span class="tag" title="изменено вручную">правка</span>':'')+'</span><span class="pv-p">'+money(i.price)+' <small>'+unitT(i.unit)+'</small></span><button class="ic-btn pv-e" title="Изменить">✎</button></div>').join('')+'</div></div></div>'; };
+    $('#main').innerHTML=head('Прайс','<span class="tag">'+all.length+' позиций</span><div class="spacer"></div><button class="btn-sec" id="reUds">⟳ Заново из UDS</button><button class="btn-pri" id="addItem">+ Позиция</button>'+refreshBtn)+storeNote()+
+      '<div class="note">Цены из UDS (снимок 17.11.2026). Чтобы изменить цену — ✎ у нужной строки. Изменённые вручную помечены «правка». «Заново из UDS» вернёт всё как в снимке.</div>'+
+      '<div class="pc-bar"><input class="inp" id="catQ" placeholder="Поиск по прайсу: ручка, баннер, 1000 шт…" value="'+esc(CAT_Q)+'"><div class="chips" style="margin:0"><button data-pc="all" class="'+(CAT_SEL==='all'?'on':'')+'">Все · '+all.length+'</button>'+catList.map(c=>'<button data-pc="'+esc(c)+'" class="'+(CAT_SEL===c?'on':'')+'">'+esc(c)+' · '+cats[c]+'</button>').join('')+'</div></div>'+
+      (groups.length?catList.filter(c=>byCat[c]).map(c=>'<h3 class="cat-h">'+esc(c)+' <span class="hint">'+byCat[c].length+' товаров</span></h3><div class="pc-grid">'+byCat[c].map(card).join('')+'</div>').join(''):'<div class="empty">Ничего не найдено</div>');
+    bindCommon();
+    $$('[data-pc]').forEach(b=>b.onclick=()=>{CAT_SEL=b.dataset.pc;ls.set('riks_cat',CAT_SEL);catalogView();});
+    const qi=$('#catQ'); qi.oninput=()=>{CAT_Q=qi.value;clearTimeout(qi._t);qi._t=setTimeout(()=>{catalogView();const n=$('#catQ');n.focus();n.setSelectionRange(n.value.length,n.value.length);},250);};
+    $('#addItem').onclick=()=>editPrice(null);
     $('#reUds').onclick=async()=>{ if(!confirm('Перезаписать прайс снимком из UDS? Ваши правки в прайсе пропадут.'))return; const r=await api('importUds','catalog'); if(r.items){DATA.catalog=r.items;toast('Загружено '+r.items.length);catalogView();} };
-    $$('#catWrap tr[data-id]').forEach(tr=>{ const id=tr.dataset.id;
-      tr.querySelector('.save').onclick=async()=>{ const old=DATA.catalog.find(x=>x.id===id)||{}; const rec=Object.assign({},old,{id,name:tr.querySelector('.f-name').value.trim(),unit:tr.querySelector('.f-unit').value.trim(),price:Number(tr.querySelector('.f-price').value)||0});
-        if(!rec.name){toast('Введите название');return;} try{const it=await save('catalog',rec);Object.assign(old,it);if(!DATA.catalog.includes(old))DATA.catalog.push(it);toast('Сохранено');}catch(e){} };
-      tr.querySelector('.del').onclick=async()=>{ if(!confirm('Удалить позицию?'))return; await remove('catalog',id); DATA.catalog=DATA.catalog.filter(x=>x.id!==id); catalogView(); };
-    });
+    $$('.pv').forEach(r=>{ const open=()=>editPrice(r.dataset.id); r.querySelector('.pv-e').onclick=e=>{e.stopPropagation();open();}; r.ondblclick=open; });
+  }
+  function editPrice(id){
+    const old=id?DATA.catalog.find(x=>x.id===id):null; const i=old?Object.assign({},old):{id:'p-'+genId(),category:CAT_SEL!=='all'?CAT_SEL:'Прочее',unit:'шт',price:0,src:'crm'};
+    const cats=[...new Set(DATA.catalog.map(x=>x.category||'Прочее'))];
+    dialog(old?'Цена: '+(i.name||''):'Новая позиция',
+      '<div class="fld"><div class="k">Название</div><input class="inp" id="pe_name" value="'+esc(i.name||'')+'" placeholder="напр. Визитки 1000 шт"></div>'+
+      '<div class="grid2"><div class="fld"><div class="k">Цена, ₽</div><input class="inp" id="pe_price" type="number" min="0" value="'+(Number(i.price)||0)+'" style="font-size:18px;font-weight:800"></div><div class="fld"><div class="k">Единица</div><select class="inp" id="pe_unit">'+['шт','м²','м','комплект','услуга'].concat(i.unit&&!['шт','м²','м','комплект','услуга'].includes(i.unit)?[i.unit]:[]).map(u=>'<option'+(u===(i.unit||'шт')?' selected':'')+'>'+u+'</option>').join('')+'</select></div></div>'+
+      '<div class="grid2"><div class="fld"><div class="k">Направление</div><select class="inp" id="pe_cat">'+cats.map(c=>'<option'+(c===(i.category||'Прочее')?' selected':'')+'>'+esc(c)+'</option>').join('')+'</select></div><div class="fld"><div class="k">Товар (группа)</div><input class="inp" id="pe_group" value="'+esc(i.group||'')+'" placeholder="объединяет тиражи в одну карточку"></div></div>'+
+      '<div class="fld"><div class="k">Описание</div><textarea class="inp" id="pe_desc" style="min-height:90px">'+esc(i.desc||'')+'</textarea></div>'+
+      (old?'<button class="btn-sec btn-sm" id="pe_del" style="color:var(--bad)">Удалить позицию</button>':''),{saveText:'Сохранить'});
+    setTimeout(()=>{const p=$('#pe_price');p.focus();p.select();},50);
+    $('#m2Save').onclick=async()=>{ const rec=Object.assign({},i,{name:$('#pe_name').value.trim(),price:Number($('#pe_price').value)||0,unit:$('#pe_unit').value,category:$('#pe_cat').value,group:$('#pe_group').value.trim(),desc:$('#pe_desc').value.trim()});
+      if(!rec.name){toast('Введите название');return;}
+      if(old&&(rec.price!==Number(old.price)||rec.name!==old.name)) rec.src='crm';
+      try{ const it=await save('catalog',rec); if(old)Object.assign(old,it); else DATA.catalog.push(it); toast('Сохранено: '+rec.name+' — '+money(rec.price)); closeDialog(); catalogView(); }catch(e){} };
+    const del=$('#pe_del'); if(del) del.onclick=async()=>{ if(!confirm('Удалить «'+i.name+'» из прайса?'))return; await remove('catalog',i.id); DATA.catalog=DATA.catalog.filter(x=>x.id!==i.id); closeDialog(); catalogView(); };
   }
 
   /* ---------- АНАЛИТИКА ---------- */
@@ -1345,6 +1391,7 @@
   if(/[?&]demo=1/.test(location.search)){ DEMO=true; DATA.settings=normSettings(null); DATA.leads=[{id:'d1',name:'Андрей',phone:'+7 902 100-11-22',service:'Вывеска',source:'сайт · квиз',stage:'new',contact:'WhatsApp',ts:new Date().toISOString(),detail:'Квиз «Вывеска»: Что вас интересует? — Вывеска; Коротко, что нужно? — Объёмные световые буквы; Где будет вывеска? — На фасаде, 1 этаж; Примерный размер — 3000×600 мм; Что уже есть? — Логотип в векторе; Когда нужно? — В течение месяца | Хочу как у соседей, но ярче',quiz:[{q:'Что вас интересует?',a:'Вывеска'},{q:'Коротко, что нужно?',a:'Объёмные световые буквы'},{q:'Где будет вывеска?',a:'На фасаде, 1 этаж'},{q:'Примерный размер',a:'3000×600 мм'},{q:'Что уже есть?',a:'Логотип в векторе'},{q:'Когда нужно?',a:'В течение месяца'}]}];
     DATA.deals=[normDeal({id:'k1',client:'Кофейня «Зерно»',phone:'+7 927 333-44-55',kind:'Наружная реклама',source:'ВКонтакте',status:'design',addr:'ул. Комсомольская, 134',items:[{name:'Объёмные световые буквы',qty:6,price:4500}],docs:{measure:{at:new Date().toISOString(),by:'Катя'},facade:true},files:[{id:'fx1',name:'Макет вывески v2 (Яндекс Диск)',link:'https://disk.yandex.ru/',cat:'mockup',who:'Ксюша',ts:new Date().toISOString()},{id:'fx2',name:'Фото фасада',link:'\\\\server\\Объекты\\Зерно',cat:'photo',doc:'facade',who:'Катя',ts:new Date().toISOString()}],ts:new Date().toISOString()})];
     DATA.clients=[{id:'c-79273334455',name:'Кофейня «Зерно»',phone:'+7 927 333-44-55',company:'ИП Зернов',src:'crm'}];
+    DATA.catalog=[{id:'p1',category:'Добрая сувенирка',group:'Ручка металлическая',name:'Ручка металлическая Тираж 100 шт',unit:'шт',price:123,desc:'Брендированные ручки, тампопечать',src:'uds'},{id:'p2',category:'Добрая сувенирка',group:'Ручка металлическая',name:'Ручка металлическая Тираж 500 шт',unit:'шт',price:105,src:'uds'},{id:'p3',category:'Наружная реклама',group:'Режим работы',name:'Режим работы 300х400 Уф на АКП',unit:'шт',price:1050,src:'uds'},{id:'p4',category:'Наружная реклама',group:'Панель-кронштейн',name:'Панель-кронштейн',unit:'шт',price:40000,src:'crm'}];
     started(); render(); return; }
 
   const saved=ls.get('riks_leads_pass','');
