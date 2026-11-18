@@ -206,8 +206,8 @@
   .dl-head{padding:12px 20px 0;border-bottom:1px solid var(--line);background:#fff}
   .dl-sum{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
   .chip{font-size:12px;font-weight:700;padding:4px 10px;border-radius:14px;background:#f6f1ed;border:1px solid var(--line)}
-  .chip.gate.bad{background:#fdecea;color:#8a1b13;border-color:#f6c3bd}
-  .chip.gate.ok{background:#eef7f0;color:#1d6b35;border-color:#cfe9d7}
+  .chip.gchip.bad{background:#fdecea;color:#8a1b13;border-color:#f6c3bd}
+  .chip.gchip.ok{background:#eef7f0;color:#1d6b35;border-color:#cfe9d7}
   .dl-tabs{display:flex;gap:2px;overflow-x:auto}
   .dl-tabs button{padding:10px 16px;font-size:14px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
   .dl-tabs button:hover{color:var(--ink)}
@@ -740,7 +740,7 @@
     return {quiz,quizTitle:p.title||'',quizCallback:!!(l.callback||p.callback),quizContact:l.contact||'',quizWarn:p.warn||'',extra:p.title?(p.extra||''):(l.detail||'')}; }
   function quizHTML(o){ if(!o||!((o.quiz||[]).length||o.quizCallback)) return '';
     return '<div class="qa-box"><div class="qa-h">📝 Ответы клиента'+(o.quizTitle?' <span>опросник «'+esc(o.quizTitle)+'»</span>':'')+'</div>'+
-      ((o.quizCallback||o.quizContact||o.quizWarn)?'<div class="qa-flags">'+(o.quizCallback?'<span class="flag warn">📞 Просил перезвонить</span>':'')+(o.quizContact?'<span class="flag">💬 Связаться: '+esc(o.quizContact)+'</span>':'')+(o.quizWarn?'<span class="flag warn">⚠ '+esc(o.quizWarn)+'</span>':'')+'</div>':'')+
+      ((o.quizContact==='Не важно'?(o.quizContact=''):0,(o.quizCallback||o.quizContact||o.quizWarn))?'<div class="qa-flags">'+(o.quizCallback?'<span class="flag warn">📞 Просил перезвонить</span>':'')+(o.quizContact?'<span class="flag">💬 Связаться: '+esc(o.quizContact)+'</span>':'')+(o.quizWarn?'<span class="flag warn">⚠ '+esc(o.quizWarn)+'</span>':'')+'</div>':'')+
       ((o.quiz||[]).length?'<div class="qa">'+o.quiz.map(x=>'<div class="qi"><div class="qq">'+esc(x.q)+'</div><div class="qv">'+esc(x.a)+'</div></div>').join('')+'</div>':'')+'</div>'; }
 
   /* ---------- клиент ↔ заказы ---------- */
@@ -929,7 +929,7 @@
       const s=stOf(st,rec.status), t=dealTotal(rec), rem=t-(rec.prepaid||0)-(rec.paidMore||0);
       $('#o_sum').innerHTML='<span class="st-pill" style="background:'+s.col+'">'+esc(s.t)+'</span>'+(s.owner?'<span class="chip">👤 отвечает '+esc(s.owner)+'</span>':'')+
         (t?'<span class="chip">'+money(t)+(rec.prepaid&&rem>0?' · остаток '+money(rem):'')+'</span>':'')+(rec.deadline?'<span class="chip">⏰ до '+esc(rec.deadline)+'</span>':'')+
-        '<span class="chip gate '+(miss.length?'bad':'ok')+'" id="o_gateHint">'+(miss.length?'⚠ для «'+esc(s.t)+'» не хватает: '+miss.map(f=>esc(FIELDS[f].t)).join(', '):'✓ всё нужное заполнено')+'</span>';
+        '<span class="chip gchip '+(miss.length?'bad':'ok')+'" id="o_gateHint">'+(miss.length?'⚠ для «'+esc(s.t)+'» не хватает: '+miss.map(f=>esc(FIELDS[f].t)).join(', '):'✓ всё нужное заполнено')+'</span>';
       return miss;
     }
     $('#mBody').addEventListener('input',()=>liveGate()); $('#mBody').addEventListener('change',()=>liveGate());
