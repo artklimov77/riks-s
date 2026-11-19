@@ -1,6 +1,6 @@
 // Приватный CRUD для админки Рикс+С. Защита паролем (env LEADS_PASS, один вход на всех).
 // POST { pass, op, col?, id?, data?, items? }
-//   op: list | save | delete | bulk | importUds | seedCatalog | backup | notify
+//   op: list | save | delete | bulk | importUds | seedCatalog | backup | restore | notify
 //   col: leads | orders | catalog | clients | settings | tasks
 // Хранилище — Upstash Redis (hash riks:<col>, поле = id).
 
@@ -18,7 +18,7 @@ async function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
   const raw = await new Promise((resolve, reject) => {
     let d = '';
-    req.on('data', (c) => { d += c; if (d.length > 3e6) req.destroy(); });
+    req.on('data', (c) => { d += c; if (d.length > 3e7) req.destroy(); });
     req.on('end', () => resolve(d));
     req.on('error', reject);
   });
@@ -51,7 +51,9 @@ module.exports = async (req, res) => {
 
   const b = await readBody(req).catch(() => ({}));
 
-  if (!process.env.LEADS_PASS || (b.pass || '') !== process.env.LEADS_PASS) {
+  // перенос базы на свой сервер: разовый токен MIGRATE_TOKEN (только op 'restore'), после переноса его удаляют из env
+  const migrate = !!process.env.MIGRATE_TOKEN && b.op === 'restore' && b.migrate === process.env.MIGRATE_TOKEN;
+  if (!migrate && (!process.env.LEADS_PASS || (b.pass || '') !== process.env.LEADS_PASS)) {
     return res.status(401).json({ ok: false, error: 'auth' });
   }
 
@@ -65,6 +67,20 @@ module.exports = async (req, res) => {
       const out = { exportedAt: now() };
       for (const [col, key] of Object.entries(KEY)) out[col] = await hall(key);
       return res.status(200).json({ ok: true, backup: out });
+    }
+
+    // восстановить базу из копии (формат op 'backup'): каждая переданная коллекция заменяется целиком
+    if (b.op === 'restore') {
+      const bk = (b.backup && typeof b.backup === 'object') ? b.backup : {};
+      const saved = {};
+      for (const [col, key] of Object.entries(KEY)) {
+        if (!Array.isArray(bk[col])) continue;
+        const recs = bk[col].filter((r) => r && typeof r === 'object' && r.id).map((r) => Object.assign({}, r, { id: String(r.id).slice(0, 80) }));
+        await cmd(['DEL', key]);
+        if (recs.length) await hsetMany(key, recs);
+        saved[col] = recs.length;
+      }
+      return res.status(200).json({ ok: true, saved });
     }
 
     if (b.op === 'notify') {

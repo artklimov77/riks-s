@@ -11,6 +11,9 @@
 // Подключение: Vercel → Storage → Create → Blob (Private) → Connect to project.
 // Нужен BLOB_STORE_ID (OIDC) или BLOB_READ_WRITE_TOKEN — Vercel добавляет сам при подключении.
 
+// На своём сервере (задан FILES_DIR) работает api/_files_local.js — файлы на диске сервера в РФ.
+if (process.env.FILES_DIR) { module.exports = require('./_files_local.js'); return; }
+
 const { issueSignedToken, presignUrl, del } = require('@vercel/blob');
 const { handleUploadPresigned, handleUpload } = require('@vercel/blob/client');
 

@@ -755,17 +755,28 @@
   const fsize=n=>!n?'':n<1048576?Math.max(1,Math.round(n/1024))+' КБ':(n/1048576).toFixed(n<1e7?1:0)+' МБ';
   const ficon=f=>f.link?'🔗':(/^image\//.test(f.type||'')||/\.(jpe?g|png|webp|gif|heic|bmp)$/i.test(f.name||''))?'🖼':(/pdf/i.test(f.type||'')||/\.pdf$/i.test(f.name||''))?'📕':/\.(cdr|ai|eps|psd|svg|tiff?)$/i.test(f.name||'')?'🎨':/\.(docx?|odt|rtf|txt)$/i.test(f.name||'')?'📘':/\.(xlsx?|csv|ods)$/i.test(f.name||'')?'📗':/\.(zip|rar|7z)$/i.test(f.name||'')?'🗜':fcat(f.cat)[1];
   const normFiles=a=>(Array.isArray(a)?a:[]).map(x=>typeof x==='string'?{id:'f'+genId(),name:x.replace(/^https?:\/\//,'').slice(0,90),link:x,cat:'other',ts:''}:x).filter(x=>x&&(x.path||x.link));
-  let FILES_READY=null, BLOBLIB=null;
+  let FILES_READY=null, FILES_MODE='blob', BLOBLIB=null;
   async function filesReady(){ if(DEMO) return false; if(FILES_READY===true) return true;
-    try{ const j=await (await fetch('/api/files',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pass:PASS,op:'status'})})).json(); FILES_READY=!!j.ready; }catch(e){ FILES_READY=false; } return FILES_READY; }
+    try{ const j=await (await fetch('/api/files',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pass:PASS,op:'status'})})).json(); FILES_READY=!!j.ready; FILES_MODE=j.mode||'blob'; }catch(e){ FILES_READY=false; } return FILES_READY; }
   // путь в хранилище — только латиница (подписанные ссылки Vercel ломаются на кириллице); русское имя хранится в f.name
   const TRL={а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'e',ж:'zh',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'h',ц:'c',ч:'ch',ш:'sh',щ:'sch',ъ:'',ы:'y',ь:'',э:'e',ю:'yu',я:'ya'};
   const safeName=n=>{ const s=String(n||'file'), dot=s.lastIndexOf('.'), ext=dot>0?s.slice(dot+1).toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,8):'';
     const base=(dot>0?s.slice(0,dot):s).toLowerCase().split('').map(c=>TRL[c]!=null?TRL[c]:c).join('').replace(/[^a-z0-9._-]+/g,'-').replace(/-+/g,'-').replace(/^[-.]+|[-.]+$/g,'').slice(0,80)||'file';
     return base+(ext?'.'+ext:''); };
+  // свой сервер: подписанная ссылка на загрузку, файл уходит одним PUT с прогрессом
+  async function uploadLocal(path,file,onProg){
+    const t=await (await fetch('/api/files',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pass:PASS,op:'uptoken',path})})).json();
+    if(!t.ok||!t.url) throw new Error(t.error||'нет доступа к хранилищу');
+    await new Promise((ok,bad)=>{ const x=new XMLHttpRequest(); x.open('PUT',t.url);
+      x.upload.onprogress=e=>{ if(e.lengthComputable&&onProg) onProg(e.loaded/e.total*100); };
+      x.onload=()=>x.status<300?ok():bad(new Error(x.status===413?'файл больше 500 МБ':'ошибка сервера '+x.status));
+      x.onerror=()=>bad(new Error('нет связи с сервером')); x.send(file); });
+    return {pathname:path};
+  }
   async function uploadOne(file,owner,meta,onProg){
-    BLOBLIB=BLOBLIB||await import('./assets/blob-client.js');
     const path='riks/'+owner+'/'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)+'-'+safeName(file.name);
+    if(FILES_MODE==='local'){ const r=await uploadLocal(path,file,onProg); return Object.assign({id:'f'+genId(),name:file.name,size:file.size,type:file.type||'',path:r.pathname,cat:'other',doc:'',who:ME||'—',ts:new Date().toISOString()},meta||{}); }
+    BLOBLIB=BLOBLIB||await import('./assets/blob-client.js');
     const o={access:'private',handleUploadUrl:'/api/files',clientPayload:JSON.stringify({pass:PASS}),multipart:file.size>40*1048576,onUploadProgress:ev=>onProg&&onProg(ev.percentage)};
     if(file.type) o.contentType=file.type;
     let r; try{ r=await BLOBLIB.uploadPresigned(path,file,o); }catch(e1){ try{ r=await BLOBLIB.upload(path,file,o); }catch(e2){ throw e1; } }
@@ -775,7 +786,7 @@
   async function uploadMany(list,owner,meta,box){
     list=[...(list||[])]; if(!list.length) return [];
     if(DEMO){ toast('Демо: загрузка файлов отключена'); return []; }
-    if(!(await filesReady())){ dialog('Хранилище файлов не подключено','<div class="note red">Чтобы загружать файлы в CRM, нужно один раз подключить хранилище в Vercel: <b>Storage → Create → Blob → Private</b> → подключить к проекту riks-s. После этого обновите страницу.</div><p style="color:var(--muted);font-size:13px">Пока можно добавить <b>ссылку</b> (Яндекс Диск, путь на сервере) — кнопка «🔗 Ссылка».</p>',{noSave:true}); return []; }
+    if(!(await filesReady())){ dialog('Хранилище файлов не подключено','<div class="note red">Хранилище файлов сейчас недоступно. Обновите страницу; если не поможет — сообщите администратору сайта.</div><p style="color:var(--muted);font-size:13px">Пока можно добавить <b>ссылку</b> (Яндекс Диск, путь на сервере) — кнопка «🔗 Ссылка».</p>',{noSave:true}); return []; }
     const out=[];
     for(const f of list){
       const row=document.createElement('div'); row.className='file up'; row.innerHTML='<div class="fi">⏫</div><div style="flex:1;min-width:0"><div class="fn">'+esc(f.name)+'</div><div class="prog"><i></i></div></div><div class="fm">'+fsize(f.size)+'</div>';

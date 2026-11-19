@@ -1,0 +1,22 @@
+[Unit]
+Description=Riks+S API (site forms, CRM)
+After=network.target redis-server.service
+Wants=redis-server.service
+
+[Service]
+User=riks
+Group=riks
+WorkingDirectory=/srv/riks/app
+EnvironmentFile=/etc/riks/riks.env
+ExecStart=/usr/bin/node /srv/riks/app/deploy/server.js
+Restart=always
+RestartSec=2
+MemoryMax=600M
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/srv/riks-files
+
+[Install]
+WantedBy=multi-user.target
