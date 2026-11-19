@@ -9,7 +9,7 @@ const ROOT = path.resolve(__dirname, '..');
 const PORT = Number(process.env.PORT || 3000);
 
 const routes = {};
-for (const name of ['lead', 'leads', 'db', 'files']) routes['/api/' + name] = require(path.join(ROOT, 'api', name + '.js'));
+for (const name of ['lead', 'leads', 'db', 'files', 'inbox']) routes['/api/' + name] = require(path.join(ROOT, 'api', name + '.js'));
 const filesLocal = require(path.join(ROOT, 'api', '_files_local.js'));
 
 // совместимость с Vercel: res.status().json()/send()
@@ -42,3 +42,6 @@ const server = http.createServer(async (req, res) => {
 server.requestTimeout = 0;           // загрузка больших файлов может идти долго
 server.headersTimeout = 60e3;
 server.listen(PORT, '127.0.0.1', () => console.log('riks api on 127.0.0.1:' + PORT));
+
+// «Сообщения»: фоновое подключение к Telegram, ВК, почте, Авито, MAX
+if (process.env.REDIS_URL && process.env.INBOX !== 'off') require('./inbox/manager.js').boot();

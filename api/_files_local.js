@@ -151,3 +151,4 @@ async function download(req, res) {
 module.exports = handler;
 module.exports.upload = upload;
 module.exports.download = download;
+module.exports.saveStream = saveStream;

@@ -5,7 +5,7 @@
 set -euo pipefail
 B=/var/backups/riks; D=$B/$(date +%F); PREV=$(ls -1d $B/20* 2>/dev/null | grep -v "$D" | tail -1 || true)
 mkdir -p "$D"
-redis-cli -q SAVE >/dev/null
+redis-cli SAVE >/dev/null
 cp /var/lib/redis/dump.rdb "$D/redis.rdb"
 # читаемая копия базы (JSON) — можно открыть без Redis
 for k in leads orders clients catalog settings tasks; do

@@ -9,6 +9,7 @@ OLD=$(git rev-parse HEAD); NEW=$(git rev-parse origin/main)
 CHANGED=$(git diff --name-only "$OLD" "$NEW")
 git reset -q --hard "$NEW"
 if echo "$CHANGED" | grep -q '^package\(-lock\)\?\.json$'; then npm install --omit=dev --no-audit --no-fund -q || true; fi
-if echo "$CHANGED" | grep -q '^\(api/\|deploy/server\.js\|data/uds-catalog\.json\)'; then sudo /bin/systemctl restart riks; fi
+if echo "$CHANGED" | grep -q '^deploy/package\.json$'; then (cd deploy && npm install --omit=dev --no-audit --no-fund -q) || true; fi
+if echo "$CHANGED" | grep -q '^\(api/\|deploy/server\.js\|deploy/inbox/\|deploy/package\.json\|data/uds-catalog\.json\)'; then sudo /bin/systemctl restart riks; fi
 if echo "$CHANGED" | grep -q '^deploy/nginx-riks\.conf$'; then echo "nginx-riks.conf изменён — применить вручную (deploy/README.md)"; fi
 echo "$(date -Is) $OLD -> $NEW"

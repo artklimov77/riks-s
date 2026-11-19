@@ -1,0 +1,10 @@
+{
+  "name": "riks-s-server",
+  "private": true,
+  "description": "Зависимости только для собственного сервера (почта в «Сообщениях»). На Vercel не используются.",
+  "dependencies": {
+    "imapflow": "^1.0.164",
+    "mailparser": "^3.7.1",
+    "nodemailer": "^6.9.14"
+  }
+}
