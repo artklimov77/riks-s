@@ -425,7 +425,8 @@
 
   // кнопки и ссылки, которые открывают квиз
   document.addEventListener('click', e => {
-    const el = e.target.closest('[data-quiz], a[href="#lead"], a[href="#form"]');
+    // только ссылки и кнопки: data-quiz на <body> задаёт набор вопросов страницы и кликом не считается
+    const el = e.target.closest('a[data-quiz], button[data-quiz], a[href="#lead"], a[href="#form"]');
     if (!el || el.closest('.qz')) return;
     e.preventDefault();
     window.RiksQuiz.open({ key: el.dataset.quiz || '' });
