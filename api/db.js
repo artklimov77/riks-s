@@ -69,13 +69,22 @@ module.exports = async (req, res) => {
       return res.status(200).json({ ok: true, backup: out });
     }
 
-    // восстановить базу из копии (формат op 'backup'): каждая переданная коллекция заменяется целиком
+    // восстановить базу из копии (формат op 'backup'):
+    //   mode 'replace' (по умолчанию) — каждая переданная коллекция заменяется целиком;
+    //   mode 'add' — добавляются только записи, которых ещё нет (уже изменённые на сервере не трогаем)
     if (b.op === 'restore') {
       const bk = (b.backup && typeof b.backup === 'object') ? b.backup : {};
+      const add = b.mode === 'add';
       const saved = {};
       for (const [col, key] of Object.entries(KEY)) {
         if (!Array.isArray(bk[col])) continue;
         const recs = bk[col].filter((r) => r && typeof r === 'object' && r.id).map((r) => Object.assign({}, r, { id: String(r.id).slice(0, 80) }));
+        if (add) {
+          let n = 0;
+          for (const r of recs) n += Number(await cmd(['HSETNX', key, r.id, JSON.stringify(r)])) || 0;
+          saved[col] = n;
+          continue;
+        }
         await cmd(['DEL', key]);
         if (recs.length) await hsetMany(key, recs);
         saved[col] = recs.length;
