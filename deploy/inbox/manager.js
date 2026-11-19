@@ -48,7 +48,8 @@ function boot() { if (started) return; started = true; sync(); setInterval(sync,
 async function send(tid, text, who) {
   const t = await C.getThread(tid);
   if (!t) throw new Error('диалог не найден');
-  let w = workers[t.ch];
+  // демо-диалоги (mock): ответ сохраняется в CRM, никуда не отправляется
+  let w = t.mock ? { api: { send: async () => ({}) } } : workers[t.ch];
   if (!w) { await sync(); w = workers[t.ch]; }
   if (!w) throw new Error('канал «' + ((C.CH[t.ch] || {}).t || t.ch) + '» не подключён');
   const r = await w.api.send(t, text);
