@@ -330,50 +330,99 @@
   @media(max-width:760px){.side{display:none}.topbar .search{display:none}.grid2,.grid3,.checks{grid-template-columns:1fr}.items .it .r2{grid-template-columns:1fr 1fr}.st-row{grid-template-columns:24px 1fr 34px}.st-row .hide-m{display:none}}
 
   /* ---- Сообщения ---- */
-  .ibx{display:grid;grid-template-columns:340px 1fr;height:calc(100vh - 150px);min-height:460px;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
-  .ib-list{display:flex;flex-direction:column;border-right:1px solid var(--line);min-height:0}
-  .ib-tools{padding:10px;border-bottom:1px solid var(--line)}
-  .ib-tools .inp{width:100%}
-  .ib-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
-  .ib-chips button{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line)}
+  .main.main-ib{height:calc(100vh - 56px);padding:12px 16px 14px;overflow:hidden;display:flex;flex-direction:column}
+  .ib-wrap{display:flex;flex-direction:column;flex:1;min-height:0;gap:10px}
+  .ib-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .ib-top h1{font-size:22px;font-weight:800;margin-right:6px}
+  .ib-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .ib-chips button{font-size:12.5px;padding:5px 11px;border-radius:999px;background:var(--panel);border:1px solid var(--line2);display:flex;align-items:center;gap:6px;transition:background .15s,border-color .15s}
+  .ib-chips button:hover{border-color:var(--or)}
+  .ib-chips button i{width:8px;height:8px;border-radius:50%;display:inline-block}
   .ib-chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .ib-chips b{color:var(--red)} .ib-chips button.on b{color:#ffd2b0}
-  .ib-th{overflow-y:auto;flex:1}
-  .ib-r{display:flex;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}
-  .ib-r:hover{background:#faf7f4}.ib-r.on{background:#fff1e6}
-  .ib-av{position:relative;flex:0 0 40px;width:40px;height:40px;border-radius:50%;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .ib-chips b{background:var(--red);color:#fff;border-radius:999px;padding:0 6px;font-size:11px}
+  .ib-note{background:#fff6e5;border:1px solid #ffe0a3;color:#6e5200;border-radius:10px;padding:9px 12px;font-size:13px}
+  .ibx{flex:1;min-height:0;display:grid;grid-template-columns:330px minmax(0,1fr);background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);position:relative}
+  .ibx.info-on{grid-template-columns:330px minmax(0,1fr) 290px}
+  .ib-list{display:flex;flex-direction:column;border-right:1px solid var(--line);min-height:0;background:var(--panel)}
+  .ib-search{padding:10px;border-bottom:1px solid var(--line)}
+  .ib-search .inp{width:100%;height:38px;border-radius:10px;background:var(--bg);border-color:transparent}
+  .ib-search .inp:focus{background:#fff;border-color:var(--or)}
+  .ib-th,.ib-msgs,.ib-info{overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:thin}
+  .ib-th{flex:1;min-height:0}
+  .ib-r{display:flex;gap:11px;padding:11px 12px;border-bottom:1px solid #f3eee9;cursor:pointer;position:relative;transition:background .12s}
+  .ib-r:hover{background:#faf6f2}
+  .ib-r.on{background:#fff1e4}.ib-r.on::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--or)}
+  .ib-av{position:relative;flex:0 0 42px;width:42px;height:42px;border-radius:50%;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:17px}
+  .ib-av.big{flex-basis:64px;width:64px;height:64px;font-size:26px}
   .ib-av i{position:absolute;right:-4px;bottom:-3px;font-style:normal;font-size:8.5px;font-weight:800;padding:1px 3px;border-radius:6px;border:2px solid #fff;line-height:1.1}
   .ib-rb{min-width:0;flex:1}
-  .ib-r1{display:flex;gap:6px;align-items:baseline}.ib-r1 b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
-  .ib-r1 span{font-size:11px;color:var(--muted2);white-space:nowrap}
-  .ib-r2{display:flex;gap:6px;align-items:center;margin-top:2px}.ib-r2 span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:13px}
-  .ib-r2 em{font-style:normal;background:var(--red);color:#fff;font-size:11px;font-weight:700;border-radius:999px;min-width:19px;height:19px;padding:0 5px;display:flex;align-items:center;justify-content:center}
-  .ib-r.un .ib-r1 b{font-weight:800}.ib-r.un .ib-r2 span{color:var(--ink)}
-  .ib-r3{font-size:11px;color:var(--muted2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .ib-chat{display:flex;flex-direction:column;min-height:0;min-width:0;background:#faf7f4}
-  .ib-ph{margin:auto;text-align:center;color:var(--muted);padding:20px}
-  .ib-h{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel);border-bottom:1px solid var(--line)}
-  .ib-hb{min-width:0;flex:1}.ib-hn{font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .ib-hs{font-size:12px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .ib-links{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .ib-r1{display:flex;gap:6px;align-items:baseline}.ib-r1 b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;font-size:14px}
+  .ib-r1 span{font-size:11.5px;color:var(--muted2);white-space:nowrap}
+  .ib-r2{display:flex;gap:6px;align-items:center;margin-top:3px}.ib-r2 span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted);font-size:13px}
+  .ib-r2 u{text-decoration:none;color:var(--muted2)}
+  .ib-r2 em{font-style:normal;background:var(--red);color:#fff;font-size:11px;font-weight:700;border-radius:999px;min-width:20px;height:20px;padding:0 6px;display:flex;align-items:center;justify-content:center}
+  .ib-r.un .ib-r1 b{font-weight:800}.ib-r.un .ib-r2 span{color:var(--ink);font-weight:600}
+  .ib-r3{font-size:11px;color:var(--muted2);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ib-empty{padding:40px 16px;text-align:center;color:var(--muted)}
+  .ib-chat{display:flex;flex-direction:column;min-height:0;min-width:0;background:#f7f3ef}
+  .ib-ph{margin:auto;text-align:center;color:var(--muted);padding:24px;max-width:380px;line-height:1.6}
+  .ib-ph b{display:block;color:var(--ink);font-size:16px;margin:6px 0}
+  .ib-ph-ic{font-size:46px;width:88px;height:88px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;box-shadow:var(--shadow)}
+  .ib-h{display:flex;align-items:center;gap:11px;padding:10px 14px;background:var(--panel);border-bottom:1px solid var(--line);flex:0 0 auto}
+  .ib-hb{min-width:0;flex:1}.ib-hn{font-weight:700;font-size:15.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ib-hs{font-size:12px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ib-ch{font-weight:700}
+  .ib-hbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:16px;background:#fff;flex:0 0 auto}
+  .ib-hbtn:hover{border-color:var(--or)}.ib-hbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
   .ib-back{display:none}
-  .ib-msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
-  .ib-day{text-align:center;margin:8px 0 4px}.ib-day span{font-size:11px;color:var(--muted);background:var(--line);padding:2px 10px;border-radius:999px}
-  .ib-m{display:flex}.ib-m.out{justify-content:flex-end}
-  .ib-b{max-width:min(560px,78%);background:#fff;border:1px solid var(--line);border-radius:14px 14px 14px 4px;padding:8px 11px 5px;box-shadow:var(--shadow)}
-  .ib-m.out .ib-b{background:#ffe9d6;border-color:#ffd6b3;border-radius:14px 14px 4px 14px}
-  .ib-t{white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;line-height:1.45}.ib-t a{color:#1a6dd6;text-decoration:underline}
-  .ib-att{display:block;margin:4px 0;padding:6px 9px;border-radius:8px;background:rgba(0,0,0,.05);font-size:13px;text-align:left;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .ib-att small{color:var(--muted)}
+  .ib-msgs{flex:1;min-height:0;padding:16px 18px 10px}
+  .ib-day{text-align:center;margin:14px 0 8px}.ib-day span{font-size:11.5px;color:var(--muted);background:rgba(255,255,255,.8);border:1px solid var(--line);padding:3px 12px;border-radius:999px}
+  .ib-new{display:flex;align-items:center;gap:10px;margin:10px 0;color:var(--red);font-size:12px;font-weight:700}
+  .ib-new::before,.ib-new::after{content:'';flex:1;height:1px;background:#f3b4ad}
+  .ib-m{display:flex;margin-top:10px}.ib-m.cont{margin-top:3px}.ib-m.out{justify-content:flex-end}
+  .ib-b{max-width:min(540px,76%);background:#fff;border:1px solid var(--line);border-radius:16px 16px 16px 5px;padding:8px 12px 5px;box-shadow:0 1px 1px rgba(43,42,40,.05)}
+  .ib-m.cont .ib-b{border-radius:16px}
+  .ib-m.out .ib-b{background:#ffe7d1;border-color:#fbd3ad;border-radius:16px 16px 5px 16px}
+  .ib-m.out.cont .ib-b{border-radius:16px}
+  .ib-b.only-img{padding:4px 4px 3px}
+  .ib-t{white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere;line-height:1.45;font-size:14px}.ib-t a{color:#1a6dd6;text-decoration:underline}
+  .ib-img{display:block;margin:2px 0 4px;border-radius:12px;overflow:hidden;background:#eee;max-width:280px}
+  .ib-img img{display:block;max-width:280px;max-height:260px;min-width:120px;min-height:80px;object-fit:cover}
+  .ib-att{display:flex;align-items:center;gap:9px;margin:4px 0;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.045);text-align:left;width:100%;max-width:320px}
+  .ib-att:hover{background:rgba(0,0,0,.08)}
+  .ib-att-ic{font-size:20px}.ib-att-n{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:600}
+  .ib-att-n small{display:block;font-weight:400;color:var(--muted);font-size:11px}
   .ib-mt{font-size:10.5px;color:var(--muted2);text-align:right;margin-top:2px}
-  .ib-quick{display:flex;gap:6px;overflow-x:auto;padding:8px 12px 0;background:var(--panel);border-top:1px solid var(--line)}
-  .ib-quick button{flex:0 0 auto;font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line2);background:#fff}
-  .ib-quick button:hover{border-color:var(--or)}
-  .ib-send{display:flex;gap:8px;padding:8px 12px 12px;background:var(--panel)}
-  .ib-send textarea{flex:1;resize:none;min-height:44px;max-height:160px}
-  .ib-send .btn-pri{width:48px;font-size:18px;padding:0}
+  .ib-off{background:#fff3d6;color:#7a5600;font-size:12.5px;padding:7px 14px;border-top:1px solid #ffe0a3}.ib-off a{font-weight:700;cursor:pointer;text-decoration:underline}
+  .ib-compose{background:var(--panel);border-top:1px solid var(--line);padding:8px 12px 8px;flex:0 0 auto}
+  .ib-quick{display:flex;gap:6px;overflow-x:auto;padding-bottom:7px;scrollbar-width:none}.ib-quick::-webkit-scrollbar{display:none}
+  .ib-quick button{flex:0 0 auto;font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);background:#fff;white-space:nowrap}
+  .ib-quick button:hover{border-color:var(--or);background:#fff7ef}
+  .ib-send{display:flex;gap:8px;align-items:flex-end}
+  .ib-send textarea{flex:1;resize:none;min-height:42px;max-height:160px;line-height:1.4;padding:10px 12px;border-radius:12px;overflow-y:auto}
+  .ib-send .btn-pri{width:46px;height:42px;font-size:18px;padding:0;border-radius:12px;flex:0 0 auto}
+  .ib-hint{font-size:10.5px;color:var(--muted2);margin-top:4px}
+  .ib-info{border-left:1px solid var(--line);background:var(--panel);padding:16px 14px;display:none;min-height:0}
+  .ibx.info-on.has-cur .ib-info{display:block}
+  .ibx.info-on:not(.has-cur){grid-template-columns:330px minmax(0,1fr)}
+  .ib-info{position:relative}.ii-close{display:none;position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;background:var(--bg);font-size:15px}
+  .ii-who{text-align:center;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .ii-who .ib-av{margin:0 auto 8px}
+  .ii-n{font-weight:800;font-size:15px}.ii-s{font-size:12px;font-weight:700;margin-top:2px}
+  .ii-sec{padding:12px 0;border-bottom:1px solid var(--line)}.ii-sec:last-child{border-bottom:0}
+  .ii-sec:empty{display:none}
+  .ii-h{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:7px}
+  .ii-r{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:3px 0}.ii-r span{color:var(--muted)}.ii-r b{font-weight:600;text-align:right;overflow-wrap:anywhere}
+  .ii-r a{color:#1a6dd6}
+  .ii-card{border:1px solid var(--line);border-radius:10px;padding:9px 11px;cursor:pointer;transition:border-color .15s,background .15s}
+  .ii-card:hover{border-color:var(--or);background:#fffaf5}
+  .ii-ct{font-weight:700;font-size:13.5px}.ii-cm{font-size:12px;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .ii-btn{width:100%;padding:9px}
+  .ii-link{font-size:11.5px;color:var(--muted);text-decoration:underline;margin-top:6px}
   .ibc-l{max-height:340px;overflow:auto;margin-top:8px;display:flex;flex-direction:column;gap:4px}
   .ibc{text-align:left;padding:8px 10px;border:1px solid var(--line);border-radius:8px;display:flex;flex-direction:column}.ibc:hover{border-color:var(--or)}.ibc span{font-size:12px;color:var(--muted)}
+  @media(max-width:1400px){.ibx{grid-template-columns:290px minmax(0,1fr)}.ibx.info-on.has-cur{grid-template-columns:290px minmax(0,1fr) 260px}}
+  @media(max-width:1100px){.ibx.info-on.has-cur{grid-template-columns:270px minmax(0,1fr)}.ibx.info-on.has-cur .ib-info{position:absolute;right:0;top:0;bottom:0;width:280px;box-shadow:-8px 0 24px rgba(0,0,0,.12);z-index:3}}
+  @media(max-width:760px){.main.main-ib{height:calc(100vh - 56px);padding:8px}.ib-top h1{font-size:18px}.ibx,.ibx.info-on,.ibx.info-on.has-cur{grid-template-columns:minmax(0,1fr)}.ib-top{flex-wrap:wrap}.ib-top .spacer{display:none}.ibx.has-cur .ib-list{display:none}.ibx:not(.has-cur) .ib-chat{display:none}.ib-back{display:flex}.ibx .ib-info,.ibx.info-on.has-cur .ib-info{display:none}.ibx.info-m.has-cur .ib-info{display:block;position:absolute;inset:0;width:auto;z-index:3}.ii-close{display:block}.ib-chips{flex-wrap:nowrap;overflow-x:auto;order:3;width:100%;scrollbar-width:none}.ib-b{max-width:86%}.ib-hint{display:none}}
   .ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
   .ch-card .ch-hd{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}.ch-card .ch-hd h3{margin:0;flex:1}
   .ch-card .ib-av{flex-basis:34px;width:34px;height:34px;font-size:12px}
@@ -644,6 +693,7 @@
     const tc=$('#taskCnt'); const nt=myDue().length; if(tc){ if(nt){tc.style.display='flex';tc.textContent=nt;tc.title='Мои задачи на сегодня и просроченные';}else tc.style.display='none'; } $('#meBtn').textContent='👤 '+(ME||'Кто вы?'); }
   function render(){
     $$('.side .nav').forEach(n=>n.classList.toggle('on',n.dataset.view===VIEW));
+    $('#main').classList.toggle('main-ib',VIEW==='inbox');
     updateCounters();
     ({leads:leadsView,deals:()=>dealsView('sales'),supply:()=>dealsView('supply'),clients:clientsView,docs:docsView,tasks:tasksView,inbox:inboxView,catalog:catalogView,analytics:analyticsView,settings:settingsView}[VIEW]||leadsView)();
   }
@@ -659,8 +709,9 @@
     ['📐 Размеры','Пришлите, пожалуйста, размеры и фото места установки — посчитаем стоимость точно.'],
     ['📞 Перезвоним','Спасибо! Менеджер перезвонит вам в течение рабочего дня. Удобный номер для связи?'],
     ['🎨 Макет','Отправили макет — посмотрите, пожалуйста. Если всё устраивает, напишите «согласовано».'],
+    ['💳 Счёт','Выставили счёт, отправили вам. После оплаты запускаем в работу.'],
     ['✅ Готово','Ваш заказ готов! Забрать можно по адресу: ул. Пролетарская, 36, офис 1 (пн–пт 9:00–18:00).']];
-  const IB={threads:[],status:{},on:{},cur:null,thread:null,msgs:[],filter:'all',q:'',note:'',snap:null,drafts:{}};
+  const IB={threads:[],status:{},on:{},cur:null,thread:null,msgs:[],filter:'all',q:'',note:'',snap:null,drafts:{},listSig:'',msgSig:'',urls:{},unreadMark:0,info:ls.get('riks_ibinfo',true)};
   const IB_DEMO=(()=>{ const t=Date.now(), iso=m=>new Date(t-m*60000).toISOString();
     return {threads:[
       {id:'tg:1',ch:'tg',peer:'1',name:'Анна Смирнова',last:'Сколько будет стоить вывеска 3×0,6 м?',ts:iso(4),unread:2,lastDir:'in',meta:{username:'anna_s'}},
@@ -687,9 +738,11 @@
     if(r.status===404) return {ok:false,note:'server-only'};
     return r.json();
   }
-  const ibTime=ts=>{ try{ const d=new Date(ts), n=new Date(); return d.toDateString()===n.toDateString()?d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Moscow'}):d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',timeZone:'Europe/Moscow'}); }catch(e){ return ''; } };
+  const ibTime=ts=>{ try{ const d=new Date(ts), n=new Date(), y=new Date(n-864e5); if(d.toDateString()===n.toDateString()) return d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Moscow'}); if(d.toDateString()===y.toDateString()) return 'вчера'; return d.toLocaleDateString('ru-RU',{day:'numeric',month:'short',timeZone:'Europe/Moscow'}).replace('.',''); }catch(e){ return ''; } };
+  const ibDay=ts=>{ const d=new Date(ts), n=new Date(), y=new Date(n-864e5); if(d.toDateString()===n.toDateString()) return 'Сегодня'; if(d.toDateString()===y.toDateString()) return 'Вчера'; return d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',timeZone:'Europe/Moscow'}); };
   const linkify=s=>s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
-  const ibAv=t=>{ const c=IBCH[t.ch]||{c:'#888',s:'?'}; return '<div class="ib-av" style="background:'+c.c+'">'+esc((t.name||'?').trim().slice(0,1).toUpperCase())+'<i style="background:'+c.c+'">'+c.s+'</i></div>'; };
+  const ibAv=(t,big)=>{ const c=IBCH[t.ch]||{c:'#888',s:'?'}; return '<div class="ib-av'+(big?' big':'')+'" style="background:'+c.c+'">'+esc((t.name||'?').trim().slice(0,1).toUpperCase())+'<i style="background:'+c.c+'">'+c.s+'</i></div>'; };
+  const ibIsImg=a=>/^image\//.test(a.type||'')||/\.(jpe?g|png|webp|gif)$/i.test(a.name||a.link||a.path||'');
   async function ibLoad(){
     try{ const j=await ibApi('threads');
       if(j.note==='server-only'){ IB.note='server-only'; IB.threads=[]; }
@@ -700,89 +753,154 @@
     IB.threads.forEach(t=>{ if(t.lastDir==='in'&&t.unread&&prev[t.id]!==t.ts&&!(VIEW==='inbox'&&IB.cur===t.id&&!document.hidden))
       pushNotif({id:'M'+t.id+t.ts,title:'💬 '+((IBCH[t.ch]||{}).t||'')+': '+(t.name||'собеседник'),text:t.last||'',ref:{t:'inbox',id:t.id}}); }); }
   function ibCounter(){ const n=IB.threads.filter(t=>t.unread).length, c=$('#inboxCnt'); if(c){ if(n){c.style.display='flex';c.textContent=n;}else c.style.display='none'; } }
+
   function inboxView(){
     const anyOn=Object.values(IB.on||{}).some(Boolean);
-    let html=head('Сообщения','<div class="spacer"></div><button class="btn-sec" id="ibSet">⚙️ Каналы</button>'+refreshBtn);
-    if(IB.note==='server-only') html+='<div class="note">«Сообщения» работают на собственном сервере CRM. Эта копия — временная, здесь переписки нет.</div>';
-    else if(!anyOn&&!IB.threads.length) html+='<div class="note">Каналы ещё не подключены. Нажмите <b>⚙️ Каналы</b>: Telegram, ВКонтакте, почта, Авито и MAX подключаются вставкой ключа, пошаговая инструкция — там же.</div>';
-    html+='<div class="ibx'+(IB.cur?' has-cur':'')+'"><div class="ib-list"><div class="ib-tools"><input class="inp" id="ibQ" placeholder="🔍 Поиск по имени и тексту" value="'+esc(IB.q)+'"><div class="ib-chips" id="ibChips"></div></div><div class="ib-th" id="ibTh"></div></div>'+
-      '<div class="ib-chat" id="ibChat"><div class="ib-ph"><div style="font-size:42px">💬</div><b>Выберите диалог слева</b><div class="hint" style="margin-top:6px;max-width:340px">Сообщения из Telegram, ВКонтакте, почты, Авито и MAX собираются здесь. Ответ уходит клиенту в тот же мессенджер, откуда он написал.</div></div></div></div>';
-    $('#main').innerHTML=html; bindCommon();
+    const note=IB.note==='server-only'?'<div class="ib-note">«Сообщения» работают на собственном сервере CRM. Эта копия — временная, здесь переписки нет.</div>'
+      :(!anyOn&&!IB.threads.length?'<div class="ib-note">Каналы ещё не подключены — нажмите <b>⚙️ Каналы</b>: Telegram, ВКонтакте, почта, Авито и MAX подключаются вставкой ключа, инструкция там же.</div>':'');
+    $('#main').innerHTML='<div class="ib-wrap"><div class="ib-top"><h1>Сообщения</h1><div class="ib-chips" id="ibChips"></div><div class="spacer"></div><button class="btn-sec" id="ibSet">⚙️ Каналы</button><button class="btn-sec" id="refresh" title="Обновить">↻</button></div>'+note+
+      '<div class="ibx'+(IB.cur?' has-cur':'')+(IB.info?' info-on':'')+'" id="ibx"><div class="ib-list"><div class="ib-search"><input class="inp" id="ibQ" placeholder="🔍  Поиск: имя, текст, телефон" value="'+esc(IB.q)+'"></div><div class="ib-th" id="ibTh"></div></div>'+
+      '<div class="ib-chat" id="ibChat">'+ibPlaceholder()+'</div><aside class="ib-info" id="ibInfo"></aside></div></div>';
     $('#ibSet').onclick=()=>{ VIEW='settings'; SET_TAB='channels'; render(); };
-    $('#refresh').onclick=()=>ibLoad().then(()=>{ ibDrawList(); toast('Обновлено'); });
-    $('#ibQ').oninput=e=>{ IB.q=e.target.value; ibDrawList(); };
-    ibDrawList();
+    $('#refresh').onclick=async()=>{ await ibLoad(); ibDrawList(true); if(IB.cur) await ibOpen(IB.cur,true); toast('Обновлено'); };
+    $('#ibQ').oninput=e=>{ IB.q=e.target.value; ibDrawList(true); };
+    IB.listSig=''; IB.msgSig='';
+    ibDrawList(true);
     if(IB.cur) ibOpen(IB.cur);
   }
-  function ibDrawList(){
+  const ibPlaceholder=()=>'<div class="ib-ph"><div class="ib-ph-ic">💬</div><b>Выберите диалог слева</b><div>Сообщения из Telegram, ВКонтакте, почты, Авито и MAX собираются здесь.<br>Ответ уходит клиенту в тот же мессенджер, откуда он написал.</div></div>';
+
+  // список: перерисовываем только если что-то изменилось, прокрутку сохраняем
+  function ibDrawList(force){
     const th=$('#ibTh'); if(!th) return;
+    const q=IB.q.trim().toLowerCase(), nUn=IB.threads.filter(x=>x.unread).length;
     const chips=[['all','Все'],['unread','Непрочитанные']].concat(Object.keys(IBCH).filter(k=>IB.on[k]||IB.threads.some(t=>t.ch===k)).map(k=>[k,IBCH[k].t]));
-    const nUn=IB.threads.filter(x=>x.unread).length;
-    $('#ibChips').innerHTML=chips.map(([k,t])=>'<button data-ibf="'+k+'" class="'+(IB.filter===k?'on':'')+'">'+esc(t)+(k==='unread'&&nUn?' <b>'+nUn+'</b>':'')+'</button>').join('');
-    $$('[data-ibf]').forEach(b=>b.onclick=()=>{ IB.filter=b.dataset.ibf; ibDrawList(); });
-    const q=IB.q.trim().toLowerCase();
     const list=IB.threads.filter(t=>(IB.filter==='all'||(IB.filter==='unread'?t.unread:t.ch===IB.filter))&&(!q||JSON.stringify([t.name,t.last,t.peer,t.meta]).toLowerCase().includes(q)));
-    th.innerHTML=list.length?list.map(t=>'<div class="ib-r'+(t.id===IB.cur?' on':'')+(t.unread?' un':'')+'" data-tid="'+esc(t.id)+'">'+ibAv(t)+'<div class="ib-rb"><div class="ib-r1"><b>'+esc(t.name||t.peer)+'</b><span>'+ibTime(t.ts)+'</span></div><div class="ib-r2"><span>'+esc(t.last||'')+'</span>'+(t.unread?'<em>'+t.unread+'</em>':'')+'</div>'+(t.meta&&t.meta.item?'<div class="ib-r3">📌 '+esc(t.meta.item)+'</div>':'')+'</div></div>').join('')
-      :'<div class="empty" style="padding:30px 10px">'+(IB.threads.length?'Ничего не найдено':'Пока нет переписки')+'</div>';
+    const sig=JSON.stringify([IB.filter,q,IB.cur,nUn,chips,list.map(t=>[t.id,t.ts,t.unread,t.last,t.name])]);
+    if(!force&&sig===IB.listSig) return; IB.listSig=sig;
+    $('#ibChips').innerHTML=chips.map(([k,t])=>'<button data-ibf="'+k+'" class="'+(IB.filter===k?'on':'')+'">'+(IBCH[k]?'<i style="background:'+IBCH[k].c+'"></i>':'')+esc(t)+(k==='unread'&&nUn?' <b>'+nUn+'</b>':'')+'</button>').join('');
+    $$('[data-ibf]').forEach(b=>b.onclick=()=>{ IB.filter=b.dataset.ibf; ibDrawList(true); });
+    const st=th.scrollTop;
+    th.innerHTML=list.length?list.map(t=>{ const c=IBCH[t.ch]||{t:t.ch};
+      return '<div class="ib-r'+(t.id===IB.cur?' on':'')+(t.unread?' un':'')+'" data-tid="'+esc(t.id)+'">'+ibAv(t)+'<div class="ib-rb"><div class="ib-r1"><b>'+esc(t.name||t.peer)+'</b><span>'+ibTime(t.ts)+'</span></div>'+
+        '<div class="ib-r2"><span>'+(t.lastDir==='out'?'<u>Вы:</u> '+esc(String(t.last||'').replace(/^Вы: /,'')):esc(t.last||''))+'</span>'+(t.unread?'<em>'+t.unread+'</em>':'')+'</div>'+
+        '<div class="ib-r3">'+esc(c.t)+(t.meta&&t.meta.item?' · '+esc(t.meta.item):'')+(t.leadId?' · ▦ лид':'')+(t.clientId?' · 👥 клиент':'')+'</div></div></div>'; }).join('')
+      :'<div class="ib-empty">'+(IB.threads.length?'Ничего не найдено':'Пока нет переписки')+'</div>';
+    th.scrollTop=st;
     $$('.ib-r',th).forEach(r=>r.onclick=()=>ibOpen(r.dataset.tid));
   }
   async function ibOpen(tid,silent){
     if(!silent&&IB.cur&&$('#ibText')) IB.drafts[IB.cur]=$('#ibText').value;
-    IB.cur=tid; $$('.ib-r').forEach(r=>r.classList.toggle('on',r.dataset.tid===tid)); const box=$('.ibx'); if(box) box.classList.add('has-cur');
+    const switching=IB.cur!==tid||!IB.thread||IB.thread.id!==tid;
+    IB.cur=tid; $$('.ib-r').forEach(r=>r.classList.toggle('on',r.dataset.tid===tid)); const box=$('#ibx'); if(box) box.classList.add('has-cur');
     const j=await ibApi('messages',{tid}).catch(()=>({ok:false}));
     if(VIEW!=='inbox'||IB.cur!==tid) return;
     if(!j.ok){ if(!silent){ toast('Не удалось открыть диалог'); IB.cur=null; } return; }
-    const first=!silent||!IB.thread||IB.thread.id!==tid;
+    if(switching||!$('#ibMsgs')){ IB.unreadMark=(j.thread&&j.thread.unread)||0; IB.msgSig=''; }
     IB.msgs=j.items||[]; IB.thread=j.thread;
-    if(first) ibDrawChat(); else { ibDrawHead(); ibDrawMsgs(); }
+    if(switching||!$('#ibMsgs')) ibDrawChat(); else { ibDrawHead(); ibDrawMsgs(); }
+    ibDrawInfo();
     if(j.thread&&j.thread.unread&&!document.hidden){ ibApi('read',{tid}); const t=IB.threads.find(x=>x.id===tid); if(t) t.unread=0; ibDrawList(); ibCounter(); }
   }
   function ibDrawChat(){
     const t=IB.thread, c=IBCH[t.ch]||{t:t.ch}; const box=$('#ibChat'); if(!box) return;
+    const off=!t.mock&&IB.note!=='server-only'&&!IB.on[t.ch]&&!DEMO;
     box.innerHTML='<div class="ib-h" id="ibH"></div><div class="ib-msgs" id="ibMsgs"></div>'+
-      '<div class="ib-quick">'+IB_QUICK.map((q,i)=>'<button data-iq="'+i+'" title="'+esc(q[1])+'">'+esc(q[0])+'</button>').join('')+'</div>'+
-      '<div class="ib-send"><textarea class="inp" id="ibText" rows="2" placeholder="Ответ в '+esc(c.t)+'…  Enter — отправить, Shift+Enter — новая строка"></textarea><button class="btn-pri" id="ibGo" title="Отправить">➤</button></div>';
+      (off?'<div class="ib-off">Канал «'+esc(c.t)+'» сейчас не подключён — ответ не уйдёт клиенту. <a id="ibOffGo">Подключить →</a></div>':'')+
+      '<div class="ib-compose"><div class="ib-quick">'+IB_QUICK.map((q,i)=>'<button data-iq="'+i+'" title="'+esc(q[1])+'">'+esc(q[0])+'</button>').join('')+'</div>'+
+      '<div class="ib-send"><textarea class="inp" id="ibText" rows="1" placeholder="Ответ клиенту · '+esc(c.t)+'"></textarea><button class="btn-pri" id="ibGo" title="Отправить (Enter)">➤</button></div>'+
+      '<div class="ib-hint">Enter — отправить · Shift+Enter — новая строка</div></div>';
     const ta=$('#ibText'); ta.value=IB.drafts[t.id]||'';
-    ta.onkeydown=e=>{ if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){ e.preventDefault(); ibSend(); } };
-    ta.oninput=()=>{ IB.drafts[t.id]=ta.value; };
+    const fit=()=>{ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight+2,160)+'px'; };
+    ta.onkeydown=e=>{ if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){ e.preventDefault(); ibSend(); } if(e.key==='Escape'&&window.innerWidth<=760) $('#ibBack').click(); };
+    ta.oninput=()=>{ IB.drafts[t.id]=ta.value; fit(); };
     $('#ibGo').onclick=ibSend;
-    $$('[data-iq]').forEach(b=>b.onclick=()=>{ const v=IB_QUICK[+b.dataset.iq][1]; ta.value=ta.value?ta.value+'\n'+v:v; IB.drafts[t.id]=ta.value; ta.focus(); });
-    ibDrawHead(); ibDrawMsgs();
-    if(window.innerWidth>760) ta.focus();
+    const og=$('#ibOffGo'); if(og) og.onclick=()=>{ VIEW='settings'; SET_TAB='channels'; render(); };
+    $$('[data-iq]').forEach(b=>b.onclick=()=>{ const v=IB_QUICK[+b.dataset.iq][1]; ta.value=ta.value?ta.value.replace(/\s+$/,'')+'\n'+v:v; IB.drafts[t.id]=ta.value; fit(); ta.focus(); });
+    ibDrawHead(); ibDrawMsgs(); fit();
+    if(window.innerWidth>760) ta.focus({preventScroll:true});
   }
   function ibDrawHead(){
     const t=IB.thread, c=IBCH[t.ch]||{t:t.ch,c:'#888'}, m=t.meta||{}; const h=$('#ibH'); if(!h) return;
-    const lead=t.leadId&&DATA.leads.find(l=>l.id===t.leadId), cl=t.clientId&&DATA.clients.find(x=>x.id===t.clientId), deal=(t.dealId&&dealOf(t.dealId))||(lead&&lead.dealId&&dealOf(lead.dealId));
     const ext=(t.ch==='vk'&&m.url)||(t.ch==='avito'&&m.itemUrl)||(t.ch==='tg'&&m.username&&'https://t.me/'+m.username)||(t.ch==='mail'&&'mailto:'+t.peer)||'';
-    h.innerHTML='<button class="ic-btn ib-back" id="ibBack" title="К списку">←</button>'+ibAv(t)+'<div class="ib-hb"><div class="ib-hn">'+esc(t.name||t.peer)+'</div><div class="ib-hs"><span class="badge" style="background:'+c.c+'">'+esc(c.t)+'</span>'+
-      (t.ch==='mail'?' '+esc(t.peer):(m.username?' @'+esc(m.username):''))+(m.phone?' · <a href="tel:'+esc(m.phone)+'">'+esc(m.phone)+'</a>':'')+(m.item?' · 📌 '+esc(m.item):'')+(m.subject&&t.ch==='mail'?' · «'+esc(m.subject)+'»':'')+'</div></div>'+
-      '<div class="ib-links">'+(lead?'<button class="btn-sec btn-sm" id="ibLead">▦ Лид</button>':(!cl&&!deal?'<button class="btn-sec btn-sm" id="ibMkLead" title="Создать лид из этой переписки">+ Лид</button>':''))+
-      (deal?'<button class="btn-sec btn-sm" id="ibDeal">💼 Сделка</button>':'')+
-      (cl?'<button class="btn-sec btn-sm" id="ibCl">👥 '+esc((cl.name||'Клиент').slice(0,22))+'</button>':'<button class="btn-sec btn-sm" id="ibLinkCl" title="Привязать к клиенту из базы">👥 Клиент</button>')+
-      (ext?'<a class="btn-sec btn-sm" href="'+esc(ext)+'" target="_blank" rel="noopener" title="Открыть в '+esc(c.t)+'">↗</a>':'')+'</div>';
+    const sub=[t.ch==='mail'?t.peer:(m.username?'@'+m.username:''),m.phone||'',m.item?'📌 '+m.item:''].filter(Boolean).map(esc).join(' · ');
+    h.innerHTML='<button class="ic-btn ib-back" id="ibBack" title="К списку">←</button>'+ibAv(t)+'<div class="ib-hb"><div class="ib-hn">'+esc(t.name||t.peer)+'</div><div class="ib-hs"><span class="ib-ch" style="color:'+c.c+'">● '+esc(c.t)+'</span>'+(sub?' · '+sub:'')+'</div></div>'+
+      (ext?'<a class="ib-hbtn" href="'+esc(ext)+'" target="_blank" rel="noopener" title="Открыть в '+esc(c.t)+'">↗</a>':'')+
+      '<button class="ib-hbtn'+(IB.info?' on':'')+'" id="ibInfoT" title="Карточка: лид, сделка, клиент">ℹ</button>';
     $('#ibBack').onclick=()=>{ if($('#ibText')) IB.drafts[t.id]=$('#ibText').value; IB.cur=null; IB.thread=null; inboxView(); };
+    $('#ibInfoT').onclick=()=>{ if(window.innerWidth<=760){ $('#ibx').classList.add('info-m'); return; } IB.info=!IB.info; ls.set('riks_ibinfo',IB.info); $('#ibx').classList.toggle('info-on',IB.info); ibDrawHead(); };
+  }
+  function ibDrawMsgs(){
+    const mb=$('#ibMsgs'); if(!mb) return;
+    const sig=IB.thread.id+'|'+IB.msgs.length+'|'+(IB.msgs.length?IB.msgs[IB.msgs.length-1].id:'');
+    if(sig===IB.msgSig) return;
+    const first=!IB.msgSig, atBottom=mb.scrollHeight-mb.scrollTop-mb.clientHeight<120; IB.msgSig=sig;
+    // где начинаются непрочитанные: последние N входящих
+    let markAt=-1; if(IB.unreadMark){ let n=IB.unreadMark; for(let i=IB.msgs.length-1;i>=0;i--){ if(IB.msgs[i].dir==='in'){ n--; if(n===0){ markAt=i; break; } } } }
+    let lastDay='', prev=null; const out=[];
+    IB.msgs.forEach((m,i)=>{ const d=ibDay(m.ts); if(d!==lastDay){ out.push('<div class="ib-day"><span>'+d+'</span></div>'); lastDay=d; prev=null; }
+      if(i===markAt) out.push('<div class="ib-new" id="ibNew"><span>Новые сообщения</span></div>');
+      const cont=prev&&prev.dir===m.dir&&(prev.who||'')===(m.who||'')&&(new Date(m.ts)-new Date(prev.ts))<5*60e3; prev=m;
+      const imgs=(m.att||[]).map((a,ai)=>[a,ai]).filter(([a])=>ibIsImg(a)), docs=(m.att||[]).map((a,ai)=>[a,ai]).filter(([a])=>!ibIsImg(a));
+      out.push('<div class="ib-m '+(m.dir==='out'?'out':'in')+(cont?' cont':'')+'"><div class="ib-b'+(imgs.length&&!m.text&&!docs.length?' only-img':'')+'">'+
+        imgs.map(([a,ai])=>'<button class="ib-img" data-mid="'+esc(m.id)+'" data-ai="'+ai+'" title="'+esc(a.name||'фото')+'"><img alt="" loading="lazy" '+(a.link?'src="'+esc(a.link)+'"':'data-path="'+esc(a.path)+'"')+'></button>').join('')+
+        (m.text?'<div class="ib-t">'+linkify(esc(m.text))+'</div>':'')+
+        docs.map(([a,ai])=>'<button class="ib-att" data-mid="'+esc(m.id)+'" data-ai="'+ai+'"><span class="ib-att-ic">'+(/^audio\//.test(a.type||'')?'🎤':/pdf/i.test((a.type||'')+(a.name||''))?'📕':'📎')+'</span><span class="ib-att-n">'+esc(a.name||'файл')+(a.size?'<small>'+fsize(a.size)+'</small>':'')+'</span></button>').join('')+
+        '<div class="ib-mt">'+(m.dir==='out'&&m.who?esc(m.who)+' · ':'')+new Date(m.ts).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Moscow'})+'</div></div></div>'); });
+    const keep=mb.scrollTop;
+    mb.innerHTML=IB.msgs.length?out.join(''):'<div class="ib-empty">Сообщений пока нет</div>';
+    $$('.ib-att,.ib-img',mb).forEach(b=>b.onclick=()=>{ const m=IB.msgs.find(x=>x.id===b.dataset.mid); const a=m&&m.att[+b.dataset.ai]; if(a) openFile(a.path?{path:a.path,name:a.name}:{link:a.link,name:a.name}); });
+    ibLoadImgs(mb);
+    const nw=$('#ibNew');
+    if(first&&nw) mb.scrollTop=Math.max(0,nw.offsetTop-60);
+    else if(first||atBottom) mb.scrollTop=mb.scrollHeight;
+    else mb.scrollTop=keep;
+    // картинки догружаются — держим низ, если были внизу
+    if(first||atBottom) $$('img',mb).forEach(im=>{ if(!im.complete) im.addEventListener('load',()=>{ if(!nw||!first) mb.scrollTop=mb.scrollHeight; },{once:true}); });
+  }
+  // превью файлов из хранилища CRM: временная ссылка, кэш на 25 минут
+  async function ibLoadImgs(root){
+    for(const im of $$('img[data-path]',root)){
+      const p=im.dataset.path, c=IB.urls[p];
+      if(c&&Date.now()-c.at<25*60e3){ im.src=c.url; continue; }
+      if(DEMO) continue;
+      try{ const j=await (await fetch('/api/files',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pass:PASS,op:'link',path:p})})).json();
+        if(j.ok&&j.url){ IB.urls[p]={url:j.url,at:Date.now()}; im.src=j.url; } }catch(e){}
+    }
+  }
+  // карточка справа: лид, сделка, клиент
+  function ibDrawInfo(){
+    const box=$('#ibInfo'); if(!box||!IB.thread) return; const t=IB.thread, m=t.meta||{}, c=IBCH[t.ch]||{t:t.ch,c:'#888'};
+    const lead=t.leadId&&DATA.leads.find(l=>l.id===t.leadId), cl=t.clientId&&DATA.clients.find(x=>x.id===t.clientId);
+    const deal=(t.dealId&&dealOf(t.dealId))||(lead&&lead.dealId&&dealOf(lead.dealId));
+    const row=(k,v)=>v?'<div class="ii-r"><span>'+k+'</span><b>'+v+'</b></div>':'';
+    let h='<button class="ii-close" id="ibInfoX" title="Закрыть">✕</button><div class="ii-who">'+ibAv(t,true)+'<div class="ii-n">'+esc(t.name||t.peer)+'</div><div class="ii-s" style="color:'+c.c+'">● '+esc(c.t)+'</div></div>'+
+      '<div class="ii-sec">'+row('Телефон',m.phone?'<a href="tel:'+esc(m.phone)+'">'+esc(m.phone)+'</a>':'')+row(t.ch==='mail'?'Почта':'',t.ch==='mail'?esc(t.peer):'')+row('Ник',m.username?'@'+esc(m.username):'')+
+        row('Объявление',m.item?(m.itemUrl?'<a href="'+esc(m.itemUrl)+'" target="_blank" rel="noopener">'+esc(m.item)+'</a>':esc(m.item)):'')+row('Тема',t.ch==='mail'&&m.subject?esc(m.subject):'')+'</div>';
+    if(lead){ const st=stOf(LEAD_STAGES,lead.stage||'new');
+      h+='<div class="ii-sec"><div class="ii-h">▦ Лид</div><div class="ii-card" id="ibLead"><div class="ii-ct">'+esc(lead.service||'Обращение')+'</div><div class="ii-cm"><span class="st-pill" style="background:'+st.col+'">'+st.t+'</span> '+fmt(lead.ts)+'</div></div></div>'; }
+    else if(!deal) h+='<div class="ii-sec"><div class="ii-h">▦ Лид</div><button class="btn-sec ii-btn" id="ibMkLead">+ Создать лид из переписки</button></div>';
+    if(deal){ const st=stOf(stagesOf(deal.funnel||'sales'),deal.status);
+      h+='<div class="ii-sec"><div class="ii-h">💼 Сделка</div><div class="ii-card" id="ibDeal"><div class="ii-ct">'+esc(deal.kind||deal.client||'Сделка')+'</div><div class="ii-cm"><span class="st-pill" style="background:'+st.col+'">'+esc(st.t)+'</span> '+money(dealTotal(deal))+'</div></div></div>'; }
+    else if(lead) h+='<div class="ii-sec"><div class="ii-h">💼 Сделка</div><button class="btn-pri ii-btn" id="ibMkDeal">💼 Создать сделку</button></div>';
+    if(cl) h+='<div class="ii-sec"><div class="ii-h">👥 Клиент</div><div class="ii-card" id="ibCl"><div class="ii-ct">'+esc(cl.name||'Клиент')+'</div><div class="ii-cm">'+esc([cl.company,cl.phone].filter(Boolean).join(' · '))+'</div></div><button class="ii-link" id="ibUnCl">отвязать</button></div>';
+    else h+='<div class="ii-sec"><div class="ii-h">👥 Клиент</div><button class="btn-sec ii-btn" id="ibLinkCl">Привязать к клиенту из базы</button></div>';
+    box.innerHTML=h;
     const on=(id,fn)=>{ const b=$('#'+id); if(b) b.onclick=fn; };
+    on('ibInfoX',()=>$('#ibx').classList.remove('info-m'));
     on('ibLead',()=>openLead(t.leadId));
     on('ibMkLead',ibMakeLead);
+    on('ibMkDeal',()=>editDeal(null,lead));
     on('ibDeal',()=>editDeal(deal.id));
     on('ibCl',()=>{ VIEW='clients'; render(); openClient(cl.id); });
     on('ibLinkCl',ibLinkClient);
-  }
-  function ibDrawMsgs(){
-    const mb=$('#ibMsgs'); if(!mb) return; const atBottom=mb.scrollHeight-mb.scrollTop-mb.clientHeight<80;
-    let lastDay='';
-    mb.innerHTML=IB.msgs.length?IB.msgs.map(m=>{ const d=new Date(m.ts).toLocaleDateString('ru-RU',{day:'numeric',month:'long',timeZone:'Europe/Moscow'}); const sep=d!==lastDay?'<div class="ib-day"><span>'+d+'</span></div>':''; lastDay=d;
-      return sep+'<div class="ib-m '+(m.dir==='out'?'out':'in')+'"><div class="ib-b">'+(m.text?'<div class="ib-t">'+linkify(esc(m.text))+'</div>':'')+
-        (m.att||[]).map((a,i)=>'<button class="ib-att" data-mid="'+esc(m.id)+'" data-ai="'+i+'">'+(/^image\//.test(a.type||'')||/\.(jpe?g|png|webp|gif)$/i.test(a.name||'')?'🖼':/^audio\//.test(a.type||'')?'🎤':'📎')+' '+esc(a.name||'файл')+(a.size?' <small>'+fsize(a.size)+'</small>':'')+'</button>').join('')+
-        '<div class="ib-mt">'+(m.dir==='out'&&m.who?esc(m.who)+' · ':'')+new Date(m.ts).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Moscow'})+'</div></div></div>'; }).join('')
-      :'<div class="empty">Сообщений пока нет</div>';
-    $$('.ib-att',mb).forEach(b=>b.onclick=()=>{ const m=IB.msgs.find(x=>x.id===b.dataset.mid); const a=m&&m.att[+b.dataset.ai]; if(a) openFile(a.path?{path:a.path,name:a.name}:{link:a.link,name:a.name}); });
-    if(atBottom||!mb.dataset.init){ mb.scrollTop=mb.scrollHeight; mb.dataset.init='1'; }
+    on('ibUnCl',async()=>{ await ibApi('link',{tid:t.id,clientId:''}); t.clientId=undefined; const tt=IB.threads.find(x=>x.id===t.id); if(tt) tt.clientId=undefined; ibDrawInfo(); });
   }
   async function ibSend(){
     const ta=$('#ibText'); if(!ta) return; const text=ta.value.trim(); if(!text) return; const tid=IB.cur, btn=$('#ibGo'); btn.disabled=true;
     try{ const j=await ibApi('send',{tid,text,who:ME}); if(!j.ok) throw new Error(j.error||'канал не ответил');
-      IB.drafts[tid]=''; if(IB.cur===tid){ ta.value=''; IB.msgs.push(j.item); ibDrawMsgs(); const mb=$('#ibMsgs'); if(mb) mb.scrollTop=mb.scrollHeight; }
+      IB.drafts[tid]=''; IB.unreadMark=0;
+      if(IB.cur===tid){ ta.value=''; ta.style.height='auto'; IB.msgs.push(j.item); IB.msgSig=IB.msgSig||'x'; const mb=$('#ibMsgs'); if(mb) mb.scrollTop=mb.scrollHeight; ibDrawMsgs(); if(mb) mb.scrollTop=mb.scrollHeight; }
       const t=IB.threads.find(x=>x.id===tid); if(t) Object.assign(t,{last:'Вы: '+text,ts:j.item.ts,lastDir:'out',unread:0}); IB.threads.sort((a,b)=>String(b.ts).localeCompare(String(a.ts))); ibDrawList(); }
     catch(e){ toast('Не отправлено: '+e.message); }
     finally{ const b=$('#ibGo'); if(b) b.disabled=false; }
@@ -790,15 +908,15 @@
   async function ibMakeLead(){
     const t=IB.thread, first=IB.msgs.find(m=>m.dir==='in'), ch=IBCH[t.ch]||{t:t.ch};
     const l={id:genId(),name:t.name||'',phone:(t.meta&&t.meta.phone)||'',service:'Сообщение: '+ch.t,detail:first?String(first.text||'').slice(0,2500):'',source:ch.t,stage:'new',note:'',thread:t.id,ts:new Date().toISOString()};
-    try{ const it=DEMO?l:await save('leads',l); DATA.leads.unshift(it); await ibApi('link',{tid:t.id,leadId:it.id}); t.leadId=it.id; const tt=IB.threads.find(x=>x.id===t.id); if(tt) tt.leadId=it.id; toast('Лид создан'); ibDrawHead(); updateCounters(); }catch(e){}
+    try{ const it=DEMO?l:await save('leads',l); DATA.leads.unshift(it); await ibApi('link',{tid:t.id,leadId:it.id}); t.leadId=it.id; const tt=IB.threads.find(x=>x.id===t.id); if(tt) tt.leadId=it.id; toast('Лид создан'); ibDrawInfo(); updateCounters(); }catch(e){}
   }
   function ibLinkClient(){
     const t=IB.thread;
-    dialog('Привязать к клиенту','<input class="inp" id="ibcQ" placeholder="Имя, телефон, компания, ИНН…"><div id="ibcL" class="ibc-l"></div><div class="hint" style="margin-top:8px">Переписка будет видна из карточки клиента, а новые сообщения от этого человека — сразу с привязкой.</div>',{noSave:true});
+    dialog('Привязать к клиенту','<input class="inp" id="ibcQ" placeholder="Имя, телефон, компания, ИНН…"><div id="ibcL" class="ibc-l"></div><div class="hint" style="margin-top:8px">Переписка будет связана с карточкой клиента.</div>',{noSave:true});
     const draw=()=>{ const q=$('#ibcQ').value.trim().toLowerCase();
       const arr=DATA.clients.filter(c=>!q||JSON.stringify([c.name,c.phone,c.company,c.inn]).toLowerCase().includes(q)).slice(0,40);
       $('#ibcL').innerHTML=arr.length?arr.map(c=>'<button class="ibc" data-id="'+esc(c.id)+'"><b>'+esc(c.name||'—')+'</b><span>'+esc([c.company,c.phone].filter(Boolean).join(' · '))+'</span></button>').join(''):'<div class="empty">Не найдено</div>';
-      $$('#ibcL .ibc').forEach(b=>b.onclick=async()=>{ await ibApi('link',{tid:t.id,clientId:b.dataset.id}); t.clientId=b.dataset.id; const tt=IB.threads.find(x=>x.id===t.id); if(tt) tt.clientId=b.dataset.id; closeDialog(); toast('Клиент привязан'); ibDrawHead(); }); };
+      $$('#ibcL .ibc').forEach(b=>b.onclick=async()=>{ await ibApi('link',{tid:t.id,clientId:b.dataset.id}); t.clientId=b.dataset.id; const tt=IB.threads.find(x=>x.id===t.id); if(tt) tt.clientId=b.dataset.id; closeDialog(); toast('Клиент привязан'); ibDrawInfo(); }); };
     $('#ibcQ').oninput=draw; draw(); setTimeout(()=>$('#ibcQ')&&$('#ibcQ').focus(),50);
   }
 
