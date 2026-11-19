@@ -6,9 +6,7 @@
 <title>Рикс+С — CRM</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="img/logo-mark.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="assets/fonts/admin.css" rel="stylesheet">
 <style>
   :root{
     --red:#E3241B; --red-d:#B5161A; --or:#F7941D; --or-d:#D97706;
@@ -1431,7 +1429,7 @@
     if(!file)return; toast('Читаю файл…');
     let rows=[];
     try{
-      if(!window.XLSX) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
+      if(!window.XLSX) await loadScript('assets/vendor/xlsx.full.min.js');
       const wb=XLSX.read(await file.arrayBuffer(),{type:'array'}); const sh=wb.Sheets[wb.SheetNames[0]];
       rows=XLSX.utils.sheet_to_json(sh,{defval:''});
     }catch(e){ toast('Не удалось прочитать файл'); return; }

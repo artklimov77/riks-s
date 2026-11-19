@@ -46,8 +46,7 @@ def page(slug, title, desc, body, quiz='', scripts=('app', 'quiz')):
     head = (f'<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>{E(title)}</title>\n'
             f'<meta name="description" content="{E(desc)}">\n<link rel="canonical" href="{DOMAIN}/{slug}">\n<meta property="og:title" content="{E(title)}">\n'
             f'<meta property="og:description" content="{E(desc)}">\n<meta property="og:type" content="website">\n<link rel="icon" href="img/logo-mark.png">\n'
-            '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
-            '<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800;900&family=Roboto+Condensed:wght@700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=Comfortaa:wght@700&display=swap" rel="stylesheet">\n'
+            '<link href="assets/fonts/site.css" rel="stylesheet">\n'
             '<link rel="stylesheet" href="assets/styles.css">\n</head>\n')
     sc = ''.join(f'<script src="assets/{n}.js" defer></script>\n' for n in scripts)
     return head + f'<body{" data-quiz=" + chr(34) + quiz + chr(34) if quiz else ""}>\n\n' + HEADER + '<main id="top">\n' + body + '\n</main>\n\n' + fix_footer(FOOTER) + '\n\n' + MBAR + sc + '</body>\n</html>\n'
