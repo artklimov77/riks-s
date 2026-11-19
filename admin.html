@@ -804,7 +804,7 @@
 
   /* ---- Настройки → Каналы связи ---- */
   const CH_FORM={
-    tg:{f:[['token','Токен бота','123456789:AAH…',1],['greet','Ответ на /start (пусто — стандартное приветствие)','',0,1]],
+    tg:{f:[['token','Токен бота','123456789:AAH…',1],['greet','Ответ на /start (пусто — стандартное приветствие)','',0,1],['apiBase','Адрес-посредник (из России Telegram API закрыт)','https://… — настраивает администратор сервера']],
       how:'<ol><li>В Telegram откройте <b>@BotFather</b> → команда <code>/newbot</code> → имя (например «Рикс+С») и адрес вида <code>riks_s_bot</code>.</li><li>BotFather пришлёт <b>токен</b> — вставьте его сюда и нажмите «Сохранить».</li><li>Клиенты пишут боту по ссылке <code>t.me/адрес_бота</code> — её можно поставить на сайт, в ВК и на визитки.</li><li><b>Переписка с рабочего номера</b> (нужен Telegram Premium на рабочем аккаунте): Настройки → <b>Telegram для бизнеса → Чат-боты</b> → добавить этого бота и разрешить отвечать. Тогда в CRM попадают обычные личные чаты с клиентами, а ответы уходят от вашего имени.</li></ol>'},
     vk:{f:[['token','Ключ доступа сообщества','vk1.a.…',1]],
       how:'<ol><li>Сообщество → <b>Управление → Сообщения</b>: включить сообщения сообщества.</li><li><b>Управление → Работа с API → Ключи доступа → Создать ключ</b>: отметить «Сообщения сообщества» и «Управление сообществом», скопировать ключ сюда.</li><li>Там же вкладка <b>Long Poll API</b>: включить, версия <b>5.199</b>; «Типы событий» → отметить «Входящее сообщение» и «Исходящее сообщение».</li></ol>'},
@@ -820,7 +820,7 @@
     if(!$('#chanBox')) return;
     if(!j.ok){ box.innerHTML='<div class="note red">'+(j.note==='server-only'?'Каналы подключаются на собственном сервере CRM (эта копия — временная).':'Не удалось загрузить настройки каналов.')+'</div>'; return; }
     box.innerHTML=Object.keys(IBCH).map(ch=>{ const c=IBCH[ch], F=CH_FORM[ch], cfg=j.channels[ch]||{}, st=(j.status||{})[ch]||{};
-      const ready=F.f.filter(x=>!x[4]&&!['fromName','imapHost','smtpHost'].includes(x[0])).every(x=>cfg[x[0]]);
+      const ready=F.f.filter(x=>!x[4]&&!['fromName','imapHost','smtpHost','apiBase'].includes(x[0])).every(x=>cfg[x[0]]);
       const on=ready&&cfg.enabled!==false; const auto=cfg.autoLead!=null?cfg.autoLead:F.auto!==false;
       const pill=!on?'<span class="ch-st off">не подключён</span>':st.ok?'<span class="ch-st ok">✓ работает'+(st.info?' · '+esc(st.info):'')+'</span>':st.err?'<span class="ch-st bad" title="'+esc(st.err)+'">⚠ ошибка: '+esc(String(st.err).slice(0,90))+'</span>':'<span class="ch-st wait">⏳ подключается…</span>';
       return '<div class="chart ch-card" data-ch="'+ch+'"><div class="ch-hd"><div class="ib-av" style="background:'+c.c+'">'+c.s+'</div><h3>'+c.t+'</h3>'+pill+'</div>'+

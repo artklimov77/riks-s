@@ -16,7 +16,9 @@ async function getJSON(url, opt, signal) {
    Бот @BotFather. Клиенты пишут боту — или (Telegram Business, нужен Premium) бот подключается
    к аккаунту компании и видит обычную переписку: Настройки → Telegram для бизнеса → Чат-боты. */
 function telegram(cfg) {
-  const API = 'https://api.telegram.org/bot' + cfg.token + '/';
+  // из РФ api.telegram.org недоступен: apiBase — адрес посредника за рубежом (обратный прокси на api.telegram.org)
+  const BASE = String(cfg.apiBase || 'https://api.telegram.org').replace(/\/+$/, '');
+  const API = BASE + '/bot' + cfg.token + '/';
   const owners = {}; // business_connection_id → user id владельца
   const tg = (m, body, signal) => getJSON(API + m, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) }, signal);
   async function ownerOf(bc) {
@@ -28,7 +30,7 @@ function telegram(cfg) {
     try {
       const f = await tg('getFile', { file_id: fileId });
       if (!f.result || !f.result.file_path) return null;
-      return await C.saveRemote('tg', 'https://api.telegram.org/file/bot' + cfg.token + '/' + f.result.file_path, name || f.result.file_path.split('/').pop(), type);
+      return await C.saveRemote('tg', BASE + '/file/bot' + cfg.token + '/' + f.result.file_path, name || f.result.file_path.split('/').pop(), type);
     } catch (e) { return { name: (name || 'файл') + ' (больше 20 МБ — откройте в Telegram)' }; }
   }
   return {
