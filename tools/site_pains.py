@@ -139,7 +139,9 @@ def run():
         hero_end = s.index('</section>', s.index('<section class="hero')) + len('</section>\n')
         rest = s[hero_end:].lstrip('\n')
         if rest.startswith('<div class="ticker'):  # бегущую строку оставляем сразу под первым экраном
-            hero_end = s.index('\n', s.index('<div class="ticker', hero_end)) + 1
+            t = s.index('<div class="ticker', hero_end)
+            hero_end = s.index('</div></div>', t) + len('</div></div>')  # конец бегущей строки (вложенные div)
+            hero_end = s.index('\n', hero_end) + 1
         k = s.index('<section class="', hero_end)
         nxt_cls = s[k + 16:s.index('"', k + 16)]
         cls = 'sec' if 'white' in nxt_cls.split() else 'sec white'
