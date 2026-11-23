@@ -344,3 +344,18 @@
   const io = new IntersectionObserver(es => { if (es[0].isIntersecting) { io.disconnect(); loop(); } }, { threshold: .3 });
   io.observe(sc);
 })();
+
+/* подсказки в пакетах — отдельным блоком, чтобы работали на любой странице */
+(() => {
+  const $$ = (q, r = document) => [...r.querySelectorAll(q)];
+  /* ---------- пакеты: подсказки к пунктам (на телефоне — по нажатию) ---------- */
+  (() => {
+    const lis = $$('.pk li.pk-li'); if (!lis.length) return;
+    lis.forEach(li => {
+      const toggle = () => { const was = li.classList.contains('open'); lis.forEach(x => x.classList.remove('open')); if (!was) li.classList.add('open'); };
+      li.addEventListener('click', e => { if (e.target.closest('a')) return; toggle(); });
+      li.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } if (e.key === 'Escape') li.classList.remove('open'); });
+    });
+    document.addEventListener('click', e => { if (!e.target.closest('.pk li.pk-li')) lis.forEach(x => x.classList.remove('open')); });
+  })();
+})();

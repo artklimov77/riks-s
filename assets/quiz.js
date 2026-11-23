@@ -121,12 +121,6 @@
     { id: 'qty', q: 'Сколько табличек / знаков?', type: 'one', opts: ['1–5', '6–20', 'больше 20', 'Нужен аудит — не знаю'] },
     { id: 'check', q: 'Есть предписание или проверка?', type: 'one', opts: ['Да, есть срок', 'Нет, делаем заранее'], hint: 'Сделаем по ГОСТ — проверка вопросов не задаст.' }
   ]};
-  QUIZZES.pechati = { title: 'Печати и штампы', intro: '3 вопроса — и сделаем печать за 1–2 дня.', qs: [
-    { id: 'what', q: 'Что нужно?', type: 'one', opts: ['Печать организации (ООО)', 'Печать ИП', 'Штамп (прямоугольный)', 'Факсимиле (подпись)', 'Датер / нумератор'] },
-    { id: 'osn', q: 'Оснастка', type: 'one', opts: ['Ручная', 'Автоматическая', 'Карманная', 'Подскажите'] },
-    { id: 'docs', q: 'Для печати нужны данные', type: 'info', text: 'Пришлите название, ИНН и ОГРН (для ООО и ИП) — сверим и нарисуем оттиск. Свидетельство не нужно.' },
-    { id: 'qty', q: 'Сколько штук?', type: 'one', opts: ['1', '2–3', 'больше'] }
-  ]};
   QUIZZES.shkoly = { title: 'Оформление школы или детсада', intro: '5 вопросов — и приедем с готовыми идеями.', qs: [
     { id: 'obj', q: 'Учреждение', type: 'one', opts: ['Школа', 'Детский сад', 'Колледж / техникум', 'Центр допобразования'] },
     { id: 'what', q: 'Что оформляем?', type: 'many', opts: ['Стенды (уголок потребителя, антитеррор, ПБ)', 'Классные уголки, расписание', 'Холл, коридоры, рекреации', 'Музыкальный / спортзал', 'Таблички на кабинеты', 'Паспорт доступности, знаки, Брайль'] },
@@ -141,16 +135,16 @@
     WHEN
   ]};
   QUIZZES.general = { title: 'Заявка', intro: 'Пара вопросов — чтобы менеджер сразу понял задачу и не переспрашивал.', qs: [
-    { id: 'svc', q: 'Что вас интересует?', type: 'one', opts: ['Вывеска', 'Неон', 'Реклама на транспорте', 'Информационный стенд', 'Мобильная стойка', 'Штендер', 'Ростовая фигура', 'Полиграфия', 'Наклейки', 'Широкоформатная печать', 'Оформление помещения', 'Школа / детсад', 'Таблички Брайля и знаки', 'Пенопласт', 'Печати и штампы', 'Логотип', 'Сувениры с логотипом', 'Другое'],
-      branch: { 'Вывеска': 'vyveski', 'Неон': 'neon', 'Реклама на транспорте': 'transport', 'Информационный стенд': 'stendy', 'Мобильная стойка': 'stojki', 'Штендер': 'shtendery', 'Ростовая фигура': 'figury', 'Полиграфия': 'poligrafiya', 'Наклейки': 'nakleyki', 'Широкоформатная печать': 'pechat', 'Оформление помещения': 'interier', 'Школа / детсад': 'shkoly', 'Таблички Брайля и знаки': 'brajl', 'Пенопласт': 'penoplast', 'Печати и штампы': 'pechati', 'Логотип': 'logotip', 'Сувениры с логотипом': 'suveniry' } },
+    { id: 'svc', q: 'Что вас интересует?', type: 'one', opts: ['Вывеска', 'Неон', 'Реклама на транспорте', 'Информационный стенд', 'Мобильная стойка', 'Штендер', 'Ростовая фигура', 'Полиграфия', 'Наклейки', 'Широкоформатная печать', 'Оформление помещения', 'Школа / детсад', 'Таблички Брайля и знаки', 'Пенопласт', 'Логотип', 'Сувениры с логотипом', 'Другое'],
+      branch: { 'Вывеска': 'vyveski', 'Неон': 'neon', 'Реклама на транспорте': 'transport', 'Информационный стенд': 'stendy', 'Мобильная стойка': 'stojki', 'Штендер': 'shtendery', 'Ростовая фигура': 'figury', 'Полиграфия': 'poligrafiya', 'Наклейки': 'nakleyki', 'Широкоформатная печать': 'pechat', 'Оформление помещения': 'interier', 'Школа / детсад': 'shkoly', 'Таблички Брайля и знаки': 'brajl', 'Пенопласт': 'penoplast', 'Логотип': 'logotip', 'Сувениры с логотипом': 'suveniry' } },
     { id: 'what', q: 'Коротко, что нужно?', type: 'text', ph: 'напр. табличка на дверь…', opt: true, skip: a => !!a.svc && a.svc !== 'Другое' }
   ]};
 
-  const PAGE = { vyveski: 'vyveski', neon: 'neon', transport: 'transport', stendy: 'stendy', 'mobilnye-stojki': 'stojki', poligrafiya: 'poligrafiya', shtendery: 'shtendery', 'rostovye-figury': 'figury', penoplast: 'penoplast', 'tablichki-brajlya': 'brajl', 'pechati-shtampy': 'pechati', 'oformlenie-shkol': 'shkoly', logotip: 'logotip' };
+  const PAGE = { vyveski: 'vyveski', neon: 'neon', transport: 'transport', stendy: 'stendy', 'mobilnye-stojki': 'stojki', poligrafiya: 'poligrafiya', shtendery: 'shtendery', 'rostovye-figury': 'figury', penoplast: 'penoplast', 'tablichki-brajlya': 'brajl', 'oformlenie-shkol': 'shkoly', logotip: 'logotip' };
   const pageKey = () => document.body.dataset.quiz || PAGE[(location.pathname.split('/').pop() || '').replace('.html', '')] || 'general';
   const fromService = s => { s = (s || '').toLowerCase();
     if (/штендер/.test(s)) return 'shtendery'; if (/ростов|фигур/.test(s)) return 'figury'; if (/пенопл/.test(s)) return 'penoplast'; if (/брайл|знак/.test(s)) return 'brajl';
-    if (/печат[ьи] и|штамп|факсимил/.test(s)) return 'pechati'; if (/школ|детсад|детск/.test(s)) return 'shkoly'; if (/логотип|товарн/.test(s)) return 'logotip';
+    if (/школ|детсад|детск/.test(s)) return 'shkoly'; if (/логотип|товарн/.test(s)) return 'logotip';
     if (/стойк|ролл|паук|виндер|пресс/.test(s)) return 'stojki'; if (/неон/.test(s)) return 'neon'; if (/вывес|букв|короб|кронштейн|табличк/.test(s)) return 'vyveski';
     if (/транспорт|авто|троллейб/.test(s)) return 'transport'; if (/стенд|уголок|эвакуац/.test(s)) return 'stendy'; if (/наклей|стикер/.test(s)) return 'nakleyki';
     if (/баннер|плёнк|пленк|широкоформат|печать/.test(s)) return 'pechat'; if (/сувенир|кружк|ручк/.test(s)) return 'suveniry'; if (/интерьер|ресепшн|оформлен|указател/.test(s)) return 'interier';
@@ -323,7 +317,7 @@
         <input class="qz-in" id="qzName" placeholder="Имя" value="${esc(S.name || '')}" style="margin-bottom:8px">
         <input class="qz-in" id="qzPhone" inputmode="tel" placeholder="+7 (___) ___-__-__" value="${esc(S.phone || '')}">
         <div style="margin-top:12px;font-size:13px;font-weight:700;color:#7a6f67">Как удобнее связаться?</div>
-        <div class="qz-opts" style="grid-template-columns:repeat(3,1fr);margin-top:6px">${['Позвонить', 'Telegram', 'ВКонтакте', 'MAX', 'WhatsApp', 'Не важно'].map(o => `<button type="button" class="qz-opt${S.contact === o ? ' on' : ''}" data-c="${o}" style="min-height:42px;text-align:center">${o}</button>`).join('')}</div>
+        <div class="qz-opts" style="grid-template-columns:repeat(2,1fr);margin-top:6px">${['Позвонить', 'MAX', 'ВКонтакте', 'Не важно'].map(o => `<button type="button" class="qz-opt${S.contact === o ? ' on' : ''}" data-c="${o}" style="min-height:42px;text-align:center">${o}</button>`).join('')}</div>
         <label class="qz-chk qz-pd"><input type="checkbox" id="qzPd"${S.pd ? ' checked' : ''}><span>Даю <a href="soglasie.html" target="_blank">согласие на обработку персональных данных</a> и принимаю <a href="privacy.html" target="_blank">Политику обработки ПДн</a></span></label>`;
     }
     body.innerHTML = html;
