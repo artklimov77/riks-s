@@ -272,7 +272,7 @@ function mail(cfg) {
     async send(t, text) {
       load();
       const tr = nodemailer.createTransport({ host: cfg.smtpHost || 'smtp.yandex.ru', port: Number(cfg.smtpPort) || 465, secure: true, auth: { user: cfg.user, pass: cfg.pass } });
-      const subj = (t.meta && t.meta.subject) ? (/^re:/i.test(t.meta.subject) ? t.meta.subject : 'Re: ' + t.meta.subject) : 'Рикс+С';
+      const subj = (t.meta && t.meta.newSubject) ? t.meta.newSubject : (t.meta && t.meta.subject) ? (/^re:/i.test(t.meta.subject) ? t.meta.subject : 'Re: ' + t.meta.subject) : 'Рикс+С';
       const r = await tr.sendMail({ from: { name: cfg.fromName || 'Рикс+С', address: cfg.user }, to: t.peer, subject: subj, text, inReplyTo: t.meta && t.meta.msgId || undefined, references: t.meta && t.meta.msgId || undefined });
       return { extId: r.messageId || '' };
     }

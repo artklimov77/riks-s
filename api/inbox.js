@@ -8,6 +8,9 @@
 //   link     { tid, leadId?, clientId?, dealId? }
 //   channels                        → настройки каналов (секреты замаскированы) + статус
 //   saveChannel { ch, cfg }         → сохранить настройки канала (пустой/маска секрет = не менять)
+//   teamCreate { name, who } / teamEdit { tid, name } / teamDelete { tid } — внутренние группы «Между собой»
+//   start { ch:'mail', to, name, subject, text, who, leadId?, dealId?, clientId? } — написать клиенту первыми (почта)
+//   link { tid, kind:'supplier'|'' } — пометить переписку как «с поставщиком»
 
 const MASK = '••••••••';
 
@@ -41,6 +44,12 @@ module.exports = async (req, res) => {
 
   try {
     if (b.op === 'threads') {
+      // внутренние группы по умолчанию — один раз (как договорились на встрече 25.11)
+      if (!(await C.getState('team.seeded'))) {
+        const G = ['Общий чат', 'Готовые работы', 'Нормативка', 'Монтаж', 'Важные ссылки', 'Наклейки', 'Печать', 'Цех'];
+        for (let i = 0; i < G.length; i++) await C.putThread({ id: 'team:' + C.genId(), ch: 'team', peer: '', name: G[i], last: '', ts: new Date(Date.now() - i * 1000).toISOString(), unread: 0, seq: 0, readBy: {}, meta: {} });
+        await C.setState('team.seeded', '1');
+      }
       const [items, status, chans] = await Promise.all([C.listThreads(), C.getStatus(), C.getChannels()]);
       const on = {}; for (const ch of Object.keys(DEF)) on[ch] = !!(chans[ch] && chans[ch].enabled !== false && DEF[ch].need.every((k) => chans[ch][k]));
       return res.status(200).json({ ok: true, items, status, on });
@@ -52,7 +61,8 @@ module.exports = async (req, res) => {
     }
     if (b.op === 'read') {
       const t = await C.getThread(String(b.tid || ''));
-      if (t && t.unread) { t.unread = 0; await C.putThread(t); }
+      if (t && t.ch === 'team') { const w = String(b.who || '').slice(0, 60); if (w) { t.readBy = Object.assign({}, t.readBy, { [w]: t.seq || 0 }); await C.putThread(t); } }
+      else if (t && t.unread) { t.unread = 0; await C.putThread(t); }
       return res.status(200).json({ ok: true });
     }
     if (b.op === 'send') {
@@ -65,9 +75,41 @@ module.exports = async (req, res) => {
       const t = await C.getThread(String(b.tid || ''));
       if (!t) return res.status(404).json({ ok: false });
       for (const k of ['leadId', 'clientId', 'dealId']) if (b[k] !== undefined) t[k] = b[k] ? String(b[k]).slice(0, 80) : undefined;
+      if (b.kind !== undefined) t.kind = b.kind === 'supplier' ? 'supplier' : undefined;
       if (b.name) t.name = String(b.name).slice(0, 120);
       await C.putThread(t);
       return res.status(200).json({ ok: true, thread: t });
+    }
+    if (b.op === 'teamCreate' || b.op === 'teamEdit') {
+      const name = String(b.name || '').trim().slice(0, 60);
+      if (!name) return res.status(400).json({ ok: false, error: 'нет названия' });
+      let t = b.op === 'teamEdit' ? await C.getThread(String(b.tid || '')) : null;
+      if (b.op === 'teamEdit' && (!t || t.ch !== 'team')) return res.status(404).json({ ok: false });
+      if (!t) t = { id: 'team:' + C.genId(), ch: 'team', peer: '', last: '', ts: C.now(), unread: 0, seq: 0, readBy: {}, meta: { by: String(b.who || '').slice(0, 60) } };
+      t.name = name; await C.putThread(t);
+      return res.status(200).json({ ok: true, thread: t });
+    }
+    if (b.op === 'teamDelete') {
+      const t = await C.getThread(String(b.tid || ''));
+      if (!t || t.ch !== 'team') return res.status(404).json({ ok: false });
+      await C.cmd(['HDEL', C.K.threads, t.id]); await C.cmd(['DEL', C.K.msgs(t.id)]);
+      return res.status(200).json({ ok: true });
+    }
+    if (b.op === 'start') {
+      if (b.ch !== 'mail') return res.status(400).json({ ok: false, error: 'первым можно написать только на почту' });
+      const to = String(b.to || '').trim().toLowerCase();
+      if (!/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(to) || to.length > 120) return res.status(400).json({ ok: false, error: 'неверный адрес почты' });
+      const text = String(b.text || '').trim();
+      if (!text) return res.status(400).json({ ok: false, error: 'пустое сообщение' });
+      const id = 'mail:' + to;
+      let t = await C.getThread(id);
+      const subject = String(b.subject || '').trim().slice(0, 160) || 'Рикс+С';
+      if (!t) t = { id, ch: 'mail', peer: to, name: String(b.name || '').trim().slice(0, 120) || to, last: '', ts: C.now(), unread: 0, meta: {} };
+      t.meta = Object.assign({}, t.meta, { newSubject: subject });
+      for (const k of ['leadId', 'clientId', 'dealId']) if (b[k]) t[k] = String(b[k]).slice(0, 80);
+      await C.putThread(t);
+      const msg = await M.send(id, text.slice(0, 4000), String(b.who || '').slice(0, 60));
+      return res.status(200).json({ ok: true, item: msg, thread: await C.getThread(id) });
     }
     if (b.op === 'channels') {
       const [chans, status] = await Promise.all([C.getChannels(), C.getStatus()]);

@@ -49,7 +49,8 @@ async function send(tid, text, who) {
   const t = await C.getThread(tid);
   if (!t) throw new Error('диалог не найден');
   // демо-диалоги (mock): ответ сохраняется в CRM, никуда не отправляется
-  let w = t.mock ? { api: { send: async () => ({}) } } : workers[t.ch];
+  // внутренние группы «Между собой» и демо-диалоги: сообщение остаётся в CRM, наружу не уходит
+  let w = (t.mock || t.ch === 'team') ? { api: { send: async () => ({}) } } : workers[t.ch];
   if (!w) { await sync(); w = workers[t.ch]; }
   if (!w) throw new Error('канал «' + ((C.CH[t.ch] || {}).t || t.ch) + '» не подключён');
   const r = await w.api.send(t, text);
@@ -57,7 +58,13 @@ async function send(tid, text, who) {
   const msg = { id: C.genId(), dir: 'out', text: C.clip(text, 4000), att: [], ts: C.now(), who: who || '', extId: r && r.extId ? String(r.extId) : '' };
   await C.cmd(['RPUSH', C.K.msgs(tid), JSON.stringify(msg)]);
   const t2 = await C.getThread(tid);
-  t2.last = 'Вы: ' + msg.text.slice(0, 140); t2.ts = msg.ts; t2.lastDir = 'out'; t2.unread = 0;
+  if (t2.ch === 'team') {
+    t2.seq = (t2.seq || 0) + 1; t2.lastWho = msg.who; t2.readBy = Object.assign({}, t2.readBy, msg.who ? { [msg.who]: t2.seq } : {});
+    t2.last = (msg.who ? msg.who + ': ' : '') + msg.text.slice(0, 140);
+  } else t2.last = 'Вы: ' + msg.text.slice(0, 140);
+  t2.ts = msg.ts; t2.lastDir = 'out'; t2.unread = 0;
+  // новое письмо, начатое из CRM: тема уходит как есть, дальше переписка идёт с «Re:»
+  if (t2.meta && t2.meta.newSubject) { t2.meta.subject = t2.meta.newSubject; delete t2.meta.newSubject; }
   await C.putThread(t2);
   return msg;
 }
