@@ -376,3 +376,16 @@
   dd.querySelectorAll('.mega a').forEach(a => a.addEventListener('click', () => set(false)));
   dd.addEventListener('mouseleave', () => set(false));
 })();
+
+/* ---------- видео ВК: плеер грузится по нажатию ---------- */
+(() => {
+  document.querySelectorAll('.vd-play[data-vk]').forEach(b => b.addEventListener('click', () => {
+    const [oid, id] = b.dataset.vk.split('_');
+    const f = document.createElement('div'); f.className = 'vd-frame';
+    const i = document.createElement('iframe');
+    i.src = 'https://vkvideo.ru/video_ext.php?oid=' + oid + '&id=' + id + '&hd=2&autoplay=1';
+    i.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock';
+    i.setAttribute('allowfullscreen', ''); i.title = b.getAttribute('aria-label') || 'Видео';
+    f.appendChild(i); b.replaceWith(f);
+  }));
+})();
