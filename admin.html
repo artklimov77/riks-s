@@ -87,6 +87,19 @@
   .card .sv{font-size:12px;color:var(--muted);margin-top:4px}
   .card .sum{font-weight:800;font-size:14px;margin-top:6px}
   .card .rem{font-size:11px;color:var(--bad);margin-top:1px}
+  .flw{display:flex;flex-wrap:wrap;gap:3px;margin-top:7px}
+  .flw .fb{font-size:9.5px;font-weight:700;line-height:1;padding:3px 4px;border-radius:4px;border:1px solid #e3ddd8;color:#b3aaa3;background:#fff;letter-spacing:.01em}
+  .flw .fb.ok{background:#2e9e4f;border-color:#2e9e4f;color:#fff}
+  .flw .fb.part{background:#fff3d6;border-color:#f0b54a;color:#8a5a00}
+  .flw .fb.due{border-color:#e3241b;color:#c11a12;background:#fff5f4}
+  .flw .fb.tag{background:#f3f0ec;border-color:#f3f0ec;color:#6e625b}
+  .cost-r{display:grid;grid-template-columns:1fr 96px 34px;gap:6px;margin-top:6px}
+  .cost-sum{background:#faf7f3;border-radius:8px;padding:8px 10px;font-size:12.5px;margin-bottom:10px}
+  .cost-sum>div{display:flex;justify-content:space-between;gap:8px;padding:2px 0}
+  .cost-sum span{color:var(--muted)}
+  .cost-sum .tot{border-top:1px solid #ece5de;margin-top:4px;padding-top:5px;font-size:13.5px}
+  .cost-sum .tot span{color:var(--ink);font-weight:700}
+  .cost-sum .pos b{color:#2e9e4f}.cost-sum .neg b{color:var(--bad)}
   .card .miss{font-size:11px;color:#9a5b00;background:#fff3d6;border-radius:4px;padding:2px 6px;margin-top:6px;display:inline-block}
   .card .meta{display:flex;align-items:center;gap:6px;margin-top:7px;flex-wrap:wrap}
   .badge{font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;color:#fff;white-space:nowrap}
@@ -554,8 +567,29 @@
     preApproval:{t:'Вывеска: предсогласование УАиГ / Минкультуры',when:d=>d.kind==='Наружная реклама',ok:d=>!!(d.docs||{}).preApproval},
     legal:{t:'Транспорт: юр. заключение (закон о рекламе)',when:d=>d.kind==='Реклама на транспорте',ok:d=>!!(d.docs||{}).legal},
     updDate:{t:'Дата подписания УПД',ok:d=>!!d.updDate},
-    paidFull:{t:'Оплачено полностью',ok:d=>!!d.paidFull}
+    paidFull:{t:'Оплачено полностью',ok:d=>!!d.paidFull},
+    designHours:{t:'Время дизайна (или «без дизайна»)',ok:d=>Number(d.designHours)>0||!!d.noDesign},
+    costs:{t:'Себестоимость: подрядчики, материалы, работа',ok:d=>dealCost(d).total>0}
   };
+  // «Ход заказа»: отметки в сделке, видны на карточке без открытия
+  const FLOWCHK=[['mockupOk','Макет согласован с клиентом'],['material','Материал заказан у поставщика'],['assembly','На сборке — всё приехало'],['notified','Заказчик оповещён, фото готовой работы отправлено']];
+  // значки на карточке: [метка, подсказка, сделано?, частично?, с какой стадии уже пора]
+  const FLOWBADGE=[
+    ['Расч','Расчёт сделан',d=>dealTotal(d)>0,null,'agree'],
+    ['Макет','Макет согласован',d=>!!(d.flow||{}).mockupOk,null,'contract'],
+    ['Счёт','Счёт выставлен',d=>!!(d.docs||{}).invoice,null,'contract'],
+    ['Дог','Договор / оферта подписаны',d=>!!((d.docs||{}).contract||(d.docs||{}).offer),null,'prod'],
+    ['Опл','Оплата: полная / частичная',d=>!!d.paidFull||(dealTotal(d)>0&&dealRem(d)<=0&&((Number(d.prepaid)||0)+(Number(d.paidMore)||0))>0),d=>((Number(d.prepaid)||0)+(Number(d.paidMore)||0))>0,'prod'],
+    ['Мат','Материал заказан',d=>!!(d.flow||{}).material,null,'mount'],
+    ['Сбор','На сборке',d=>!!(d.flow||{}).assembly,null,'mount'],
+    ['Монт','Монтаж: наш / не наш / без монтажа',d=>!!d.mountBy,null,'mount'],
+    ['Опов','Заказчик оповещён',d=>!!(d.flow||{}).notified,null,'docs'],
+    ['УПД','УПД подписан',d=>!!d.updDate,null,'done']];
+  const PROD_MACH=['УФ-принтер','Широкоформат','Плоттер','Фрезер','Лазер','Подрядчик'];
+  // себестоимость сделки: дизайн (часы × ставка), своя работа (часы × ставка), подрядчики и материалы
+  function dealCost(d){ const c=(S().costs)||{}; const dr=Number(d.designRate!=null?d.designRate:c.designRate)||0, wr=Number(d.workRate!=null?d.workRate:c.workRate)||0;
+    const design=Math.round((Number(d.designHours)||0)*dr), work=Math.round((Number(d.workHours)||0)*wr), sub=(d.costs||[]).reduce((a,x)=>a+(Number(x.sum)||0),0);
+    const total=design+work+sub, rev=dealTotal(d); return {design,work,sub,total,dr,wr,margin:rev-total,pct:rev?Math.round((rev-total)/rev*100):0}; }
 
   const DEFAULT_SETTINGS={
     id:'main',
@@ -565,12 +599,12 @@
         {k:'new',t:'Новая',col:'#F7941D',owner:'Катя',req:[]},
         {k:'tz',t:'Сбор ТЗ (до дизайна)',col:'#ef7d1a',owner:'Катя',req:['source','kind']},
         {k:'design',t:'В дизайне',col:'#d9534f',owner:'Ксюша',req:['payType','docFlow','sizes','materials','tz']},
-        {k:'calc',t:'Расчёт',col:'#c0392b',owner:'Катя',req:['mockupPath']},
+        {k:'calc',t:'Расчёт',col:'#c0392b',owner:'Катя',req:['mockupPath','designHours']},
         {k:'agree',t:'Согласование с клиентом',col:'#9b59b6',owner:'Катя',req:['items','total']},
         {k:'contract',t:'Договор / предоплата',col:'#6c5ce7',owner:'Катя',req:['deadline']},
         {k:'prod',t:'Производство',col:'#2d3436',owner:'Игорь',req:['preApproval','legal']},
         {k:'mount',t:'Монтаж / выдача',col:'#00838f',owner:'Игорь',req:[]},
-        {k:'docs',t:'Документы / УПД',col:'#5d6d7e',owner:'Катя',req:[]},
+        {k:'docs',t:'Документы / УПД',col:'#5d6d7e',owner:'Катя',req:['costs']},
         {k:'done',t:'Закрыта · оплачено',col:'#2e9e4f',owner:'',req:['updDate','paidFull']},
         {k:'lost',t:'Отказ',col:'#7a2620',owner:'',req:[],lost:true}]},
       supply:{name:'Поставщики',stages:[
@@ -582,7 +616,8 @@
     },
     company:{name:'ООО «Рикс Плюс С»',addr:'РМЭ, г. Йошкар-Ола, ул. Комсомольская, д. 134, оф. 115',phone:'+7 967 758-27-26',email:'info@riks-s.ru',
       inn:'1215087324',kpp:'121501001',ogrn:'1031200411110',bank:'Филиал «Центральный» Банка ВТБ (ПАО), г. Москва',rs:'40702810507240001481',ks:'30101810145250000411',bik:'044525411',
-      director:'Устюгова Мария Николаевна',tax:'Без НДС (упрощённая система налогообложения)'}
+      director:'Устюгова Мария Николаевна',tax:'Без НДС (упрощённая система налогообложения)'},
+    costs:{designRate:200,workRate:0}
   };
   const OLD_STATUS={kp:'calc',ready:'mount',paid:'done'};
 
@@ -616,7 +651,7 @@
   }
   function normSettings(s){
     const d=JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); if(!s) return d;
-    return Object.assign(d,s,{company:Object.assign(d.company,s.company||{}),funnels:Object.assign(d.funnels,s.funnels||{})});
+    return Object.assign(d,s,{company:Object.assign(d.company,s.company||{}),funnels:Object.assign(d.funnels,s.funnels||{}),costs:Object.assign(d.costs,s.costs||{})});
   }
   function normDeal(d){ if(OLD_STATUS[d.status]&&(d.funnel||'sales')==='sales') d.status=OLD_STATUS[d.status]; d.funnel=d.funnel||'sales'; d.docs=d.docs||{}; d.log=d.log||[]; d.files=normFiles(d.files); return d; }
   async function save(col,rec){
@@ -988,11 +1023,55 @@
       return '<div class="col" data-stage="'+st.k+'"><div class="ch" style="background:'+st.col+'"><div class="cn">'+esc(st.t)+'</div><div class="cm"><span>'+it.length+' сд.'+(sum?' · '+money(sum):'')+'</span>'+(st.owner?'<span class="ow">👤 '+esc(st.owner)+'</span>':'')+'</div></div>'+
         '<div class="cards">'+it.map(dealCard).join('')+'</div></div>';
     }).join('');
-    $('#main').innerHTML=head(fk==='supply'?'Поставщики':'Сделки','<div class="spacer"></div><button class="btn-pri" id="addDeal">+ '+(fk==='supply'?'Заказ поставщику':'Сделка')+'</button>'+refreshBtn)+storeNote()+
+    $('#main').innerHTML=head(fk==='supply'?'Поставщики':'Сделки','<div class="spacer"></div>'+(fk==='sales'?'<button class="btn-sec" id="dealsXlsx" title="Все сделки с себестоимостью и маржой — для Excel и Google-таблиц">📊 Excel</button>':'')+'<button class="btn-pri" id="addDeal">+ '+(fk==='supply'?'Заказ поставщику':'Сделка')+'</button>'+refreshBtn)+storeNote()+
       (fk==='sales'?'<div class="note">Перетаскивайте карточки по стадиям. Если не заполнены обязательные поля — сделка дальше не пойдёт и CRM покажет, чего не хватает. Стадии, ответственные и обязательные поля — в «Настройках».</div>':'')+
       '<div class="kanban">'+cols+'</div>';
     bindCommon(); bindDnD('deals');
     $('#addDeal').onclick=()=>editDeal(null,null,fk);
+    const xb=$('#dealsXlsx'); if(xb) xb.onclick=()=>exportDealsXlsx(rows);
+  }
+  // ---------- Excel (.xlsx без библиотек: ZIP «без сжатия» + листы XML) ----------
+  const CRC_T=(()=>{ const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=c&1?0xEDB88320^(c>>>1):c>>>1; t[n]=c>>>0; } return t; })();
+  const crc32=b=>{ let c=0xFFFFFFFF; for(let i=0;i<b.length;i++) c=CRC_T[(c^b[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; };
+  function zipStore(files){ const enc=new TextEncoder(), parts=[], cen=[]; let off=0;
+    for(const f of files){ const name=enc.encode(f.name), data=typeof f.data==='string'?enc.encode(f.data):f.data, crc=crc32(data);
+      const h=new DataView(new ArrayBuffer(30)); h.setUint32(0,0x04034b50,true); h.setUint16(4,20,true); h.setUint16(6,0x0800,true); h.setUint16(8,0,true); h.setUint32(14,crc,true); h.setUint32(18,data.length,true); h.setUint32(22,data.length,true); h.setUint16(26,name.length,true);
+      parts.push(new Uint8Array(h.buffer),name,data);
+      const c=new DataView(new ArrayBuffer(46)); c.setUint32(0,0x02014b50,true); c.setUint16(4,20,true); c.setUint16(6,20,true); c.setUint16(8,0x0800,true); c.setUint32(16,crc,true); c.setUint32(20,data.length,true); c.setUint32(24,data.length,true); c.setUint16(28,name.length,true); c.setUint32(42,off,true);
+      cen.push(new Uint8Array(c.buffer),name); off+=30+name.length+data.length; }
+    const csize=cen.reduce((a,x)=>a+x.length,0), e=new DataView(new ArrayBuffer(22)); e.setUint32(0,0x06054b50,true); e.setUint16(8,files.length,true); e.setUint16(10,files.length,true); e.setUint32(12,csize,true); e.setUint32(16,off,true);
+    return new Blob(parts.concat(cen,[new Uint8Array(e.buffer)]),{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}); }
+  function xlsxBlob(sheets){ // sheets: [{name, rows:[[...]]}] — первая строка заголовки
+    const x=v=>String(v).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'');
+    const col=i=>{ let s=''; i++; while(i){ const m=(i-1)%26; s=String.fromCharCode(65+m)+s; i=Math.floor((i-1)/26); } return s; };
+    const sheetXml=rows=>'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>'+
+      (rows[0]||[]).map((h,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+Math.min(40,Math.max(10,String(h).length+4))+'" customWidth="1"/>').join('')+'</cols><sheetData>'+
+      rows.map((r,ri)=>'<row r="'+(ri+1)+'">'+r.map((v,ci)=>{ const ref=col(ci)+(ri+1), st=ri===0?' s="1"':'';
+        if(typeof v==='number'&&isFinite(v)) return '<c r="'+ref+'"'+st+'><v>'+v+'</v></c>';
+        if(v==null||v==='') return ''; return '<c r="'+ref+'" t="inlineStr"'+st+'><is><t xml:space="preserve">'+x(v)+'</t></is></c>'; }).join('')+'</row>').join('')+'</sheetData>'+
+      (rows.length>1?'<autoFilter ref="A1:'+col((rows[0]||[]).length-1)+rows.length+'"/>':'')+'</worksheet>';
+    const files=[
+      {name:'[Content_Types].xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'+sheets.map((s,i)=>'<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join('')+'</Types>'},
+      {name:'_rels/.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
+      {name:'xl/workbook.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheets.map((s,i)=>'<sheet name="'+x(s.name).slice(0,31)+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>').join('')+'</sheets></workbook>'},
+      {name:'xl/_rels/workbook.xml.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+sheets.map((s,i)=>'<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>').join('')+'<Relationship Id="rId'+(sheets.length+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},
+      {name:'xl/styles.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFEBDB"/></patternFill></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="2"><xf xfId="0"/><xf xfId="0" fontId="1" fillId="2" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>'}
+    ].concat(sheets.map((s,i)=>({name:'xl/worksheets/sheet'+(i+1)+'.xml',data:sheetXml(s.rows)})));
+    return zipStore(files);
+  }
+  function exportDealsXlsx(list){
+    const yes=b=>b?'да':'';
+    const H=['№','Создана','Стадия','Клиент','Телефон','Организация','ИНН','Направление','Источник','Позиции','Сумма, ₽','Оплачено, ₽','Остаток, ₽','Нал / безнал','Документы',
+      'Дизайн, ч','Дизайн, ₽','Своя работа, ч','Своя работа, ₽','Подрядчики и материалы, ₽','Подрядчики (что)','Себестоимость, ₽','Маржа, ₽','Маржа, %',
+      'Станок','Материал','Ламинация','Размеры для печати','Расчёт','Макет согласован','Счёт','Договор','Материал заказан','На сборке','Монтаж','Заказчик оповещён','УПД подписан','Срок','Закрыта'];
+    const rows=[H].concat(list.map(d=>{ const c=dealCost(d), paid=(Number(d.prepaid)||0)+(Number(d.paidMore)||0), st=stOf(stagesOf(d.funnel),d.status), f=d.flow||{}, dc=d.docs||{};
+      const closed=(d.log||[]).find(l=>/→ Закрыта/.test(l.t||''));
+      return [(d.id||'').slice(-6).toUpperCase(),fdate(d.ts),st.t,d.client||'',d.phone||'',d.company||'',d.inn||'',d.kind||'',srcOf(d.source).t,(d.items||[]).map(i=>i.name+' ×'+i.qty).join('; '),
+        dealTotal(d),paid,dealRem(d),d.payType||'',d.docFlow||'',Number(d.designHours)||0,c.design,Number(d.workHours)||0,c.work,c.sub,(d.costs||[]).map(x=>x.name+' — '+x.sum).join('; '),c.total,c.margin,c.pct,
+        d.prodMachine||'',d.prodMat||'',d.prodLam||'',d.prodSpec||'',yes(dealTotal(d)>0),yes(f.mockupOk),yes(dc.invoice),yes(dc.contract||dc.offer),yes(f.material),yes(f.assembly),d.mountBy||'',yes(f.notified),d.updDate||'',d.deadline||'',closed?fdate(closed.ts):''];
+    }));
+    const a=document.createElement('a'); a.href=URL.createObjectURL(xlsxBlob([{name:'Сделки',rows}])); a.download='riks-sdelki-'+new Date().toISOString().slice(0,10)+'.xlsx'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+    toast('Выгружено сделок: '+list.length);
   }
   function dealCard(d){
     const s=srcOf(d.source), total=dealTotal(d), rem=dealRem(d), miss=missingFor(d,d.status);
@@ -1002,7 +1081,18 @@
       (total?'<div class="sum">'+money(total)+'</div>':'')+
       ((Number(d.prepaid)||0)>0&&rem>0?'<div class="rem">остаток '+money(rem)+'</div>':'')+
       (miss.length?'<div class="miss">⚠ не заполнено: '+miss.length+'</div>':'')+
+      ((d.funnel||'sales')==='sales'?flowBadges(d):'')+
       '<div class="meta"><span class="badge" style="background:'+s.c+'">'+esc(s.t)+'</span>'+(d.leadId?'<span class="tag">из лида</span>':'')+((d.files||[]).length?'<span class="tag">📎'+d.files.length+'</span>':'')+'</div></div>';
+  }
+
+  function flowBadges(d){
+    const st=stagesOf(d.funnel), at=st.findIndex(x=>x.k===d.status), lost=(st[at]||{}).lost;
+    const due=k=>{ const i=st.findIndex(x=>x.k===k); return !lost&&i>=0&&at>=i; };
+    const b=FLOWBADGE.map(([t,h,ok,part,from])=>{ const o=ok(d), p=!o&&part&&part(d), late=!o&&due(from);
+      const cls=o?'ok':p?'part':late?'due':''; const tip=h+': '+(o?'да':p?'частично':late?'пора сделать':'нет')+(t==='Монт'&&d.mountBy?' ('+d.mountBy+')':'');
+      return '<span class="fb '+cls+'" title="'+esc(tip)+'">'+t+'</span>'; }).join('');
+    const tags=[d.payType,d.docFlow].filter(Boolean).map(x=>'<span class="fb tag">'+esc(x)+'</span>').join('');
+    return '<div class="flw">'+b+tags+'</div>';
   }
 
   /* ---------- DnD ---------- */
@@ -1028,9 +1118,13 @@
   }
   async function moveDeal(d,k){
     const st=stOf(stagesOf(d.funnel),k);
+    lockDesign(d,d.status,k);
     d.status=k; d.log=[{ts:new Date().toISOString(),who:ME||'—',t:'→ '+st.t}].concat(d.log||[]).slice(0,60);
     render(); try{ const it=await save('deals',d); Object.assign(d,it); toast('→ '+st.t+(st.owner?' · '+st.owner:'')); tgOwner(d);}catch(e){}
   }
+  // время дизайна фиксируется, когда сделка уходит со стадии «В дизайне»: доработки его не увеличивают
+  function lockDesign(d,from,to){ if(from==='design'&&to!=='design'&&!d.designLocked&&Number(d.designHours)>0){ d.designLocked={at:new Date().toISOString(),by:ME||'—',h:Number(d.designHours)}; const r=((S().costs)||{}).designRate; if(d.designRate==null&&r!=null) d.designRate=Number(r)||0; } }
+  const isBoss=()=>/руковод|директор/i.test((teamOf(ME)||{}).role||'');
   function gateBlocked(d,k,miss){
     const st=stOf(stagesOf(d.funnel),k);
     showModal('Сделка не может перейти в «'+st.t+'»','<div class="note red">Не заполнены обязательные поля. Пока их нет — дальше нельзя (так договорились, чтобы ничего не терять).</div><ul class="gate-list">'+miss.map(f=>'<li><b>'+esc(FIELDS[f].t)+'</b></li>').join('')+'</ul>',{sm:true,saveText:'Заполнить'});
@@ -1112,7 +1206,7 @@
   const DOC_CAT={contract:'contract',offer:'contract',invoice:'invoice',updSent:'upd',measure:'photo',facade:'photo',photoBind:'mockup'};
 
   /* ---------- ФАЙЛЫ (Vercel Blob, закрытое хранилище) ---------- */
-  const FCATS=[['mockup','📐','Макет'],['client','📥','От клиента: ТЗ, логотип'],['photo','📷','Фото объекта / замер'],['contract','📑','Договор'],['invoice','💳','Счёт'],['upd','🧾','УПД / акт'],['approval','🏛','Согласование'],['done','✅','Фото готовой работы'],['other','📎','Прочее']];
+  const FCATS=[['mockup','📐','Макет'],['prod','🏭','В производство'],['client','📥','От клиента: ТЗ, логотип'],['photo','📷','Фото объекта / замер'],['contract','📑','Договор'],['invoice','💳','Счёт'],['upd','🧾','УПД / акт'],['approval','🏛','Согласование'],['done','✅','Фото готовой работы'],['other','📎','Прочее']];
   const fcat=k=>FCATS.find(x=>x[0]===k)||FCATS[FCATS.length-1];
   const fsize=n=>!n?'':n<1048576?Math.max(1,Math.round(n/1024))+' КБ':(n/1048576).toFixed(n<1e7?1:0)+' МБ';
   const ficon=f=>f.link?'🔗':(/^image\//.test(f.type||'')||/\.(jpe?g|png|webp|gif|heic|bmp)$/i.test(f.name||''))?'🖼':(/pdf/i.test(f.type||'')||/\.pdf$/i.test(f.name||''))?'📕':/\.(cdr|ai|eps|psd|svg|tiff?)$/i.test(f.name||'')?'🎨':/\.(docx?|odt|rtf|txt)$/i.test(f.name||'')?'📘':/\.(xlsx?|csv|ods)$/i.test(f.name||'')?'📗':/\.(zip|rar|7z)$/i.test(f.name||'')?'🗜':fcat(f.cat)[1];
@@ -1225,6 +1319,7 @@
     const isNew=!d; delete e._new;
     const st=stagesOf(e.funnel), sup=e.funnel==='supply';
     let FILES=normFiles(e.files); const DOCS=Object.assign({},e.docs||{});
+    const FLOW=Object.assign({},e.flow||{}), COSTS=(e.costs||[]).map(x=>Object.assign({},x));
     const items=(e.items||[]).map(x=>Object.assign({},x)); if(!items.length) items.push({name:'',spec:'',qty:1,price:0});
     const groups={}; DATA.catalog.forEach(c=>{(groups[c.category||'Прочее']=groups[c.category||'Прочее']||[]).push(c);});
     const catOpts='<option value="">— выбрать из прайса —</option>'+Object.keys(groups).map(g=>'<optgroup label="'+esc(g)+'">'+groups[g].map(c=>'<option value="'+esc(c.id)+'">'+esc(c.name)+' — '+money(c.price)+'</option>').join('')+'</optgroup>').join('');
@@ -1253,12 +1348,28 @@
           '<div class="grid2">'+fld('Размеры',inp('o_sizes','sizes',e.sizes,'напр. 3000×600 мм, высота 3 м'))+fld('Материалы',inp('o_materials','materials',e.materials,'акрил, композит, плёнка…'))+'</div>'+
           fld('Пожелания, детали'+((e.quiz||[]).length?' (дополнительно к ответам)':''),'<textarea class="inp" id="o_tz" data-f="tz" placeholder="Что важно клиенту, цвета, сроки, пожелания…">'+esc(e.tz||'')+'</textarea>')+
           fld('Путь к макету, если файл не в CRM',inp('o_mockupPath','mockupPath',e.mockupPath,'\\\\server\\Макеты\\2026\\Клиент — или загрузите макет во вкладку «Файлы»'))+'</div>')+
+        (sup?'':'<div class="sec"><h4>🏭 Задание в производство <span class="hint">что уходит в цех — чтобы не ошибиться с размером</span></h4>'+
+          fld('Станок / кто делает',pills('prodMachine',PROD_MACH,e.prodMachine))+
+          '<div class="grid2">'+fld('Материал, плёнка',inp('o_prodMat','',e.prodMat,'Oracal 641 белый глянец, баннер 440 г…'))+fld('Ламинация',pills('prodLam',['Нет','Глянец','Мат'],e.prodLam))+'</div>'+
+          fld('Размеры для печати (с вылетами) и количество','<textarea class="inp" id="o_prodSpec" placeholder="напр. 1020×620 мм — 2 шт, вылеты по 10 мм">'+esc(e.prodSpec||'')+'</textarea>')+
+          '<div class="hint" style="margin:-4px 0 10px">Файл, отправленный в цех, загрузите во «Файлы» с типом «🏭 В производство».</div></div>')+
         '<div class="sec" data-f="items"><h4>🧾 Позиции</h4><div class="items" id="o_items"></div><button class="btn-sec btn-sm" id="o_add" style="margin-bottom:10px">+ позиция</button></div>'+
       '</div><div class="dl-side">'+
+        (sup?'':'<div class="sec"><h4>✅ Ход заказа <span class="hint">видно на карточке</span></h4>'+
+          FLOWCHK.map(([k,t])=>{ const v=(e.flow||{})[k]; return '<label class="chk"><input type="checkbox" data-flow="'+k+'"'+(v?' checked':'')+'><span>'+t+(v&&v.by?' <small class="hint">· '+esc(v.by)+(v.at?', '+fdate(v.at):'')+'</small>':'')+'</span></label>'; }).join('')+
+          fld('Монтаж',pills('mountBy',['Наш','Не наш','Без монтажа'],e.mountBy))+'</div>')+
         '<div class="sec"><h4>💰 Оплата</h4><div class="totals" id="o_totals" style="text-align:left;margin-bottom:10px"></div>'+
           fld('Оплата',pills('payType',['Нал','Безнал'],e.payType))+fld('Документы',pills('docFlow',['СБИС','Живьём'],e.docFlow))+
           '<div class="grid2">'+fld('Предоплата, ₽','<input class="inp" id="o_prepaid" data-f="prepaid" type="number" min="0" value="'+(Number(e.prepaid)||0)+'">')+fld('Доплачено, ₽','<input class="inp" id="o_paidMore" type="number" min="0" value="'+(Number(e.paidMore)||0)+'">')+'</div>'+
           '<label class="chk" data-f="paidFull" style="margin-bottom:10px"><input type="checkbox" id="o_paidFull"'+(e.paidFull?' checked':'')+'><span><b>Оплачено полностью</b></span></label></div>'+
+        (sup?'':(()=>{ const lk=e.designLocked, ro=!!lk&&!isBoss();
+          return '<div class="sec" data-f="costs"><h4>🧮 Себестоимость <span class="hint">для аналитики и маржи</span></h4>'+
+          '<div class="grid2">'+fld('Дизайн, часов','<input class="inp" id="o_designHours" data-f="designHours" type="number" min="0" step="0.25" value="'+(Number(e.designHours)||'')+'" placeholder="0"'+(ro?' disabled':'')+'>')+
+            fld('Своя работа, часов','<input class="inp" id="o_workHours" type="number" min="0" step="0.25" value="'+(Number(e.workHours)||'')+'" placeholder="резка, сборка…">')+'</div>'+
+          (lk?'<div class="hint" style="margin:-4px 0 8px">🔒 Время дизайна зафиксировано '+fdate(lk.at)+' ('+esc(lk.by)+'), когда сделка ушла с дизайна — доработки не добавляются.'+(ro?' Изменить может руководитель.':'')+'</div>':'')+
+          '<label class="chk" style="margin-bottom:8px"><input type="checkbox" id="o_noDesign"'+(e.noDesign?' checked':'')+'><span>Без дизайна — макет клиента</span></label>'+
+          '<div class="sm-l">Подрядчики и материалы</div><div id="o_costs"></div><button class="btn-sec btn-sm" id="o_addCost" type="button" style="margin:6px 0 10px">+ затрата</button>'+
+          '<div class="cost-sum" id="o_costSum"></div></div>'; })())+
         '<div class="sec"><h4>📎 Файлы заказа <a class="hint lnk" data-go-tab="files">все →</a></h4><div class="drop sm" id="o_dropMini">Перетащите файлы сюда или <b>выберите</b></div><div class="files" id="o_filesMini" style="margin:8px 0 10px"></div></div>'+
         (sup?'':'<div class="sec"><h4>🗓 Задачи по заказу <a class="hint lnk" id="o_addTask">+ задача</a></h4><div class="tk-list sm" id="o_tasks" style="margin-bottom:10px"></div></div>')+
         '<div class="sec"><h4>🗒 Заметка</h4><textarea class="inp" id="o_note" style="margin-bottom:10px" placeholder="Что обсудили, о чём договорились…">'+esc(e.note||'')+'</textarea></div>'+
@@ -1377,7 +1488,10 @@
         sizes:v('#o_sizes'),materials:v('#o_materials'),tz:v('#o_tz'),mockupPath:v('#o_mockupPath'),files:FILES,
         items:rows,total:rows.reduce((a,r)=>a+r.qty*r.price,0),payType:pv('payType'),docFlow:pv('docFlow'),
         prepaid:Number(v('#o_prepaid'))||0,paidMore:Number(v('#o_paidMore'))||0,updDate:v('#o_updDate'),updNo:v('#o_updNo'),passDate:v('#o_passDate'),passUntil:v('#o_passUntil'),paidFull:$('#o_paidFull').checked,
-        docs:Object.assign({},DOCS),note:v('#o_note'),leadId:e.leadId||'',ts:e.ts||new Date().toISOString()});
+        docs:Object.assign({},DOCS),note:v('#o_note'),leadId:e.leadId||'',ts:e.ts||new Date().toISOString(),
+        flow:Object.assign({},FLOW),mountBy:pv('mountBy'),prodMachine:pv('prodMachine'),prodLam:pv('prodLam'),prodMat:v('#o_prodMat'),prodSpec:v('#o_prodSpec'),
+        designHours:$('#o_designHours')?(Number(v('#o_designHours'))||0):(e.designHours||0),workHours:$('#o_workHours')?(Number(v('#o_workHours'))||0):(e.workHours||0),
+        noDesign:$('#o_noDesign')?$('#o_noDesign').checked:!!e.noDesign,costs:COSTS.filter(x=>(x.name||'').trim()||Number(x.sum)).map(x=>({name:(x.name||'').trim(),sum:Number(x.sum)||0}))});
     }
     function liveGate(){
       if(!$('#o_paidFull')) return [];
@@ -1395,7 +1509,27 @@
     const drawTasks=()=>{ const box=$('#o_tasks'); if(!box) return; const ts=DATA.tasks.filter(t=>t.dealId===e.id).sort((a,b)=>(a.done-b.done)||String(a.due+a.time).localeCompare(String(b.due+b.time)));
       box.innerHTML=ts.length?ts.map(t=>taskRow(t,{noDeal:true})).join(''):'<div class="hint" style="padding:4px 0 6px">Нет задач. Например: «Замер в четверг 10:00», «Позвонить про макет».</div>'; bindTaskRows(box,drawTasks); updateCounters(); };
     const at=$('#o_addTask'); if(at) at.onclick=()=>{ if(isNew&&!dealOf(e.id)){ toast('Сначала сохраните сделку'); return; } const st0=stOf(st,$('#o_status').value); editTask(null,{dealId:e.id,who:st0.owner||ME||'',title:''},drawTasks); };
-    drawFiles(); drawDocs(); drawTasks(); recalc(); liveGate();
+    // ---- ход заказа (кто и когда отметил) ----
+    $$('#modal [data-flow]').forEach(i=>i.onchange=()=>{ const k=i.dataset.flow; if(i.checked) FLOW[k]={at:new Date().toISOString(),by:ME||'—'}; else delete FLOW[k]; dirty(); liveGate(); });
+    // ---- себестоимость ----
+    const costRow=(x,i)=>'<div class="cost-r" data-ci="'+i+'"><input class="inp c-n" value="'+esc(x.name||'')+'" placeholder="баннер у подрядчика, плёнка…"><input class="inp c-s" type="number" min="0" value="'+(Number(x.sum)||'')+'" placeholder="₽"><button class="ic-btn del c-rm" type="button" title="Убрать">🗑</button></div>';
+    function drawCosts(){ const box=$('#o_costs'); if(!box) return;
+      box.innerHTML=COSTS.map(costRow).join('');
+      $$('.cost-r',box).forEach(r=>{ const x=COSTS[+r.dataset.ci];
+        r.querySelector('.c-n').oninput=ev=>{x.name=ev.target.value;dirty();};
+        r.querySelector('.c-s').oninput=ev=>{x.sum=Number(ev.target.value)||0;dirty();costSum();liveGate();};
+        r.querySelector('.c-rm').onclick=()=>{COSTS.splice(+r.dataset.ci,1);drawCosts();costSum();liveGate();dirty();}; });
+    }
+    function costSum(){ const el=$('#o_costSum'); if(!el) return; const c=dealCost(collect());
+      el.innerHTML='<div><span>Дизайн'+(c.dr?' · '+money(c.dr)+'/ч':'')+'</span><b>'+money(c.design)+'</b></div><div><span>Своя работа'+(c.wr?' · '+money(c.wr)+'/ч':'')+'</span><b>'+money(c.work)+'</b></div><div><span>Подрядчики, материалы</span><b>'+money(c.sub)+'</b></div>'+
+        '<div class="tot"><span>Себестоимость</span><b>'+money(c.total)+'</b></div><div class="tot '+(c.margin<0?'neg':'pos')+'"><span>Маржа</span><b>'+money(c.margin)+(dealTotal(collect())?' · '+c.pct+'%':'')+'</b></div>'+
+        ((!c.dr&&Number(v('#o_designHours')))||(!c.wr&&Number(v('#o_workHours')))?'<div class="hint">Ставка часа не задана — «Настройки → Себестоимость».</div>':''); }
+    const ac=$('#o_addCost'); if(ac) ac.onclick=()=>{ COSTS.push({name:'',sum:0}); drawCosts(); dirty(); setTimeout(()=>{const a=$$('#o_costs .c-n');if(a.length)a[a.length-1].focus();},20); };
+    ['#o_designHours','#o_workHours'].forEach(q=>{ const el=$(q); if(el) el.addEventListener('input',costSum); });
+    { const nd=$('#o_noDesign'); if(nd) nd.onchange=()=>{dirty();liveGate();}; }
+    { const oi=$('#o_items'); if(oi) oi.addEventListener('input',()=>setTimeout(costSum,0)); }
+    drawCosts();
+    drawFiles(); drawDocs(); drawTasks(); recalc(); liveGate(); costSum();
 
     $$('[data-print]').forEach(b=>b.onclick=()=>printDoc(b.dataset.print,collect()));
     const tc=$('#o_toClient'); if(tc) tc.onclick=()=>{ if($('#modal').dataset.dirty==='1'&&!confirm('Есть несохранённые изменения. Перейти без сохранения?'))return; hideModal(); VIEW='clients'; render(); openClient(cl.id); };
@@ -1408,6 +1542,8 @@
       if(!rec.client&&!rec.items.length){toast('Заполните клиента или позиции');showTab('main');return;}
       if(miss.length){ toast('Не заполнено: '+miss.map(f=>FIELDS[f].t).join(', ')); const first=$('#modal .miss'); if(first){ const p=first.closest('.dl-pane'); if(p) showTab(p.dataset.pane); setTimeout(()=>first.scrollIntoView({behavior:'smooth',block:'center'}),50);} return; }
       const prevSt=d?d.status:null;
+      lockDesign(rec,prevSt,rec.status);
+      { const c=(S().costs)||{}; if(Number(rec.designHours)>0&&rec.designRate==null) rec.designRate=Number(c.designRate)||0; if(Number(rec.workHours)>0&&rec.workRate==null) rec.workRate=Number(c.workRate)||0; }
       rec.log=[{ts:new Date().toISOString(),who:ME||'—',t:!d?'создал(а) сделку':(prevSt!==rec.status?'→ '+stOf(st,rec.status).t:'изменил(а)')}].concat(rec.log||[]).slice(0,60);
       // что изменилось в документах — в историю
       if(d){ Object.keys(rec.docs).filter(k=>!(d.docs||{})[k]).forEach(k=>rec.log.unshift({ts:new Date().toISOString(),who:ME||'—',t:'✓ '+(DOC_NAME[k]||k)})); Object.keys(d.docs||{}).filter(k=>!rec.docs[k]).forEach(k=>rec.log.unshift({ts:new Date().toISOString(),who:ME||'—',t:'снял(а) отметку: '+(DOC_NAME[k]||k)})); rec.log=rec.log.slice(0,80); }
@@ -1862,12 +1998,12 @@
 
   /* ---------- НАСТРОЙКИ ---------- */
   let SET_TAB='funnel', SDRAFT=null, SDIRTY=false, ST_OPEN=null;
-  const FGROUPS=[['📋 Заказ',['source','kind','deadline']],['✏️ ТЗ и макет',['sizes','materials','tz','mockupPath']],['💰 Деньги',['items','total','payType','prepaid','paidFull']],['📑 Документы',['docFlow','contract','preApproval','legal','updDate']]];
+  const FGROUPS=[['📋 Заказ',['source','kind','deadline']],['✏️ ТЗ и макет',['sizes','materials','tz','mockupPath','designHours']],['💰 Деньги',['items','total','payType','prepaid','paidFull','costs']],['📑 Документы',['docFlow','contract','preApproval','legal','updDate']]];
   const SCOLORS=['#F7941D','#ef7d1a','#e46a1d','#d9534f','#c0392b','#9b59b6','#6c5ce7','#2d3436','#00838f','#5d6d7e','#2e9e4f','#7a2620','#a59d96'];
   function settingsView(){
     if(!SDRAFT){ SDRAFT=JSON.parse(JSON.stringify(S())); SDIRTY=false; }
     const s=SDRAFT;
-    const tabs='<div class="tabs">'+[['funnel','Воронка продаж'],['supply','Воронка поставщиков'],['team','Команда'],['company','Реквизиты'],['channels','Каналы связи'],['backup','Бэкапы']].map(([k,t])=>'<button data-st="'+k+'" class="'+(SET_TAB===k?'on':'')+'">'+t+'</button>').join('')+'</div>';
+    const tabs='<div class="tabs">'+[['funnel','Воронка продаж'],['supply','Воронка поставщиков'],['team','Команда'],['costs','Себестоимость'],['company','Реквизиты'],['channels','Каналы связи'],['backup','Бэкапы']].map(([k,t])=>'<button data-st="'+k+'" class="'+(SET_TAB===k?'on':'')+'">'+t+'</button>').join('')+'</div>';
     const ownerOpts=v=>'<option value="">— никто —</option>'+s.team.filter(m=>m.name).map(m=>'<option'+(m.name===v?' selected':'')+'>'+esc(m.name)+'</option>').join('');
     let body='';
     if(SET_TAB==='funnel'||SET_TAB==='supply'){
@@ -1898,6 +2034,13 @@
           '<div class="fld"><div class="k">Telegram chat id</div><div style="display:flex;gap:6px"><input class="inp t-tg" value="'+esc(m.tg||'')+'" placeholder="напр. 123456789"><button class="btn-sec btn-sm" data-test="'+i+'" title="Отправить тестовое сообщение">📨 Проверить</button></div></div>'+
           '<div class="hint">'+(o.length?'Отвечает за: '+o.map(esc).join(', '):'Ни за одну стадию не отвечает')+'</div></div><button class="ic-btn del t-rm" title="Удалить">🗑</button></div>'; }).join('')+
         '<button class="tm tm-add" id="tmAdd">+ сотрудник</button></div><div style="height:70px"></div>';
+    } else if(SET_TAB==='costs'){
+      s.costs=s.costs||{designRate:200,workRate:0};
+      body='<div class="note">Справочник затрат. Дизайнер в сделке пишет, сколько часов потратил, — CRM сама считает стоимость дизайна по ставке и сохраняет её в сделке для аналитики. Так же — своя работа (резка, сборка, монтаж). Затраты на подрядчиков и материалы менеджер вписывает в сделке. Ставка сохраняется в сделке на момент заполнения — если потом поменяете ставку, старые сделки не пересчитаются.</div>'+
+        '<div class="co-grid"><div class="chart"><h3>⏱ Ставки часа</h3>'+
+        '<div class="fld"><div class="k">Час работы дизайнера, ₽</div><input class="inp" data-cr="designRate" type="number" min="0" value="'+(Number(s.costs.designRate)||0)+'"><div class="hint">Например: оклад 20 000 ₽ ÷ ~100 часов на заказы = 200 ₽/ч.</div></div>'+
+        '<div class="fld"><div class="k">Час своей работы (цех, монтаж), ₽</div><input class="inp" data-cr="workRate" type="number" min="0" value="'+(Number(s.costs.workRate)||0)+'"></div></div>'+
+        '<div class="chart"><h3>📊 Где это видно</h3><p class="hint" style="line-height:1.7">В сделке — блок «🧮 Себестоимость»: дизайн, своя работа, подрядчики, итог и маржа.<br>«Сделки» → кнопка <b>📊 Excel</b> — выгрузка всех сделок с себестоимостью и маржой для ваших Google-таблиц.<br>Обязательность себестоимости по стадиям — во вкладке «Воронка продаж».</p></div></div><div style="height:70px"></div>';
     } else if(SET_TAB==='company'){
       const c=s.company; const G=[['🏢 Организация',[['name','Название'],['director','Директор (ФИО, для подписи)'],['inn','ИНН'],['kpp','КПП'],['ogrn','ОГРН'],['tax','Налоги (строка в документах)']]],['📞 Контакты',[['addr','Юридический адрес'],['phone','Телефон'],['email','E-mail']]],['🏦 Банк',[['bank','Банк'],['bik','БИК'],['rs','Расчётный счёт'],['ks','Корр. счёт']]]];
       body='<div class="note">Эти реквизиты подставляются в счёт, договор, акт, доверенность и заявление (кнопки 🖨 в сделке).</div><div class="co-grid">'+G.map(([g,fs])=>'<div class="chart"><h3>'+g+'</h3>'+fs.map(([k,t])=>'<div class="fld"><div class="k">'+t+'</div><input class="inp" data-k="'+k+'" value="'+esc(c[k]||'')+'"></div>').join('')+'</div>').join('')+'</div>'+
@@ -1938,6 +2081,8 @@
       $$('.tm .t-rm').forEach(b=>b.onclick=()=>{ const x=m(b); if(!confirm('Удалить «'+(x.name||'сотрудника')+'» из команды?'))return; s.team.splice(+b.closest('.tm').dataset.i,1); markDirty(); settingsView(); });
       $('#tmAdd').onclick=()=>{ s.team.push({name:'',role:'',tg:''}); markDirty(); settingsView(); setTimeout(()=>{const a=$$('.tm .t-n');if(a.length)a[a.length-1].focus();},30); };
       $$('[data-test]').forEach(b=>b.onclick=async()=>{ const tg=b.parentNode.querySelector('.t-tg').value.trim(); if(!tg){toast('Укажите chat id');return;} const r=await api('notify',null,{chatId:tg,text:'Рикс+С CRM: тестовое уведомление ✅'}); toast(r.ok?'Отправлено в Telegram':(r.note==='telegram-not-configured'?'Бот не подключён (TELEGRAM_BOT_TOKEN)':'Не отправилось — проверьте chat id и /start боту')); });
+    } else if(SET_TAB==='costs'){
+      $$('[data-cr]').forEach(i=>i.oninput=()=>{ s.costs[i.dataset.cr]=Number(i.value)||0; markDirty(); });
     } else if(SET_TAB==='company'){
       const prev=()=>{ const c=s.company; $('#coPrev').innerHTML='<b>'+esc(c.name)+'</b>, ИНН/КПП '+esc(c.inn)+'/'+esc(c.kpp)+', ОГРН '+esc(c.ogrn)+'<br>'+esc(c.addr)+', тел. '+esc(c.phone)+(c.email?', '+esc(c.email):'')+'<br>р/с '+esc(c.rs)+' в '+esc(c.bank)+', к/с '+esc(c.ks)+', БИК '+esc(c.bik)+'<br>Директор ____________ / '+esc(c.director)+' / · '+esc(c.tax); };
       $$('[data-k]').forEach(i=>i.oninput=()=>{ s.company[i.dataset.k]=i.value.trim(); markDirty(); prev(); }); prev();
