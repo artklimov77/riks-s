@@ -359,3 +359,20 @@
     document.addEventListener('click', e => { if (!e.target.closest('.pk li.pk-li')) lis.forEach(x => x.classList.remove('open')); });
   })();
 })();
+
+/* ---------- шапка: выпадающее меню «Услуги» ---------- */
+(() => {
+  const dd = document.getElementById('navDd');
+  const here = location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.mega a.mg-i, .mn-list a').forEach(a => {
+    if (a.getAttribute('href') === here) a.setAttribute('aria-current', 'page');
+  });
+  if (!dd) return;
+  const btn = dd.querySelector('.nav-dd-btn');
+  const set = on => { dd.classList.toggle('open', on); btn.setAttribute('aria-expanded', on ? 'true' : 'false'); };
+  btn.addEventListener('click', e => { e.stopPropagation(); set(!dd.classList.contains('open')); });
+  document.addEventListener('click', e => { if (!dd.contains(e.target)) set(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && dd.classList.contains('open')) { set(false); btn.focus(); } });
+  dd.querySelectorAll('.mega a').forEach(a => a.addEventListener('click', () => set(false)));
+  dd.addEventListener('mouseleave', () => set(false));
+})();
