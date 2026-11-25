@@ -155,7 +155,7 @@
     if (S.maket === 'design') return `<p class="pcm-hint">Дизайнер свяжется, уточнит пожелания и назовёт стоимость до начала работы. Есть логотип, фото или пример — прикрепите ниже.</p>` + filesBox();
     if (S.maket === 'self') {
       const tp = it.tpl ? `<div class="pcm-tpl"><span class="pcm-tpl-ic">${ICON.tpl}</span><div><b>Шаблон: ${esc(it.s)}</b><small>Вылеты 1 мм, безопасная зона 4 мм${(fm.f || []).length ? ', линии сгиба' : ''}. Разметку удалите перед отправкой.</small></div>` +
-        `<a href="shablony/${it.tpl}.pdf" download>${ICON.dl}PDF</a><a href="shablony/${it.tpl}.svg" download>${ICON.dl}SVG</a></div>` : `<p class="pcm-hint">Шаблон под этот формат пришлём по запросу — укажите размер в комментарии.</p>`;
+        `<a href="shablony/${it.tpl}.pdf" download>${ICON.dl}PDF</a><a href="shablony/${it.tpl}.svg" download>${ICON.dl}SVG</a></div><p class="pcm-hint"><a class="pcm-link" href="shablony.html" target="_blank">Все шаблоны макетов →</a></p>` : `<p class="pcm-hint">Шаблон под этот формат пришлём по запросу — укажите размер в комментарии. <a class="pcm-link" href="shablony.html" target="_blank">Все шаблоны →</a></p>`;
       return tp + `<details class="pcm-req"><summary>Технические требования к макету</summary><dl>${REQ.map(r => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('')}</dl></details>` +
         `<p class="pcm-hint">Готовый файл можно прикрепить сейчас или прислать позже в MAX или на почту.</p>` + filesBox();
     }

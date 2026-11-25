@@ -223,7 +223,110 @@ def page():
     print('page: ok')
 
 
+# ---------- страница «Шаблоны макетов» (shablony.html; /shablony/ → сюда) ----------
+TPL_GROUPS = [
+    ('Визитки', ['viz', 'evroviz']),
+    ('Листовки и флаеры', ['a7', 'a6', 'a5', 'a4', 'evro', 'mini']),
+    ('Буклеты и лифлеты', ['b-a6a7', 'b-a5a6', 'b-a4a5', 'b-evro']),
+    ('Открытки, купоны, сертификаты', ['otk-evro', 'otk-a5', 'kupon']),
+    ('Наклейки', ['st30', 'st40', 'st50', 'st4055', 'st5090']),
+]
+REQ = [
+    ('Форматы', 'PDF (шрифты в кривых), TIFF, JPG, CDR (до версии 14), EPS. Не принимаем DOC, XLS, PPT и PDF из онлайн-редакторов.'),
+    ('Размер и вылеты', 'Макет — с вылетами по 1 мм с каждой стороны: визитка 90×50 → файл 92×52 мм. Фон и картинки «в край» доводите до края файла.'),
+    ('Безопасная зона', 'Текст, логотипы и QR-код — не ближе 4 мм к линии реза. Рамки по краю не делайте: допуск резки 1–2 мм, рамка выйдет неровной.'),
+    ('Цвет', 'CMYK, 300 dpi. Мелкий чёрный текст и QR — только чёрной краской (C0 M0 Y0 K100). Глубокий чёрный фон — C60 M50 Y50 K100. Суммарная красочность — до 280%.'),
+    ('Файл', 'Слои сведены, без прозрачностей, теней, линз и скрытых объектов. Шрифт — не мельче 6 пт.'),
+    ('Перед отправкой', 'Удалите из шаблона цветную разметку (слой «RAZMETKA…»). Проверим макет до оплаты и подскажем, если что-то поправить.'),
+]
+DL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>'
+ARR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+
+
+def shablony_page():
+    src = open(os.path.join(R, 'poligrafiya.html'), encoding='utf-8').read()
+    head = src[:src.index('<main id="top">')]
+    tail = src[src.index('</main>'):]
+    title = 'Шаблоны макетов для печати — визитки, листовки, буклеты | Рикс+С'
+    desc = 'Бесплатные шаблоны макетов PDF и SVG: визитки, листовки, еврофлаеры, буклеты, купоны, наклейки. Вылеты 1 мм, безопасная зона 4 мм, линии сгиба.'
+    head = re.sub(r'<title>.*?</title>', '<title>' + E(title) + '</title>', head, count=1, flags=re.S)
+    head = re.sub(r'(<meta name="description" content=")[^"]*', r'\g<1>' + desc, head, count=1)
+    head = re.sub(r'(<link rel="canonical" href="[^"]*/)[^"]*"', r'\1shablony.html"', head, count=1)
+    head = re.sub(r'(<meta property="og:title" content=")[^"]*', r'\g<1>' + E(title), head, count=1)
+    head = re.sub(r'(<meta property="og:description" content=")[^"]*', r'\g<1>' + desc, head, count=1)
+    head = head.replace('class="nav-dd-btn"', 'class="nav-dd-btn"')
+    for js in ('print-data', 'print', 'explainer', 'gallery'):
+        tail = tail.replace(f'<script src="assets/{js}.js" defer></script>\n', '')
+    groups = ''
+    for g, keys in TPL_GROUPS:
+        cards = ''
+        for k in keys:
+            f = FMT[k]; W, H = f['w'] + 2 * BLEED, f['h'] + 2 * BLEED
+            name = f['t'].split(':')[0] if ':' in f['t'] else f['t']
+            cards += (f'<article class="tp-card"><div class="tp-pic"><img src="shablony/{k}.svg" alt="Разметка шаблона: {E(f["t"])}" loading="lazy"></div>'
+                      f'<div class="tp-b"><h3>{E(name)}</h3><p>{E(f["t"].split(": ", 1)[1]) + "<br>" if ": " in f["t"] else ""}файл с вылетами {W:g}×{H:g} мм</p>'
+                      f'<div class="tp-dl"><a href="shablony/{k}.pdf" download>{DL}PDF</a><a href="shablony/{k}.svg" download>{DL}SVG</a></div></div></article>')
+        groups += f'<div class="tp-group reveal"><h3 class="tp-h">{E(g)}</h3><div class="tp-grid">{cards}</div></div>'
+    req = ''.join(f'<div class="tp-req-i"><b>{E(a)}</b><p>{E(b)}</p></div>' for a, b in REQ)
+    body = f"""<!-- HERO -->
+<section class="hero hero-dk">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="label reveal"><i class="sq"></i>Полиграфия · шаблоны</span>
+      <h1 class="reveal d1">Шаблоны <span class="mark">макетов</span></h1>
+      <p class="lead reveal d2">Скачайте шаблон нужного формата, нарисуйте макет в CorelDRAW, Illustrator или Photoshop — и загрузите в заказ. Проверим файл до оплаты.</p>
+      <div class="hero-cta reveal d3">
+        <a class="btn btn-ink" href="poligrafiya.html#katalog">В каталог с ценами {ARR}</a>
+        <a class="btn btn-line" href="#trebovaniya">Требования к макету</a>
+      </div>
+      <div class="facts reveal d4"><div class="fact"><b>1 мм</b><span>вылеты с каждой<br>стороны</span></div>
+        <div class="fact"><b>4 мм</b><span>безопасная зона<br>от линии реза</span></div>
+        <div class="fact"><b>CMYK</b><span>цвет, 300 dpi</span></div>
+      </div>
+    </div>
+    <div class="tscene reveal d2" data-scene="poligrafiya"></div>
+  </div>
+</section>
+
+<!-- ШАБЛОНЫ -->
+<section class="sec white" id="shablony">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="label reveal"><i class="sq"></i>Скачать бесплатно</span><h2 class="h2 reveal d1">Шаблоны по форматам</h2></div>
+      <p class="lead reveal d2" style="max-width:440px">В каждом шаблоне: <b style="color:#E3241B">красная</b> рамка — край файла, чёрная пунктирная — линия реза, <b style="color:#16a34a">зелёная</b> — безопасная зона, розовая — линия сгиба.</p>
+    </div>
+    {groups}
+  </div>
+</section>
+
+<!-- ТРЕБОВАНИЯ -->
+<section class="sec" id="trebovaniya">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="label reveal"><i class="sq"></i>Чтобы тираж не ушёл в брак</span><h2 class="h2 reveal d1">Требования к макету</h2></div>
+      <p class="lead reveal d2" style="max-width:420px">Не уверены, что всё правильно? Загрузите файл в заказ — проверим и подскажем бесплатно.</p>
+    </div>
+    <div class="tp-req reveal">{req}</div>
+    <div class="pain-ft reveal"><span>Нет макета или некогда рисовать? Сделаем дизайн за вас.</span><a class="btn btn-ink" href="poligrafiya.html#katalog">Выбрать и заказать</a></div>
+  </div>
+</section>
+"""
+    open(os.path.join(R, 'shablony.html'), 'w', encoding='utf-8', newline='').write(head + '<main id="top">\n' + body + '\n' + tail)
+    # /shablony/ (папка с файлами) → страница
+    open(os.path.join(R, 'shablony', 'index.html'), 'w', encoding='utf-8', newline='').write(
+        '<!doctype html><meta charset="utf-8"><title>Шаблоны макетов — Рикс+С</title><meta http-equiv="refresh" content="0;url=/shablony.html">'
+        '<link rel="canonical" href="https://www.riks-s.ru/shablony.html"><a href="/shablony.html">Шаблоны макетов</a>')
+    sm = os.path.join(R, 'sitemap.xml')
+    if os.path.exists(sm):
+        x = open(sm, encoding='utf-8').read()
+        if 'shablony.html' not in x:
+            x = x.replace('</urlset>', '  <url><loc>https://www.riks-s.ru/shablony.html</loc></url>\n</urlset>')
+            open(sm, 'w', encoding='utf-8', newline='').write(x)
+    print('shablony.html: ok')
+
+
 if __name__ == '__main__':
     build_templates()
     open(os.path.join(R, 'assets', 'print-data.js'), 'w', encoding='utf-8', newline='').write(data_js())
     page()
+    shablony_page()

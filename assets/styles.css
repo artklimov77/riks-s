@@ -1170,3 +1170,26 @@ html.pc-lock{overflow:hidden}
   .xp-dg{max-width:240px}
 }
 @media (prefers-reduced-motion:reduce){.xp *{animation:none !important}.xp-prog i.now em{width:100%}}
+
+/* ---- страница «Шаблоны макетов» ---- */
+.tp-group{margin-top:40px}
+.tp-h{font-family:var(--disp);font-size:24px;font-weight:800;margin-bottom:16px}
+.tp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.tp-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:box-shadow .2s,transform .2s}
+.tp-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.tp-pic{background:var(--cream);height:190px;display:flex;align-items:center;justify-content:center;padding:18px}
+.tp-pic img{max-width:100%;max-height:154px;width:auto;height:auto;background:#fff;box-shadow:0 8px 20px -10px rgba(26,21,19,.35)}
+.tp-b{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
+.tp-b h3{font-size:16.5px;font-weight:800;line-height:1.25}
+.tp-b p{font-size:13px;color:var(--muted);line-height:1.45;margin:4px 0 12px}
+.tp-dl{margin-top:auto;display:flex;gap:8px}
+.tp-dl a{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;height:38px;border-radius:10px;font-weight:700;font-size:13.5px;border:1.5px solid var(--line-2);color:var(--ink)}
+.tp-dl a:first-child{background:var(--flame);border-color:transparent;color:#fff}
+.tp-dl a:hover{border-color:var(--red)}
+.tp-dl svg{width:15px;height:15px}
+.tp-req{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px}
+.tp-req-i{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px 20px}
+.tp-req-i b{display:block;font-size:16px;margin-bottom:6px}
+.tp-req-i p{font-size:14px;color:var(--muted);line-height:1.55}
+@media (max-width:900px){.tp-req{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.tp-req{grid-template-columns:1fr}.tp-grid{grid-template-columns:1fr 1fr;gap:10px}.tp-dl{flex-direction:column}}
