@@ -79,19 +79,19 @@
       <p class="lead reveal d2" style="max-width:440px">От визитки до тиража буклетов. Поможем с макетом, подберём бумагу и отделку под задачу и бюджет.</p>
     </div>
     <div class="svc reveal">
-      <a href="#prices" class="s-card feat">
+      <a href="#katalog" class="s-card feat">
         <span class="no">01</span>
         <h3>Визитки</h3>
         <p style="max-width:440px">Классические, евро, с ламинацией, скруглением углов или отверстием. Чёткая печать и ровная резка.</p>
         <div class="pr"><span>от 4 000 ₽</span><span class="go">→</span></div>
       </a>
-      <a href="#prices" class="s-card">
+      <a href="#katalog" class="s-card">
         <span class="no">02</span>
         <h3>Листовки и флаеры</h3>
         <p>А7–А4, минифлаеры и еврофлаеры. Большие тиражи для акций.</p>
         <div class="pr"><span>от 2 500 ₽</span><span class="go">→</span></div>
       </a>
-      <a href="#prices" class="s-card">
+      <a href="#katalog" class="s-card">
         <span class="no">03</span>
         <h3>Буклеты и лифлеты</h3>
         <p>Фальцовка в несколько сгибов, «гармошка», «накидка».</p>
@@ -112,6 +112,24 @@
     </div>
   </div>
 </section>
+
+<!-- KATALOG -->
+<section class="sec white" id="katalog">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="label reveal"><i class="sq"></i>Каталог и цены</span><h2 class="h2 reveal d1">Выберите — и сразу<br>видно цену</h2></div>
+      <p class="lead reveal d2" style="max-width:440px">Цены за тираж, печать с двух сторон — без доплаты. Чем больше тираж, тем дешевле штука: часто 2000 стоят чуть дороже 1000. Срок — 6–8 рабочих дней.</p>
+    </div>
+    <div class="pc-cats reveal" id="pcCats" role="tablist" aria-label="Разделы каталога"></div>
+    <div class="pc-grid" id="pcGrid"></div>
+    <div class="pc-help reveal">
+      <div class="pc-help-i"><span class="pc-help-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 15l2 2 4-4"/></svg></span><div><b>Проверим макет до оплаты</b><span>Не подходит по требованиям — подскажем, что исправить.</span></div></div>
+      <div class="pc-help-i"><span class="pc-help-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v10H3z"/><path d="M14 10h4l3 3v4h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg></span><div><b>Самовывоз или доставка</b><span>Комсомольская, 134, по Йошкар-Оле и по России транспортной компанией.</span></div></div>
+      <div class="pc-help-i"><span class="pc-help-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/></svg></span><div><b>Не знаете, где раздать?</b><span>Позвоните — подскажем, с кем посотрудничать и где ваша аудитория.</span></div></div>
+    </div>
+  </div>
+</section>
+<div class="pc-modal" id="pcModal" role="dialog" aria-modal="true" aria-labelledby="pcmTitle" hidden></div>
 
 <!-- РАБОТЫ -->
 <section class="sec white" id="works">
@@ -169,19 +187,6 @@
         <div class="pr"><span>от 35 ₽</span><span class="go">→</span></div>
       </a>
     </div>
-  </div>
-</section>
-
-<!-- PRICES -->
-<section class="sec white" id="prices">
-  <div class="wrap">
-    <div class="sec-head">
-      <div><span class="label reveal"><i class="sq"></i>04 / Цены</span><h2 class="h2 reveal d1">Полиграфия — цены открыто</h2></div>
-      <p class="lead reveal d2" style="max-width:420px">Отметьте нужное — пришлём расчёт одним сообщением. Полный прайс — на странице <a href="ceny.html" style="color:inherit;text-decoration:underline">«Цены»</a>.</p>
-    </div>
-    <div class="tabs reveal d2" id="tabs" data-only="Визитки, Листовки и буклеты, Наклейки и печать, Сувениры"></div>
-    <div class="board reveal d2" id="board"></div>
-    <div class="price-note"><span>Цена зависит от тиража, бумаги и отделки.</span><span>Оплата: наличные, карта, СБП, безнал</span></div>
   </div>
 </section>
 
@@ -245,5 +250,7 @@
 <script src="assets/quiz.js" defer></script>
 <script src="assets/gallery.js" defer></script>
 <script src="assets/scenes.js" defer></script>
+<script src="assets/print-data.js" defer></script>
+<script src="assets/print.js" defer></script>
 </body>
 </html>

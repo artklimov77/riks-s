@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="42mm" height="57mm" viewBox="0 0 42 57">
+<title>Шаблон: Наклейка 40×55 мм. Вылеты 1 мм, безопасная зона 4 мм</title>
+<g id="RAZMETKA_udalit_pered_otpravkoy" fill="none" stroke-width="0.2">
+<rect x="0.1" y="0.1" width="41.8" height="56.8" stroke="#E3241B"/>
+<rect x="1" y="1" width="40" height="55" stroke="#111" stroke-dasharray="1 0.6"/>
+<rect x="5" y="5" width="32" height="47" stroke="#16a34a" stroke-dasharray="0.8 0.8"/>
+<g fill="#9a8f88" stroke="none" font-family="Arial, sans-serif" font-size="1.82" text-anchor="middle">
+<text x="21.0" y="27.14">Наклейка 40×55 мм</text>
+<text x="21.0" y="29.86">удалите разметку</text>
+</g></g></svg>

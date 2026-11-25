@@ -18,6 +18,8 @@ const DIR = path.resolve(process.env.FILES_DIR || '/srv/riks-files');
 const SECRET = process.env.FILES_SECRET || '';
 const ACCEL = process.env.FILES_ACCEL || '';            // напр. /_files/ (internal location в nginx)
 const MAX = 500 * 1024 * 1024;                          // 500 МБ на файл
+const MAX_PUB = 100 * 1024 * 1024;                      // 100 МБ — макет, загруженный посетителем сайта
+const PUB_EXT = /^(pdf|tif|tiff|jpg|jpeg|png|cdr|eps|ai|psd|svg|zip|rar|7z)$/;
 
 const okPass = (p) => !!process.env.LEADS_PASS && p === process.env.LEADS_PASS;
 const okMigrate = (t) => !!process.env.MIGRATE_TOKEN && t === process.env.MIGRATE_TOKEN;
@@ -54,7 +56,8 @@ async function readJson(req) {
 }
 
 // записать поток в файл атомарно (через .part), с ограничением размера
-async function saveStream(stream, p) {
+async function saveStream(stream, p, lim) {
+  lim = lim || MAX;
   const dst = abs(p);
   await fsp.mkdir(path.dirname(dst), { recursive: true });
   const tmp = dst + '.part-' + crypto.randomBytes(4).toString('hex');
@@ -62,7 +65,7 @@ async function saveStream(stream, p) {
   await new Promise((resolve, reject) => {
     const out = fs.createWriteStream(tmp, { flags: 'wx' });
     const fail = (e) => { stream.destroy && stream.destroy(); out.destroy(); reject(e); };
-    stream.on('data', (c) => { size += c.length; if (size > MAX) fail(new Error('too big')); });
+    stream.on('data', (c) => { size += c.length; if (size > lim) fail(new Error('too big')); });
     stream.on('error', fail);
     out.on('error', fail);
     out.on('finish', resolve);
@@ -117,11 +120,14 @@ async function handler(req, res) {
 async function upload(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'PUT' && req.method !== 'POST') return json(res, 405, { ok: false });
-  const p = checkSig(req, 'put');
+  // 'put' — загрузка из CRM (до 500 МБ); 'pput' — макет с сайта от посетителя (до 100 МБ, только riks/site/)
+  let p = checkSig(req, 'put'), lim = MAX;
+  if (!p) { p = checkSig(req, 'pput'); lim = MAX_PUB; if (p && !p.startsWith('riks/site/')) p = null; }
   if (!p) return json(res, 403, { ok: false, error: 'link expired' });
-  if (Number(req.headers['content-length'] || 0) > MAX) return json(res, 413, { ok: false, error: 'too big' });
+  if (Number(req.headers['content-length'] || 0) > lim) return json(res, 413, { ok: false, error: 'too big' });
+  if (lim === MAX_PUB && fs.existsSync(abs(p))) return json(res, 409, { ok: false, error: 'exists' });
   try {
-    const size = await saveStream(req, p);
+    const size = await saveStream(req, p, lim);
     return json(res, 200, { ok: true, pathname: p, size });
   } catch (e) {
     return json(res, e.message === 'too big' ? 413 : 500, { ok: false, error: String(e.message || e).slice(0, 200) });
@@ -148,7 +154,21 @@ async function download(req, res) {
   fs.createReadStream(abs(p)).pipe(res);
 }
 
+// Билет на загрузку макета посетителем сайта (вызывается из api/lead.js, op: 'upload').
+// Имя файла на диске — латиница + случайная папка; исходное имя хранится в заявке.
+function publicTicket(name, size) {
+  if (!SECRET) return { ok: false, error: 'files-not-configured' };
+  const ext = (String(name || '').split('.').pop() || '').toLowerCase();
+  if (!PUB_EXT.test(ext)) return { ok: false, error: 'type' };
+  if (!(Number(size) > 0) || Number(size) > MAX_PUB) return { ok: false, error: 'size' };
+  const base = String(name).slice(0, -(ext.length + 1)).normalize('NFKD').replace(/[^A-Za-z0-9._-]+/g, '_').replace(/^[._]+|_+$/g, '').slice(0, 60) || 'maket';
+  const d = new Date(), ym = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  const p = 'riks/site/' + ym + '/' + crypto.randomBytes(8).toString('hex') + '/' + base + '.' + ext;
+  return { ok: true, path: p, url: signedUrl('/api/files-up', 'pput', p, 30 * 60e3) };
+}
+
 module.exports = handler;
+module.exports.publicTicket = publicTicket;
 module.exports.upload = upload;
 module.exports.download = download;
 module.exports.saveStream = saveStream;

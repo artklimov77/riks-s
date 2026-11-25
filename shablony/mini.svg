@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="92mm" height="152mm" viewBox="0 0 92 152">
+<title>Шаблон: Минифлаер 90×150 мм. Вылеты 1 мм, безопасная зона 4 мм</title>
+<g id="RAZMETKA_udalit_pered_otpravkoy" fill="none" stroke-width="0.2">
+<rect x="0.1" y="0.1" width="91.8" height="151.8" stroke="#E3241B"/>
+<rect x="1" y="1" width="90" height="150" stroke="#111" stroke-dasharray="1 0.6"/>
+<rect x="5" y="5" width="82" height="142" stroke="#16a34a" stroke-dasharray="0.8 0.8"/>
+<g fill="#9a8f88" stroke="none" font-family="Arial, sans-serif" font-size="4.09" text-anchor="middle">
+<text x="46.0" y="60.66">Минифлаер 90×150 мм</text>
+<text x="46.0" y="66.80">файл с вылетами: 92×152 мм</text>
+<text x="46.0" y="72.93">красная — край файла (вылеты 1 мм)</text>
+<text x="46.0" y="79.07">чёрная — линия реза</text>
+<text x="46.0" y="85.20">зелёная — текст и логотипы только внутри</text>
+<text x="46.0" y="91.34">УДАЛИТЕ РАЗМЕТКУ ПЕРЕД ОТПРАВКОЙ</text>
+</g></g></svg>

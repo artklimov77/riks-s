@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="76mm" height="107mm" viewBox="0 0 76 107">
+<title>Шаблон: А7 74×105 мм. Вылеты 1 мм, безопасная зона 4 мм</title>
+<g id="RAZMETKA_udalit_pered_otpravkoy" fill="none" stroke-width="0.2">
+<rect x="0.1" y="0.1" width="75.8" height="106.8" stroke="#E3241B"/>
+<rect x="1" y="1" width="74" height="105" stroke="#111" stroke-dasharray="1 0.6"/>
+<rect x="5" y="5" width="66" height="97" stroke="#16a34a" stroke-dasharray="0.8 0.8"/>
+<g fill="#9a8f88" stroke="none" font-family="Arial, sans-serif" font-size="3.36" text-anchor="middle">
+<text x="38.0" y="40.89">А7 74×105 мм</text>
+<text x="38.0" y="45.93">файл с вылетами: 76×107 мм</text>
+<text x="38.0" y="50.98">красная — край файла (вылеты 1 мм)</text>
+<text x="38.0" y="56.02">чёрная — линия реза</text>
+<text x="38.0" y="61.07">зелёная — текст и логотипы только внутри</text>
+<text x="38.0" y="66.11">УДАЛИТЕ РАЗМЕТКУ ПЕРЕД ОТПРАВКОЙ</text>
+</g></g></svg>

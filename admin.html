@@ -1049,6 +1049,7 @@
       (cl?'<div class="linkbox">👥 Уже есть в базе клиентов'+(cl.points?' · баллов: '+esc(cl.points):'')+(cl.paid?' · покупок на '+money(cl.paid):'')+'</div>':'')+
       '<div class="fld"><div class="k">Телефон</div><div class="v"><a href="tel:'+tel+'">'+esc(l.phone)+'</a></div></div>'+
       (()=>{ const q=quizOfLead(l); return quizHTML(q)+(q.extra?'<div class="fld"><div class="k">'+((q.quiz||[]).length?'Дополнительно':'Что хочет')+'</div><div class="v">'+esc(q.extra)+'</div></div>':''); })()+
+      ((l.files||[]).length?'<div class="fld"><div class="k">Файлы от клиента</div>'+l.files.map((f,i)=>'<div class="file"><div class="fi">📄</div><div style="min-width:0;flex:1"><div class="fn">'+esc(f.name||f.path)+'</div><div class="fm">'+fsize(f.size||0)+' · макет с сайта</div></div><button class="btn-sec" data-lf="'+i+'">Открыть</button></div>').join('')+'</div>':'')+
       '<div class="fld"><div class="k">Источник</div><div class="v"><span class="badge" style="background:'+s.c+'">'+esc(s.t)+'</span> <span style="color:var(--muted);font-size:12px">'+esc(l.source||'')+(l.utm?' · '+esc(typeof l.utm==='object'?JSON.stringify(l.utm):l.utm):'')+'</span></div></div>'+
       '<div class="fld"><div class="k">Страница · когда</div><div class="v">'+esc(l.page||'—')+' · '+fmt(l.ts)+'</div></div>'+
       (l.consent&&l.consent.pd?'<div class="fld"><div class="k">Согласие на обработку ПДн</div><div class="v" style="font-size:12px;color:var(--muted)">✓ дано '+fmt(l.consent.at)+' · ред. '+esc(l.consent.ver||'—')+' · '+esc(l.consent.page||'')+(l.consent.ip?' · IP '+esc(l.consent.ip):'')+'</div></div>':'')+
@@ -1062,6 +1063,7 @@
     if(d)$('#dGoDeal').onclick=()=>{closeDrawer();VIEW='deals';render();editDeal(d.id);};
     const mk=$('#dMakeDeal'); if(mk)mk.onclick=()=>{closeDrawer();editDeal(null,l);};
     const dc=$('#dChat'); if(dc)dc.onclick=()=>{closeDrawer();VIEW='inbox';IB.cur=l.thread;render();};
+    $$('#dBody [data-lf]').forEach(b=>b.onclick=()=>openFile(l.files[+b.dataset.lf]));
     $('#dEdit').onclick=()=>{closeDrawer();editLead(l);};
     $('#dDel').onclick=async()=>{ if(!confirm('Удалить лид?'))return; await remove('leads',l.id); DATA.leads=DATA.leads.filter(x=>x.id!==l.id); closeDrawer(); render(); };
     $('#scrim').classList.add('on'); $('#drawer').classList.add('on');
@@ -1214,7 +1216,9 @@
     if(fromLead&&!id){ const q=quizOfLead(fromLead);
       Object.assign(e,{client:fromLead.name,phone:fromLead.phone,source:srcOf(fromLead.source).t,leadId:fromLead.id,kind:guessKind(fromLead.service+' '+fromLead.page),
         quiz:q.quiz,quizTitle:q.quizTitle,quizCallback:q.quizCallback,quizContact:q.quizContact,quizWarn:q.quizWarn,tz:q.extra});
-      ['clientId','company','inn','ctype'].forEach(k=>{ if(fromLead[k]) e[k]=fromLead[k]; }); if(!fromLead.id) delete e.leadId; }
+      ['clientId','company','inn','ctype'].forEach(k=>{ if(fromLead[k]) e[k]=fromLead[k]; }); if(!fromLead.id) delete e.leadId;
+      // макеты, загруженные клиентом на сайте, — сразу в «Файлы» сделки
+      if((fromLead.files||[]).length) e.files=(e.files||[]).concat(fromLead.files.filter(f=>f&&f.path).map(f=>({id:'f'+genId(),name:f.name||f.path.split('/').pop(),path:f.path,size:f.size||0,cat:'mockup',who:'клиент (сайт)',ts:fromLead.ts||new Date().toISOString()}))); }
     // старые сделки: ответы квиза лежали одной строкой в ТЗ — раскладываем
     if(!(e.quiz||[]).length){ const p=parseQuiz(e.tz); if(p){ Object.assign(e,{quiz:p.quiz,quizTitle:p.title,quizCallback:p.callback,quizWarn:p.warn,tz:p.extra}); } }
     if(targetStage) e.status=targetStage;

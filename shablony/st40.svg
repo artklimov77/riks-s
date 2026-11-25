@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="42mm" height="42mm" viewBox="0 0 42 42">
+<title>Шаблон: Наклейка: круг 40 мм. Вылеты 1 мм, безопасная зона 4 мм</title>
+<g id="RAZMETKA_udalit_pered_otpravkoy" fill="none" stroke-width="0.2">
+<rect x="0.1" y="0.1" width="41.8" height="41.8" stroke="#E3241B"/>
+<circle cx="21.0" cy="21.0" r="20.0" stroke="#111" stroke-dasharray="1 0.6"/>
+<circle cx="21.0" cy="21.0" r="18.0" stroke="#16a34a" stroke-dasharray="0.8 0.8"/>
+<g fill="#9a8f88" stroke="none" font-family="Arial, sans-serif" font-size="1.82" text-anchor="middle">
+<text x="21.0" y="19.64">Наклейка: круг 40 мм</text>
+<text x="21.0" y="22.36">удалите разметку</text>
+</g></g></svg>

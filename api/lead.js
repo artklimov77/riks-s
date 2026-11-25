@@ -24,12 +24,28 @@ module.exports = async (req, res) => {
   try { lead = typeof req.body === 'object' && req.body ? req.body : JSON.parse(raw || '{}'); } catch (e) { lead = {}; }
 
   const clean = (v, n) => String(v == null ? '' : v).slice(0, n);
+  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim().slice(0, 45);
+
+  // Загрузка макета с сайта (каталог полиграфии): выдаём подписанную ссылку на загрузку.
+  // Только на своём сервере (FILES_DIR); не больше 20 файлов в час с одного IP.
+  if (lead.op === 'upload') {
+    if (!process.env.FILES_DIR) return res.status(200).json({ ok: false, error: 'files-not-configured' });
+    if (kvReady() && ip) {
+      try {
+        const k = 'riks:upl:' + ip, n = await cmd(['INCR', k]);
+        if (n === 1) await cmd(['EXPIRE', k, 3600]);
+        if (n > 20) return res.status(429).json({ ok: false, error: 'limit' });
+      } catch (e) { /* без лимита, если Redis недоступен */ }
+    }
+    const t = require('./_files_local.js').publicTicket(lead.name, lead.size);
+    return res.status(t.ok ? 200 : 400).json(t);
+  }
+
   const phone = clean(lead.phone, 40);
   if (!phone.replace(/\D/g, '')) return res.status(400).json({ ok: false, error: 'no phone' });
   // без отметки о согласии на обработку ПДн заявку не принимаем (152-ФЗ, ст. 9); факт согласия храним вместе с заявкой
   const c = (lead.consent && typeof lead.consent === 'object') ? lead.consent : null;
   if (!c || c.pd !== true) return res.status(400).json({ ok: false, error: 'no consent' });
-  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim().slice(0, 45);
 
   const rec = {
     id: genId(),
@@ -37,8 +53,11 @@ module.exports = async (req, res) => {
     phone,
     service: clean(lead.service, 200),
     detail: clean(lead.detail, 2500),
-    quiz: Array.isArray(lead.quiz) ? lead.quiz.slice(0, 15).map((x) => ({ q: clean(x && x.q, 120), a: clean(x && x.a, 400) })) : undefined,
+    quiz: Array.isArray(lead.quiz) ? lead.quiz.slice(0, 20).map((x) => ({ q: clean(x && x.q, 120), a: clean(x && x.a, 400) })) : undefined,
     contact: clean(lead.contact, 40),
+    files: Array.isArray(lead.files) ? lead.files.slice(0, 5)
+      .filter((f) => f && /^riks\/site\/\d{4}-\d{2}\/[0-9a-f]{16}\/[A-Za-z0-9._-]{1,80}$/.test(String(f.path || '')))
+      .map((f) => ({ name: clean(f.name, 160), path: String(f.path), size: Number(f.size) || 0, cat: 'mockup' })) : undefined,
     callback: !!lead.callback,
     page: clean(lead.page, 60),
     source: clean(lead.source, 120),
