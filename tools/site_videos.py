@@ -42,10 +42,38 @@ VIDEOS = {
     ]),
 }
 
+# клипы ВК (вертикальные): страница → [(id, подпись)]. Отобраны по обложкам 25.11.2026 (vkvideo.ru/@rikss12/clips).
+CLIPS = {
+    'vyveski.html': [('456239402', 'Световые буквы ночью'), ('456239266', 'Вывеска «Планета»'), ('456239316', 'Монтаж с автовышки'),
+                     ('456239419', 'Панель-кронштейн'), ('456239555', 'Режим работы'), ('456239290', 'Когда вывеску «не надо согласовывать»')],
+    'neon.html': [('456239472', 'Неон в деле'), ('456239468', '«Это неон, детка»')],
+    'transport.html': [('456239546', 'Реклама на троллейбусе'), ('456239536', 'Брендирование троллейбуса'), ('456239543', 'Оклейка')],
+    'poligrafiya.html': [('456239516', 'Подарочные сертификаты'), ('456239344', 'Буклеты'), ('456239321', 'Наклейки в бизнесе'), ('456239504', 'Наклейки на упаковку')],
+    'stendy.html': [('456239289', 'Стенд с карманами'), ('456239502', 'Навигация «Деловой центр»')],
+    'mobilnye-stojki.html': [('456239406', 'Ролл-ап'), ('456239564', 'Пресс-волл с логотипами')],
+    'tablichki-brajlya.html': [('456239343', 'Таблички на двери'), ('456239332', '«Служебное помещение»'), ('456239486', 'Знаки')],
+    'oformlenie-shkol.html': [('456239178', 'Оформление стен в школе'), ('456239557', 'Стенды в детском саду'), ('456239326', 'Актовый зал')],
+    'penoplast.html': [('456239296', 'Снежинки из пенопласта'), ('456239187', 'Объёмная буква')],
+    'rostovye-figury.html': [('456239401', 'Фигуры-указатели')],
+    'logotip.html': [('456239503', 'Работа дизайнера')],
+    'raboty.html': [('456239431', 'Отзыв заказчика'), ('456239411', 'Отзыв заказчика: студия «Своя»')],
+}
+SUB = {'penoplast.html': 'Пенопласт в деле', 'rostovye-figury.html': 'Ростовые фигуры', 'logotip.html': 'Как рождается логотип', 'raboty.html': 'Видеоотзывы и работы'}
+
+
+def clips_html(items):
+    if not items:
+        return ''
+    cards = ''.join(f'<figure class="cl-card reveal"><div class="cl-frame"><iframe loading="lazy" src="https://vkvideo.ru/video_ext.php?oid={OID}&amp;id={i}" '
+                    f'allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen title="{E(c)}"></iframe></div><figcaption>{E(c)}</figcaption></figure>'
+                    for i, c in items)
+    return f'<div class="cl-strip"><h3 class="cl-h reveal">Короткие ролики</h3><div class="cl-row">{cards}</div></div>'
+
+
 PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>'
 
 
-def section(title, sub, items):
+def section(title, sub, items, clips=()):
     def card(vid, t, d):
         if vid.startswith('xp:'):  # свой обучающий ролик (assets/explainer.js)
             return f'<article class="vd-card wide reveal"><div class="xp" data-xp="{vid[3:]}"></div><div class="vd-meta"><span>{E(d)}</span></div></article>'
@@ -53,29 +81,31 @@ def section(title, sub, items):
                 f'<span class="vd-poster"><span class="vd-tag">ВКонтакте · видео</span><span class="vd-btn">{PLAY}</span><span class="vd-t">{E(t)}</span></span></button>'
                 f'<div class="vd-meta"><span>{E(d)}</span></div></article>')
     cards = ''.join(card(*x) for x in items)
-    vk = any(not x[0].startswith('xp:') for x in items)
+    vk = any(not x[0].startswith('xp:') for x in items) or bool(clips)
     nvk = sum(1 for x in items if not x[0].startswith('xp:'))
     many = ' many' if len(items) > 1 else ''
     return (f'<!-- VIDEO -->\n<section class="sec" id="video">\n  <div class="wrap">\n'
             f'    <div class="sec-head"><div><span class="label reveal"><i class="sq"></i>{E(title)}</span><h2 class="h2 reveal d1">{E(sub)}</h2></div>' +
             (f'<p class="lead reveal d2" style="max-width:420px">Больше роликов — в нашей группе <a href="https://vkvideo.ru/@rikss12" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">ВКонтакте</a>.</p>' if vk else '<p class="lead reveal d2" style="max-width:420px">Короткий ролик — можно смотреть без звука.</p>') + '</div>\n' +
-            f'    <div class="vd-grid{many} n{nvk or 1}">{cards}</div>\n  </div>\n</section>\n\n')
+            (f'    <div class="vd-grid{many} n{nvk or 1}">{cards}</div>\n' if items else '') + clips_html(clips) + '\n  </div>\n</section>\n\n')
 
 
 def run():
-    for page, (title, sub, items) in VIDEOS.items():
+    pages = list(VIDEOS) + [p for p in CLIPS if p not in VIDEOS]
+    for page in pages:
+        title, sub, items = VIDEOS.get(page, ('Видео', SUB.get(page, 'Смотрите, как это выглядит'), []))
         p = os.path.join(R, page); s = open(p, encoding='utf-8').read()
         s = re.sub(r'<!-- VIDEO -->\n<section class="sec[^"]*" id="video">.*?</section>\n\n', '', s, flags=re.S)
         k = s.index('<!-- LEAD')
         # фон: чередуем с соседними секциями
         prev = s.rfind('<section class="', 0, k)
         white = 'white' in s[prev:prev + 40]
-        sec = section(title, sub, items).replace('<section class="sec" id="video">', '<section class="sec' + ('' if white else ' white') + '" id="video">')
+        sec = section(title, sub, items, CLIPS.get(page, [])).replace('<section class="sec" id="video">', '<section class="sec' + ('' if white else ' white') + '" id="video">')
         s = s[:k] + sec + s[k:]
         if any(x[0].startswith('xp:') for x in items) and 'assets/explainer.js' not in s:
             s = s.replace('</body>', '<script src="assets/explainer.js" defer></script>\n</body>')
         open(p, 'w', encoding='utf-8', newline='').write(s)
-    print('videos:', len(VIDEOS), 'pages')
+    print('videos:', len(pages), 'pages')
 
 
 if __name__ == '__main__':

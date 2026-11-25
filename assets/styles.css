@@ -1193,3 +1193,13 @@ html.pc-lock{overflow:hidden}
 .tp-req-i p{font-size:14px;color:var(--muted);line-height:1.55}
 @media (max-width:900px){.tp-req{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.tp-req{grid-template-columns:1fr}.tp-grid{grid-template-columns:1fr 1fr;gap:10px}.tp-dl{flex-direction:column}}
+
+/* ---- клипы ВК (вертикальные) ---- */
+.cl-strip{margin-top:40px}
+.cl-h{font-family:var(--disp);font-size:22px;font-weight:800;margin-bottom:14px}
+.cl-row{display:flex;gap:14px;overflow-x:auto;padding-bottom:10px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.cl-card{flex:0 0 220px;margin:0;scroll-snap-align:start}
+.cl-frame{position:relative;aspect-ratio:9/16;border-radius:var(--r);overflow:hidden;background:#141110}
+.cl-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.cl-card figcaption{font-size:14px;font-weight:700;margin-top:8px;line-height:1.3}
+@media (max-width:640px){.cl-card{flex-basis:62vw}}
