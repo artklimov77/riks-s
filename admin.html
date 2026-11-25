@@ -92,7 +92,7 @@
   .flw .fb.ok{background:#2e9e4f;border-color:#2e9e4f;color:#fff}
   .flw .fb.part{background:#fff3d6;border-color:#f0b54a;color:#8a5a00}
   .flw .fb.due{border-color:#e3241b;color:#c11a12;background:#fff5f4}
-  .flw .fb.prog{background:#1a1513;border-color:#1a1513;color:#fff}
+  .flw .fb.fbp{background:#1a1513;border-color:#1a1513;color:#fff;height:auto;width:auto;overflow:visible}
   .flw .fb.nt{box-shadow:inset 0 -2px 0 #f0b54a}
   .kf{display:flex;flex-direction:column;gap:6px}
   .kf-r{display:grid;grid-template-columns:24px 190px 1fr 130px;gap:8px;align-items:center;padding:6px 8px;border-radius:8px;background:#faf7f3}
@@ -1245,7 +1245,7 @@
       const cls=v==='ok'?'ok':v==='part'?'part':late?'due':''; const tip=t+': '+(v==='ok'?'да':v==='part'?'частично':late?'пора сделать':'нет')+(k==='mounted'&&d.mountBy?' ('+d.mountBy+')':'')+(note?' — '+note:'');
       return '<span class="fb '+cls+(note?' nt':'')+'" title="'+esc(tip)+'">'+sh+'</span>'; }).join('');
     const tags=[d.payType,d.docFlow].filter(Boolean).map(x=>'<span class="fb tag">'+esc(x)+'</span>').join('');
-    return '<div class="flw"><span class="fb prog" title="Готовность: '+flowDone(d)+' из '+KFLOW.length+'">'+flowDone(d)+'/'+KFLOW.length+'</span>'+b+tags+'</div>';
+    return '<div class="flw"><span class="fb fbp" title="Готовность: '+flowDone(d)+' из '+KFLOW.length+'">'+flowDone(d)+'/'+KFLOW.length+'</span>'+b+tags+'</div>';
   }
 
   /* ---------- DnD ---------- */
