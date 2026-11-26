@@ -19,7 +19,8 @@ const CH = {
   vk: { t: 'ВКонтакте', src: 'ВКонтакте' },
   mail: { t: 'Почта', src: 'Почта' },
   avito: { t: 'Авито', src: 'Авито' },
-  max: { t: 'MAX', src: 'MAX' }
+  max: { t: 'MAX', src: 'MAX' },
+  maxu: { t: 'MAX', src: 'MAX' }
 };
 const now = () => new Date().toISOString();
 const J = (s, d) => { try { return s ? JSON.parse(s) : d; } catch (e) { return d; } };
@@ -79,7 +80,8 @@ async function saveBuffer(ch, buf, name, type) {
 }
 
 // новое сообщение (входящее или исходящее, отправленное не из CRM — напр. с телефона)
-//   m = { ch, peer, name, text, att, extId, dir, who, ts, meta, phone }
+//   m = { ch, peer, name, text, att, extId, dir, who, ts, meta, phone, noLead, silent }
+//   noLead/silent — загрузка старой истории: без лида и без «непрочитанных»
 async function addMessage(m) {
   if (await seen(m.ch, m.extId)) return null;
   const id = m.ch + ':' + m.peer;
@@ -96,11 +98,11 @@ async function addMessage(m) {
   t.last = (msg.dir === 'out' ? 'Вы: ' : '') + (msg.text || (msg.att.length ? '📎 ' + (msg.att[0].name || 'вложение') : '')).slice(0, 140);
   t.ts = msg.ts;
   t.lastDir = msg.dir;
-  if (msg.dir === 'in') t.unread = (t.unread || 0) + 1;
+  if (msg.dir === 'in' && !m.silent) t.unread = (t.unread || 0) + 1;
 
   // первое входящее от нового собеседника → лид в CRM (если в настройках канала не выключено)
   const autoLead = cfg.autoLead != null ? !!cfg.autoLead : m.ch !== 'mail';
-  if (msg.dir === 'in' && !t.leadId && !t.clientId && autoLead && (isNew || !t.leadAsked)) {
+  if (msg.dir === 'in' && !m.noLead && !t.leadId && !t.clientId && autoLead && (isNew || !t.leadAsked)) {
     const lead = {
       id: genId(), name: t.name, phone: t.meta.phone || '', service: (CH[m.ch] || {}).t ? 'Сообщение: ' + CH[m.ch].t : 'Сообщение',
       detail: clip(msg.text || (msg.att.length ? 'Прислал(а) вложение' : ''), 2500), source: (CH[m.ch] || {}).src || m.ch,

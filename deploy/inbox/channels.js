@@ -284,6 +284,7 @@ const DEF = {
   tg: { make: telegram, need: ['token'], secret: ['token'] },
   vk: { make: vk, need: ['token'], secret: ['token'] },
   max: { make: max, need: ['token'], secret: ['token'] },
+  maxu: { make: (cfg) => require('./maxuser.js').channel(cfg), need: ['token', 'deviceId'], secret: ['token'] }, // рабочий номер MAX (вход по QR)
   avito: { make: avito, need: ['clientId', 'clientSecret'], secret: ['clientSecret'] },
   mail: { make: mail, need: ['user', 'pass'], secret: ['pass'] }
 };

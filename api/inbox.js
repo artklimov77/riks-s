@@ -116,6 +116,12 @@ module.exports = async (req, res) => {
       const out = {}; for (const ch of Object.keys(DEF)) out[ch] = masked(ch, chans[ch]);
       return res.status(200).json({ ok: true, channels: out, status });
     }
+    if (b.op === 'maxuQr') { // вход в рабочий аккаунт MAX по QR-коду: act start | status | password | cancel
+      const Q = require('../deploy/inbox/maxuser.js');
+      const act = String(b.act || 'status');
+      const v = act === 'start' ? await Q.qrStart() : act === 'password' ? await Q.qrPassword(b.password) : act === 'cancel' ? Q.qrCancel() : Q.qrView();
+      return res.status(200).json(Object.assign({ ok: true }, v));
+    }
     if (b.op === 'saveChannel') {
       const ch = String(b.ch || '');
       if (!DEF[ch]) return res.status(400).json({ ok: false, error: 'bad channel' });

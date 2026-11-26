@@ -478,7 +478,10 @@
   .ch-st.ok{background:#e3f4e8;color:#1f7a3b}.ch-st.bad{background:#fde6e4;color:#a81c14}.ch-st.wait{background:#fff3d6;color:#8a6200}.ch-st.off{background:var(--bg);color:var(--muted)}
   .ch-chk{display:flex;gap:8px;align-items:center;font-size:13px;margin:8px 0}
   .ch-how{margin:6px 0 10px;font-size:13px;color:var(--muted)}.ch-how summary{cursor:pointer;color:var(--ink);font-weight:600}
-  .ch-how ol{margin:8px 0 0 18px;line-height:1.6}.ch-how code{background:var(--bg);padding:0 4px;border-radius:4px}
+  .ch-how ol{margin:8px 0 0 18px;line-height:1.6}
+  .mxq{margin-top:10px}.mxq:empty{display:none}.mxq-wrap{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+  .mxq-img{width:210px;max-width:100%;background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px}.mxq-img svg{display:block;width:100%;height:auto}
+  .mxq-t{flex:1;min-width:200px;font-size:13px}.mxq-t ol{margin:6px 0 8px 18px;line-height:1.6}.mxq-left{color:var(--muted);margin-bottom:8px}.mxq-err{color:#a81c14;font-size:13px;margin:-4px 0 8px}.ch-how code{background:var(--bg);padding:0 4px;border-radius:4px}
   .ch-act{display:flex;gap:8px;align-items:center}
   @media(max-width:760px){.ibx{grid-template-columns:1fr;height:calc(100vh - 130px)}.ibx.has-cur .ib-list{display:none}.ibx:not(.has-cur) .ib-chat{display:none}.ib-back{display:flex}.ib-links .btn-sm{padding:4px 7px}.ch-grid{grid-template-columns:1fr}}
 </style>
@@ -786,7 +789,7 @@
   function bindCommon(){ const r=$('#refresh'); if(r)r.onclick=()=>loadAll().then(()=>toast('Обновлено')); $$('[data-go]',$('#main')).forEach(b=>b.onclick=()=>{VIEW=b.dataset.go;render();}); }
 
   /* ---------- СООБЩЕНИЯ (единый ящик: Telegram, ВК, почта, Авито, MAX) ---------- */
-  const IBCH={team:{t:'Команда',c:'#1a1513',s:'#'},tg:{t:'Telegram',c:'#29a9eb',s:'TG'},vk:{t:'ВКонтакте',c:'#2787f5',s:'VK'},mail:{t:'Почта',c:'#9a6b3c',s:'@'},avito:{t:'Авито',c:'#0a8f3c',s:'A'},max:{t:'MAX',c:'#6b4de6',s:'M'}};
+  const IBCH={team:{t:'Команда',c:'#1a1513',s:'#'},tg:{t:'Telegram',c:'#29a9eb',s:'TG'},vk:{t:'ВКонтакте',c:'#2787f5',s:'VK'},mail:{t:'Почта',c:'#9a6b3c',s:'@'},avito:{t:'Авито',c:'#0a8f3c',s:'A'},max:{t:'MAX',c:'#6b4de6',s:'M'},maxu:{t:'MAX · номер',c:'#6b4de6',s:'M'}};
   const IB_QUICK=[
     ['👋 Приветствие','Здравствуйте! Это «Рикс+С». Подскажите, пожалуйста, что нужно сделать — и, если есть, пришлите фото места или эскиз.'],
     ['📐 Размеры','Пришлите, пожалуйста, размеры и фото места установки — посчитаем стоимость точно.'],
@@ -819,7 +822,7 @@
     if(op==='send'){ const m={id:genId(),dir:'out',text:x.text,ts:new Date().toISOString(),who:ME,att:[]}; (D.msgs[x.tid]=D.msgs[x.tid]||[]).push(m); const t=th(x.tid); Object.assign(t,{last:'Вы: '+x.text,ts:m.ts,lastDir:'out'}); return {ok:true,item:m}; }
     if(op==='read'){ const t=th(x.tid); if(t)t.unread=0; return {ok:true}; }
     if(op==='link'){ const t=th(x.tid); ['leadId','clientId','dealId'].forEach(k=>{ if(x[k]!==undefined) t[k]=x[k]; }); return {ok:true,thread:t}; }
-    if(op==='channels') return {ok:true,channels:{tg:{token:'••••••••'},vk:{token:'••••••••'},mail:{user:'info@riks-s.ru',pass:'••••••••'},avito:{clientId:'demo',clientSecret:'••••••••'},max:{}},status:{tg:{ok:true,info:'@riks_s_bot'},vk:{ok:true,info:'Рикс+С'},mail:{ok:true,info:'info@riks-s.ru'},avito:{ok:false,err:'Нет доступа к API (тариф)'}}};
+    if(op==='channels') return {ok:true,channels:{tg:{token:'••••••••'},vk:{token:'••••••••'},mail:{user:'info@riks-s.ru',pass:'••••••••'},avito:{clientId:'demo',clientSecret:'••••••••'},max:{},maxu:{}},status:{tg:{ok:true,info:'@riks_s_bot'},vk:{ok:true,info:'Рикс+С'},mail:{ok:true,info:'info@riks-s.ru'},avito:{ok:false,err:'Нет доступа к API (тариф)'}}};
     if(op==='saveChannel') return {ok:true,cfg:x.cfg};
     return {ok:true};
   }
@@ -1069,17 +1072,51 @@
     avito:{f:[['clientId','Client ID',''],['clientSecret','Client Secret','',1]],
       how:'<ol><li>Нужен тариф Авито для бизнеса с доступом к API.</li><li><b>avito.ru/professionals/api</b> → «Получить ключи» → Client ID и Client Secret → вставить сюда.</li><li>Сообщения подтягиваются раз в 30 секунд, при первом подключении — последние диалоги. Ответ уходит в чат Авито.</li></ol>'},
     max:{f:[['token','Токен бота','',1]],
-      how:'<ol><li>Зарегистрируйте организацию на <b>business.max.ru</b> и создайте чат-бота.</li><li>Раздел бота → <b>Интеграция</b> → скопируйте токен сюда.</li><li>Клиенты пишут боту компании в MAX; ответы уходят от имени бота.</li></ol>'}};
+      how:'<ol><li>Зарегистрируйте организацию на <b>business.max.ru</b> и создайте чат-бота.</li><li>Раздел бота → <b>Интеграция</b> → скопируйте токен сюда.</li><li>Клиенты пишут боту компании в MAX; ответы уходят от имени бота.</li></ol>'},
+    maxu:{f:[],qr:true,
+      how:'<ol><li>Нажмите <b>«Войти по QR-коду»</b> — появится код.</li><li>На телефоне с рабочим номером: MAX → <b>Профиль → Устройства → Подключить устройство</b> → наведите камеру на код.</li><li>Готово: диалоги с клиентами (один на один) приходят в «Сообщения», ответ из CRM уходит от имени этого номера. Последние 30 диалогов подтянутся сразу — без лидов. Группы и каналы MAX не берём.</li><li>CRM видна в MAX в списке устройств как «Chrome» — оттуда вход можно завершить в любой момент.</li><li>Подключение неофициальное (как веб-версия MAX): если MAX обновится и что-то перестанет приходить — статус станет красным, мы поправим.</li></ol>'}};
+  // вход в рабочий аккаунт MAX по QR-коду (библиотека QR грузится только здесь, с cdnjs, с проверкой подписи)
+  let QRLIB=null, MXQ=null;
+  function loadQR(){ if(window.qrcode) return Promise.resolve(); if(QRLIB) return QRLIB;
+    QRLIB=new Promise((res,rej)=>{ const sc=document.createElement('script'); sc.src='https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+      sc.integrity='sha512-ZDSPMa/JM1D+7kdg2x3BsruQ6T/JpJo3jWDWkCZsP+5yVyp1KfESqLI+7RqB5k24F7p2cV7i2YHh/890y6P6Sw=='; sc.crossOrigin='anonymous'; sc.referrerPolicy='no-referrer';
+      sc.onload=()=>res(); sc.onerror=()=>{ QRLIB=null; rej(new Error('qr')); }; document.head.appendChild(sc); });
+    return QRLIB; }
+  function mxqStop(){ if(MXQ){ clearTimeout(MXQ); MXQ=null; } }
+  async function mxqDraw(v){
+    const box=$('#mxq'); if(!box){ mxqStop(); return; }
+    const again='<button class="btn-pri btn-sm" data-mxgo>Показать новый код</button> <button class="btn-sec btn-sm" data-mxx>Отмена</button>';
+    if(v.state==='wait'&&v.qrLink){
+      if(box.dataset.link!==v.qrLink){ try{ await loadQR(); const q=qrcode(0,'M'); q.addData(v.qrLink); q.make(); box.dataset.link=v.qrLink;
+        box.innerHTML='<div class="mxq-wrap"><div class="mxq-img">'+q.createSvgTag({cellSize:5,margin:3,scalable:true})+'</div><div class="mxq-t"><b>Отсканируйте телефоном с рабочим номером</b><ol><li>Откройте MAX</li><li><b>Профиль → Устройства → Подключить устройство</b></li><li>Наведите камеру на этот код</li></ol><div class="mxq-left" id="mxqLeft"></div><button class="btn-sec btn-sm" data-mxx>Отмена</button></div></div>';
+      }catch(e){ box.innerHTML='<div class="note red">Не удалось нарисовать QR-код (нет доступа к cdnjs.cloudflare.com).</div>'+again; } }
+      const left=Math.max(0,Math.round(((v.expiresAt||0)-Date.now())/1000)), l=$('#mxqLeft'); if(l) l.textContent='Код действует ещё '+left+' с';
+    } else if(v.state==='password'){
+      if(box.dataset.st!=='password') box.innerHTML='<div class="fld"><div class="k">В MAX включён облачный пароль — введите его'+(v.hint?' (подсказка: '+esc(v.hint)+')':'')+'</div><input class="inp" type="password" id="mxqPw" autocomplete="off"></div><div class="mxq-err" id="mxqErr"></div><button class="btn-pri btn-sm" data-mxpw>Войти</button> <button class="btn-sec btn-sm" data-mxx>Отмена</button>';
+      const er=$('#mxqErr'); if(er) er.textContent=v.err||'';
+    } else if(v.state==='ok'){ mxqStop(); box.innerHTML=''; toast('MAX подключён — подтягиваю диалоги…'); bindChan(); setTimeout(()=>{ if(SET_TAB==='channels'&&VIEW==='settings') bindChan(); },6000); return; }
+    else if(v.state==='expired'){ box.innerHTML='<div class="note">Код устарел — покажите новый и отсканируйте сразу.</div>'+again; }
+    else if(v.state==='error'){ box.innerHTML='<div class="note red">Не получилось: '+esc(v.err||'ошибка')+'</div>'+again; }
+    else { box.innerHTML=''; }
+    box.dataset.st=v.state;
+    $$('[data-mxgo]',box).forEach(b=>b.onclick=()=>mxqStart());
+    $$('[data-mxx]',box).forEach(b=>b.onclick=async()=>{ mxqStop(); await ibApi('maxuQr',{act:'cancel'}); box.innerHTML=''; box.dataset.link=''; box.dataset.st=''; });
+    $$('[data-mxpw]',box).forEach(b=>b.onclick=async()=>{ const pw=$('#mxqPw'); b.disabled=true; const r=await ibApi('maxuQr',{act:'password',password:pw?pw.value:''}).catch(()=>({})); b.disabled=false; if(pw) pw.value=''; mxqDraw(r); });
+    if(v.state==='wait'||v.state==='password'){ mxqStop(); MXQ=setTimeout(async()=>{ const r=await ibApi('maxuQr',{act:'status'}).catch(()=>null); if(r&&r.ok) mxqDraw(r); },2500); }
+  }
+  async function mxqStart(){ const box=$('#mxq'); if(!box) return; box.dataset.link=''; box.innerHTML='<div class="empty">Получаю код…</div>';
+    const r=await ibApi('maxuQr',{act:'start'}).catch(e=>({ok:false,error:String(e)})); if(!r.ok){ box.innerHTML='<div class="note red">Не получилось: '+esc(r.error||'ошибка')+'</div>'; return; } mxqDraw(r); }
   function chanBody(){ return '<div class="note">Сюда подключаются мессенджеры, почта и Авито — вся переписка с клиентами появляется в разделе <b>💬 Сообщения</b>. Ключи хранятся на сервере CRM и после сохранения не показываются (видно только «••••»). Первое сообщение от нового человека автоматически создаёт <b>лид</b> (можно выключить).</div><div class="ch-grid" id="chanBox"><div class="empty">Загрузка…</div></div><div style="height:40px"></div>'; }
   async function bindChan(){
     const box=$('#chanBox'); const j=await ibApi('channels').catch(()=>({ok:false}));
     if(!$('#chanBox')) return;
     if(!j.ok){ box.innerHTML='<div class="note red">'+(j.note==='server-only'?'Каналы подключаются на собственном сервере CRM (эта копия — временная).':'Не удалось загрузить настройки каналов.')+'</div>'; return; }
     box.innerHTML=Object.keys(IBCH).filter(ch=>CH_FORM[ch]).map(ch=>{ const c=IBCH[ch], F=CH_FORM[ch], cfg=j.channels[ch]||{}, st=(j.status||{})[ch]||{};
-      const ready=F.f.filter(x=>!x[4]&&!['fromName','imapHost','smtpHost','apiBase'].includes(x[0])).every(x=>cfg[x[0]]);
+      const ready=F.qr?!!cfg.token:F.f.filter(x=>!x[4]&&!['fromName','imapHost','smtpHost','apiBase'].includes(x[0])).every(x=>cfg[x[0]]);
       const on=ready&&cfg.enabled!==false; const auto=cfg.autoLead!=null?cfg.autoLead:F.auto!==false;
       const pill=!on?'<span class="ch-st off">не подключён</span>':st.ok?'<span class="ch-st ok">✓ работает'+(st.info?' · '+esc(st.info):'')+'</span>':st.err?'<span class="ch-st bad" title="'+esc(st.err)+'">⚠ ошибка: '+esc(String(st.err).slice(0,90))+'</span>':'<span class="ch-st wait">⏳ подключается…</span>';
       return '<div class="chart ch-card" data-ch="'+ch+'"><div class="ch-hd"><div class="ib-av" style="background:'+c.c+'">'+c.s+'</div><h3>'+c.t+'</h3>'+pill+'</div>'+
+        (F.qr?'<div class="fld"><div class="k">Рабочий номер MAX — весь аккаунт: обычные диалоги с клиентами</div>'+(cfg.token?'<button class="btn-sec btn-sm" data-mxin>Войти заново по QR-коду</button> <button class="btn-sec btn-sm" data-mxout>Выйти из аккаунта</button>':'<button class="btn-pri btn-sm" data-mxin>Войти по QR-коду</button>')+'<div id="mxq" class="mxq"></div></div>':'')+
         F.f.map(([k,t,ph,sec,ta])=>'<div class="fld"><div class="k">'+esc(t)+'</div>'+(ta?'<textarea class="inp" data-k="'+k+'" rows="2" placeholder="'+esc(ph)+'">'+esc(cfg[k]||'')+'</textarea>':'<input class="inp" data-k="'+k+'"'+(sec?' data-sec="1" autocomplete="off" spellcheck="false"':'')+' value="'+esc(cfg[k]||'')+'" placeholder="'+esc(sec&&cfg[k]?'':ph)+'">')+'</div>').join('')+
         '<label class="ch-chk"><input type="checkbox" data-k="autoLead"'+(auto?' checked':'')+'> Создавать лид из первого сообщения нового человека</label>'+
         '<details class="ch-how"><summary>Как подключить</summary>'+F.how+'</details>'+
@@ -1089,6 +1126,9 @@
     $$('[data-save]',box).forEach(b=>b.onclick=()=>{ const card=b.closest('.ch-card'); go(b.dataset.save,Object.assign(collect(card),{enabled:true}),'Сохранено — подключаюсь…'); });
     $$('[data-off]',box).forEach(b=>b.onclick=()=>{ if(confirm('Отключить канал «'+IBCH[b.dataset.off].t+'»? Новые сообщения перестанут приходить в CRM (переписка сохранится).')) go(b.dataset.off,{enabled:false},'Канал отключён'); });
     $$('[data-on]',box).forEach(b=>b.onclick=()=>go(b.dataset.on,{enabled:true},'Канал включён'));
+    $$('[data-mxin]',box).forEach(b=>b.onclick=()=>mxqStart());
+    $$('[data-mxout]',box).forEach(b=>b.onclick=async()=>{ if(!confirm('Выйти из рабочего аккаунта MAX? Новые сообщения перестанут приходить в CRM (переписка сохранится). Устройство «Chrome» удалите в MAX: Профиль → Устройства.')) return;
+      const r=await ibApi('saveChannel',{ch:'maxu',cfg:{enabled:false},clear:true}); toast(r.ok?'Вышли из MAX':'Не получилось'); bindChan(); });
   }
 
   /* ---------- ЛИДЫ ---------- */
