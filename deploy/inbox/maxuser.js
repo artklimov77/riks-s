@@ -1,7 +1,8 @@
 // Канал «MAX (номер)» — рабочий аккаунт MAX целиком: личные диалоги с клиентами приходят в CRM,
 // ответы из CRM уходят от имени аккаунта. Неофициально (протокол веб-версии) — см. maxweb.js.
 // Вход — по QR-коду из CRM (qrStart/qrView/qrPassword); ключ сессии и deviceId хранятся в настройках канала.
-// Группы и каналы MAX не берём — только диалоги один на один.
+// Диалоги один на один — все. Беседы (группы) — только выбранные в CRM: «Поставщики» или «Между собой»
+// (state maxu.groups = { chatId: 'supplier'|'team' }); список бесед для выбора — state maxu.chats. Каналы MAX не берём.
 
 const crypto = require('crypto');
 const C = require('./core.js');
@@ -26,6 +27,8 @@ function channel(cfg) {
   const chats = {};   // chatId → { type, peer }
   const people = {};  // userId → { name, phone }
   let queue = Promise.resolve();
+  let groups = {};    // chatId → 'supplier' | 'team' (выбрано в CRM)
+  let chatsDirty = false;
 
   async function person(uid) {
     if (people[uid]) return people[uid];
@@ -39,7 +42,36 @@ function channel(cfg) {
   function remember(ch) {
     if (!ch || ch.id == null) return;
     const ids = Object.keys(ch.participants || {}).filter((x) => String(x) !== String(me));
-    chats[String(ch.id)] = { type: ch.type || '', peer: ids.length === 1 ? ids[0] : (chats[String(ch.id)] || {}).peer };
+    const old = chats[String(ch.id)] || {}, lm = ch.lastMessage || {};
+    chats[String(ch.id)] = {
+      type: ch.type || '', peer: ids.length === 1 ? ids[0] : old.peer,
+      title: ch.title || old.title || '', count: ch.participantsCount || Object.keys(ch.participants || {}).length || old.count || 0,
+      lastTs: Number(lm.time || ch.lastEventTime || old.lastTs || 0), last: String(lm.text || old.last || '').slice(0, 80)
+    };
+    if (ch.type === 'CHAT') chatsDirty = true;
+  }
+  // список бесед — для выбора в CRM (Настройки → Каналы связи → MAX · номер → Беседы)
+  async function publishChats() {
+    if (!chatsDirty) return;
+    chatsDirty = false;
+    const list = Object.entries(chats).filter(([, c]) => c.type === 'CHAT')
+      .map(([id, c]) => ({ id, title: c.title, count: c.count, lastTs: c.lastTs, last: c.last }))
+      .sort((a, b) => b.lastTs - a.lastTs).slice(0, 200);
+    await C.setState('maxu.chats', JSON.stringify(list));
+  }
+  // выбор бесед из CRM: новые — подтягиваем последние сообщения, сменили раздел — переносим диалог
+  async function loadGroups() {
+    const g = C.J(await C.getState('maxu.groups'), {}) || {};
+    for (const [id, kind] of Object.entries(g)) {
+      if (!kind) continue;
+      if (groups[id] && groups[id] !== kind) { const t = await C.getThread('maxu:' + id); if (t) { t.kind = kind; await C.putThread(t); } }
+      if (!(await C.getState('maxu.gimp.' + id))) {
+        await C.setState('maxu.gimp.' + id, C.now());
+        groups[id] = kind;
+        queue = queue.then(() => importChat(id, 50)).catch(() => {});
+      }
+    }
+    groups = g;
   }
   async function chatOf(chatId) {
     const k = String(chatId);
@@ -74,8 +106,20 @@ function channel(cfg) {
     if (!m || m.id == null) return;
     if (m.type && m.type !== 'USER') return;
     const ch = await chatOf(chatId);
-    if (ch.type !== 'DIALOG') return; // группы, каналы, «Избранное» — мимо
     const mine = String(m.sender) === String(me);
+    const kind = ch.type === 'CHAT' ? groups[String(chatId)] : null;
+    if (kind) { // беседа, выбранная в CRM: подпись автора у каждого сообщения, лидов нет
+      const att = await atts(chatId, m, !(opt && opt.history));
+      if (!m.text && !att.length) return;
+      const who = mine ? 'с телефона' : (await person(String(m.sender))).name;
+      await C.addMessage({
+        ch: 'maxu', peer: String(chatId), name: ch.title || 'Беседа MAX', text: m.text || '', att, kind,
+        dir: mine ? 'out' : 'in', who, extId: String(m.id), ts: m.time ? new Date(Number(m.time)).toISOString() : undefined,
+        meta: { group: true, count: ch.count || 0 }, noLead: true, silent: !!(opt && opt.history)
+      });
+      return;
+    }
+    if (ch.type !== 'DIALOG') return; // остальные группы, каналы, «Избранное» — мимо
     const peer = ch.peer || (!mine ? String(m.sender) : null);
     if (!peer) return;
     const p = await person(peer);
@@ -98,16 +142,16 @@ function channel(cfg) {
     const t = await C.getThread('maxu:' + String(p.chatId));
     if (t && t.unread) { t.unread = 0; await C.putThread(t); }
   }
+  async function importChat(id, n) {
+    try {
+      const r = await conn.request(OP.CHAT_HISTORY, { chatId: idOut(id), from: Date.now(), forward: 0, backward: n || 30, getMessages: true });
+      const ms = (r.messages || []).slice().sort((a, b) => Number(a.time) - Number(b.time));
+      for (const m of ms) await take(id, m, { history: true });
+    } catch (e) {}
+  }
   async function importHistory(list) {
     const dialogs = list.filter((c) => c.type === 'DIALOG').slice(0, 30);
-    for (const c of dialogs) {
-      try {
-        const r = await conn.request(OP.CHAT_HISTORY, { chatId: idOut(c.id), from: Date.now(), forward: 0, backward: 30, getMessages: true });
-        const ms = (r.messages || []).slice().sort((a, b) => Number(a.time) - Number(b.time));
-        for (const m of ms) await take(c.id, m, { history: true });
-      } catch (e) {}
-      await sleep(400);
-    }
+    for (const c of dialogs) { await importChat(c.id, 30); await sleep(400); }
   }
 
   return {
@@ -128,7 +172,7 @@ function channel(cfg) {
       });
       let login;
       try {
-        login = await conn.request(OP.LOGIN, { interactive: true, token, chatsCount: 40, chatsSync: 0, contactsSync: 0, presenceSync: -1, draftsSync: 0 });
+        login = await conn.request(OP.LOGIN, { interactive: true, token, chatsCount: 100, chatsSync: 0, contactsSync: 0, presenceSync: -1, draftsSync: 0 });
       } catch (e) {
         conn.close();
         if (e.code && AUTH_ERR.test(String(e.code))) {
@@ -145,6 +189,11 @@ function channel(cfg) {
       me = prof.id;
       people[String(me)] = { name: nameFrom(prof), phone: phoneFrom(prof) };
       for (const c of login.chats || []) remember(c);
+      await publishChats();
+      await loadGroups();
+      const tick = setInterval(() => { publishChats().then(loadGroups).catch(() => {}); }, 10000);
+      signal.addEventListener('abort', () => clearInterval(tick), { once: true });
+      gone.then(() => clearInterval(tick));
       await C.setStatus('maxu', { ok: true, info: [nameFrom(prof), phoneFrom(prof)].filter(Boolean).join(' · ') || 'аккаунт MAX' });
       const flag = 'maxu.imported.' + me;
       if (!(await C.getState(flag))) {

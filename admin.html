@@ -479,6 +479,9 @@
   .ch-chk{display:flex;gap:8px;align-items:center;font-size:13px;margin:8px 0}
   .ch-how{margin:6px 0 10px;font-size:13px;color:var(--muted)}.ch-how summary{cursor:pointer;color:var(--ink);font-weight:600}
   .ch-how ol{margin:8px 0 0 18px;line-height:1.6}
+  .mxg{margin-top:10px}.mxg:empty{display:none}.mxg-h{font-size:12.5px;color:var(--muted);margin-bottom:8px;line-height:1.45}
+  .mxg-r{display:flex;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}.mxg-n{flex:1;min-width:0}.mxg-n b{display:block;font-size:13.5px}
+  .mxg-n small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mxg-r select{width:150px;flex:none}
   .mxq{margin-top:10px}.mxq:empty{display:none}.mxq-wrap{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
   .mxq-img{width:210px;max-width:100%;background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px}.mxq-img svg{display:block;width:100%;height:auto}
   .mxq-t{flex:1;min-width:200px;font-size:13px}.mxq-t ol{margin:6px 0 8px 18px;line-height:1.6}.mxq-left{color:var(--muted);margin-bottom:8px}.mxq-err{color:#a81c14;font-size:13px;margin:-4px 0 8px}.ch-how code{background:var(--bg);padding:0 4px;border-radius:4px}
@@ -849,7 +852,7 @@
       pushNotif({id:'M'+t.id+t.ts,title:team?'👥 '+(t.name||'Команда'):'💬 '+((IBCH[t.ch]||{}).t||'')+': '+(t.name||'собеседник'),text:t.last||'',ref:{t:'inbox',id:t.id}}); }); }
   // непрочитанное: у клиентов/поставщиков — счётчик диалога, в группах команды — для каждого сотрудника своё
   const ibUn=t=>t.ch==='team'?Math.max(0,(t.seq||0)-((t.readBy||{})[ME]||0)):(t.unread||0);
-  const ibSecOf=t=>t.ch==='team'?'team':t.kind==='supplier'?'sup':'cl';
+  const ibSecOf=t=>(t.ch==='team'||t.kind==='team')?'team':t.kind==='supplier'?'sup':'cl';
   function ibCounter(){ const n=IB.threads.filter(t=>ibUn(t)).length, c=$('#inboxCnt'); if(c){ if(n){c.style.display='flex';c.textContent=n;}else c.style.display='none'; } }
 
   function inboxView(){
@@ -887,7 +890,7 @@
       const un=ibUn(t), team=t.ch==='team';
       return '<div class="ib-r'+(t.id===IB.cur?' on':'')+(un?' un':'')+'" data-tid="'+esc(t.id)+'">'+ibAv(t)+'<div class="ib-rb"><div class="ib-r1"><b>'+esc(t.name||t.peer)+'</b><span>'+(t.last?ibTime(t.ts):'')+'</span></div>'+
         '<div class="ib-r2"><span>'+(team?esc(t.last||'Пока тихо — напишите первым'):t.lastDir==='out'?'<u>Вы:</u> '+esc(String(t.last||'').replace(/^Вы: /,'')):esc(t.last||''))+'</span>'+(un?'<em>'+un+'</em>':'')+'</div>'+
-        (team?'':'<div class="ib-r3">'+esc(c.t)+(t.kind==='supplier'?' · 🏭 поставщик':'')+(t.meta&&t.meta.item?' · '+esc(t.meta.item):'')+(t.leadId?' · ▦ лид':'')+(t.clientId?' · 👥 клиент':'')+'</div>')+'</div></div>'; }).join('')
+        (team?'':'<div class="ib-r3">'+esc(c.t)+(t.meta&&t.meta.group?' · беседа':'')+(t.kind==='supplier'?' · 🏭 поставщик':'')+(t.meta&&t.meta.item?' · '+esc(t.meta.item):'')+(t.leadId?' · ▦ лид':'')+(t.clientId?' · 👥 клиент':'')+'</div>')+'</div></div>'; }).join('')
       :'<div class="ib-empty">'+(inSec.length?'Ничего не найдено':IB.sec==='sup'?'Переписка с поставщиками появится здесь: откройте диалог в «С клиентами» и нажмите 🏭 — «это поставщик».':IB.sec==='team'?'Групп пока нет — «+ Группа».':'Пока нет переписки')+'</div>';
     th.scrollTop=st;
     $$('.ib-r',th).forEach(r=>r.onclick=()=>ibOpen(r.dataset.tid));
@@ -913,7 +916,7 @@
     box.innerHTML='<div class="ib-h" id="ibH"></div><div class="ib-msgs" id="ibMsgs"></div>'+
       (off?'<div class="ib-off">Канал «'+esc(c.t)+'» сейчас не подключён — ответ не уйдёт клиенту. <a id="ibOffGo">Подключить →</a></div>':'')+
       '<div class="ib-compose">'+(team?'':'<div class="ib-quick">'+IB_QUICK.map((q,i)=>'<button data-iq="'+i+'" title="'+esc(q[1])+'">'+esc(q[0])+'</button>').join('')+'</div>')+
-      '<div class="ib-send"><textarea class="inp" id="ibText" rows="1" placeholder="'+(team?'Сообщение в «'+esc(t.name)+'» — видят все сотрудники':(t.kind==='supplier'?'Поставщику':'Ответ клиенту')+' · '+esc(c.t))+'"></textarea><button class="btn-pri" id="ibGo" title="Отправить (Enter)">➤</button></div>'+
+      '<div class="ib-send"><textarea class="inp" id="ibText" rows="1" placeholder="'+(team?'Сообщение в «'+esc(t.name)+'» — видят все сотрудники':(t.meta&&t.meta.group?'Сообщение в беседу «'+esc(t.name)+'»':t.kind==='supplier'?'Поставщику':'Ответ клиенту')+' · '+esc(c.t))+'"></textarea><button class="btn-pri" id="ibGo" title="Отправить (Enter)">➤</button></div>'+
       '<div class="ib-hint">Enter — отправить · Shift+Enter — новая строка</div></div>';
     const ta=$('#ibText'); ta.value=IB.drafts[t.id]||'';
     const fit=()=>{ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight+2,160)+'px'; };
@@ -950,10 +953,10 @@
     let lastDay='', prev=null; const out=[];
     IB.msgs.forEach((m,i)=>{ const d=ibDay(m.ts); if(d!==lastDay){ out.push('<div class="ib-day"><span>'+d+'</span></div>'); lastDay=d; prev=null; }
       if(i===markAt) out.push('<div class="ib-new" id="ibNew"><span>Новые сообщения</span></div>');
-      const team=IB.thread.ch==='team', mine=team?(m.who||'')===ME:m.dir==='out';
+      const team=IB.thread.ch==='team', grp=!!(IB.thread.meta&&IB.thread.meta.group), mine=team?(m.who||'')===ME:m.dir==='out';
       const cont=prev&&prev.dir===m.dir&&(prev.who||'')===(m.who||'')&&(new Date(m.ts)-new Date(prev.ts))<5*60e3; prev=m;
       const imgs=(m.att||[]).map((a,ai)=>[a,ai]).filter(([a])=>ibIsImg(a)), docs=(m.att||[]).map((a,ai)=>[a,ai]).filter(([a])=>!ibIsImg(a));
-      out.push('<div class="ib-m '+(mine?'out':'in')+(cont?' cont':'')+'"><div class="ib-b'+(imgs.length&&!m.text&&!docs.length?' only-img':'')+'">'+(team&&!mine&&!cont?'<div class="ib-who">'+esc(m.who||'—')+'</div>':'')+
+      out.push('<div class="ib-m '+(mine?'out':'in')+(cont?' cont':'')+'"><div class="ib-b'+(imgs.length&&!m.text&&!docs.length?' only-img':'')+'">'+((team||grp)&&!mine&&!cont?'<div class="ib-who">'+esc(m.who||'—')+'</div>':'')+
         imgs.map(([a,ai])=>'<button class="ib-img" data-mid="'+esc(m.id)+'" data-ai="'+ai+'" title="'+esc(a.name||'фото')+'"><img alt="" loading="lazy" '+(a.link?'src="'+esc(a.link)+'"':'data-path="'+esc(a.path)+'"')+'></button>').join('')+
         (m.text?'<div class="ib-t">'+linkify(esc(m.text))+'</div>':'')+
         docs.map(([a,ai])=>'<button class="ib-att" data-mid="'+esc(m.id)+'" data-ai="'+ai+'"><span class="ib-att-ic">'+(/^audio\//.test(a.type||'')?'🎤':/pdf/i.test((a.type||'')+(a.name||''))?'📕':'📎')+'</span><span class="ib-att-n">'+esc(a.name||'файл')+(a.size?'<small>'+fsize(a.size)+'</small>':'')+'</span></button>').join('')+
@@ -1076,7 +1079,7 @@
     max:{f:[['token','Токен бота','',1]],
       how:'<ol><li>Зарегистрируйте организацию на <b>business.max.ru</b> и создайте чат-бота.</li><li>Раздел бота → <b>Интеграция</b> → скопируйте токен сюда.</li><li>Клиенты пишут боту компании в MAX; ответы уходят от имени бота.</li></ol>'},
     maxu:{f:[],qr:true,
-      how:'<ol><li>Нажмите <b>«Войти по QR-коду»</b> — появится код.</li><li>На телефоне с рабочим номером: MAX → <b>Профиль → Устройства → Подключить устройство</b> → наведите камеру на код.</li><li>Готово: диалоги с клиентами (один на один) приходят в «Сообщения», ответ из CRM уходит от имени этого номера. Последние 30 диалогов подтянутся сразу — без лидов. Группы и каналы MAX не берём.</li><li>CRM видна в MAX в списке устройств как «Chrome» — оттуда вход можно завершить в любой момент.</li><li>Подключение неофициальное (как веб-версия MAX): если MAX обновится и что-то перестанет приходить — статус станет красным, мы поправим.</li></ol>'}};
+      how:'<ol><li>Нажмите <b>«Войти по QR-коду»</b> — появится код.</li><li>На телефоне с рабочим номером: MAX → <b>Профиль → Устройства → Подключить устройство</b> → наведите камеру на код.</li><li>Готово: диалоги с клиентами (один на один) приходят в «Сообщения», ответ из CRM уходит от имени этого номера. Последние 30 диалогов подтянутся сразу — без лидов.</li><li>Беседы (группы) — только выбранные: кнопка <b>«Выбрать беседы для CRM»</b> → для каждой «Поставщики» или «Между собой». Каналы MAX не берём.</li><li>CRM видна в MAX в списке устройств как «Chrome» — оттуда вход можно завершить в любой момент.</li><li>Подключение неофициальное (как веб-версия MAX): если MAX обновится и что-то перестанет приходить — статус станет красным, мы поправим.</li></ol>'}};
   // вход в рабочий аккаунт MAX по QR-коду (библиотека QR грузится только здесь, с cdnjs, с проверкой подписи)
   let QRLIB=null, MXQ=null;
   function loadQR(){ if(window.qrcode) return Promise.resolve(); if(QRLIB) return QRLIB;
@@ -1106,6 +1109,18 @@
     $$('[data-mxpw]',box).forEach(b=>b.onclick=async()=>{ const pw=$('#mxqPw'); b.disabled=true; const r=await ibApi('maxuQr',{act:'password',password:pw?pw.value:''}).catch(()=>({})); b.disabled=false; if(pw) pw.value=''; mxqDraw(r); });
     if(v.state==='wait'||v.state==='password'){ mxqStop(); MXQ=setTimeout(async()=>{ const r=await ibApi('maxuQr',{act:'status'}).catch(()=>null); if(r&&r.ok) mxqDraw(r); },2500); }
   }
+  // беседы рабочего номера MAX: какие брать в CRM и в какой раздел
+  async function mxgOpen(){ const box=$('#mxg'); if(!box) return; box.innerHTML='<div class="empty">Загружаю беседы…</div>';
+    const r=await ibApi('maxuGroups',{}).catch(()=>({ok:false})); if(!r.ok){ box.innerHTML='<div class="note red">Не получилось загрузить</div>'; return; }
+    const map=r.map||{}, items=(r.items||[]).slice().sort((a,b)=>(map[b.id]?1:0)-(map[a.id]?1:0)||b.lastTs-a.lastTs);
+    if(!items.length){ box.innerHTML='<div class="note">Бесед пока нет (или MAX ещё подключается — попробуйте через минуту).</div>'; return; }
+    const opt=(id,v,t)=>'<option value="'+v+'"'+((map[id]||'')===v?' selected':'')+'>'+t+'</option>';
+    box.innerHTML='<div class="mxg-h">Отмеченные беседы приходят в «Сообщения» (последние 50 сообщений подтянутся сразу), ответ из CRM уходит в беседу от рабочего номера. Лиды из бесед не создаются.</div>'+
+      items.map(g=>'<div class="mxg-r"><div class="mxg-n"><b>'+esc(g.title||'Беседа')+'</b><small>'+(g.count?g.count+' уч. · ':'')+esc(g.last||'')+'</small></div><select class="inp" data-mxgs="'+esc(g.id)+'">'+opt(g.id,'','Не брать')+opt(g.id,'supplier','Поставщики')+opt(g.id,'team','Между собой')+'</select></div>').join('');
+    $$('[data-mxgs]',box).forEach(sel=>sel.onchange=async()=>{ const was=map[sel.dataset.mxgs]||'';
+      if(!sel.value&&was&&!confirm('Убрать эту беседу из CRM? В самом MAX она останется.')){ sel.value=was; return; }
+      sel.disabled=true; const j=await ibApi('maxuGroupSet',{chatId:sel.dataset.mxgs,kind:sel.value}).catch(()=>({})); sel.disabled=false;
+      if(j.ok){ map[sel.dataset.mxgs]=sel.value; toast(sel.value?'Беседа подключена — сообщения появятся через несколько секунд':'Беседа убрана из CRM'); } else { sel.value=was; toast('Не получилось'); } }); }
   async function mxqStart(){ const box=$('#mxq'); if(!box) return; box.dataset.link=''; box.innerHTML='<div class="empty">Получаю код…</div>';
     const r=await ibApi('maxuQr',{act:'start'}).catch(e=>({ok:false,error:String(e)})); if(!r.ok){ box.innerHTML='<div class="note red">Не получилось: '+esc(r.error||'ошибка')+'</div>'; return; } mxqDraw(r); }
   function chanBody(){ return '<div class="note">Сюда подключаются мессенджеры, почта и Авито — вся переписка с клиентами появляется в разделе <b>💬 Сообщения</b>. Ключи хранятся на сервере CRM и после сохранения не показываются (видно только «••••»). Первое сообщение от нового человека автоматически создаёт <b>лид</b> (можно выключить).</div><div class="ch-grid" id="chanBox"><div class="empty">Загрузка…</div></div><div style="height:40px"></div>'; }
@@ -1118,7 +1133,8 @@
       const on=ready&&cfg.enabled!==false; const auto=cfg.autoLead!=null?cfg.autoLead:F.auto!==false;
       const pill=!on?'<span class="ch-st off">не подключён</span>':st.ok?'<span class="ch-st ok">✓ работает'+(st.info?' · '+esc(st.info):'')+'</span>':st.err?'<span class="ch-st bad" title="'+esc(st.err)+'">⚠ ошибка: '+esc(String(st.err).slice(0,90))+'</span>':'<span class="ch-st wait">⏳ подключается…</span>';
       return '<div class="chart ch-card" data-ch="'+ch+'"><div class="ch-hd"><div class="ib-av" style="background:'+c.c+'">'+c.s+'</div><h3>'+c.t+'</h3>'+pill+'</div>'+
-        (F.qr?'<div class="fld"><div class="k">Рабочий номер MAX — весь аккаунт: обычные диалоги с клиентами</div>'+(cfg.token?'<button class="btn-sec btn-sm" data-mxin>Войти заново по QR-коду</button> <button class="btn-sec btn-sm" data-mxout>Выйти из аккаунта</button>':'<button class="btn-pri btn-sm" data-mxin>Войти по QR-коду</button>')+'<div id="mxq" class="mxq"></div></div>':'')+
+        (F.qr?'<div class="fld"><div class="k">Рабочий номер MAX — весь аккаунт: обычные диалоги с клиентами</div>'+(cfg.token?'<button class="btn-sec btn-sm" data-mxin>Войти заново по QR-коду</button> <button class="btn-sec btn-sm" data-mxout>Выйти из аккаунта</button>':'<button class="btn-pri btn-sm" data-mxin>Войти по QR-коду</button>')+'<div id="mxq" class="mxq"></div></div>'+
+          (cfg.token?'<div class="fld"><div class="k">Беседы (группы) MAX</div><button class="btn-sec btn-sm" data-mxg>Выбрать беседы для CRM</button><div id="mxg" class="mxg"></div></div>':''):'')+
         F.f.map(([k,t,ph,sec,ta])=>'<div class="fld"><div class="k">'+esc(t)+'</div>'+(ta?'<textarea class="inp" data-k="'+k+'" rows="2" placeholder="'+esc(ph)+'">'+esc(cfg[k]||'')+'</textarea>':'<input class="inp" data-k="'+k+'"'+(sec?' data-sec="1" autocomplete="off" spellcheck="false"':'')+' value="'+esc(cfg[k]||'')+'" placeholder="'+esc(sec&&cfg[k]?'':ph)+'">')+'</div>').join('')+
         '<label class="ch-chk"><input type="checkbox" data-k="autoLead"'+(auto?' checked':'')+'> Создавать лид из первого сообщения нового человека</label>'+
         '<details class="ch-how"><summary>Как подключить</summary>'+F.how+'</details>'+
@@ -1129,6 +1145,7 @@
     $$('[data-off]',box).forEach(b=>b.onclick=()=>{ if(confirm('Отключить канал «'+IBCH[b.dataset.off].t+'»? Новые сообщения перестанут приходить в CRM (переписка сохранится).')) go(b.dataset.off,{enabled:false},'Канал отключён'); });
     $$('[data-on]',box).forEach(b=>b.onclick=()=>go(b.dataset.on,{enabled:true},'Канал включён'));
     $$('[data-mxin]',box).forEach(b=>b.onclick=()=>mxqStart());
+    $$('[data-mxg]',box).forEach(b=>b.onclick=()=>mxgOpen());
     $$('[data-mxout]',box).forEach(b=>b.onclick=async()=>{ if(!confirm('Выйти из рабочего аккаунта MAX? Новые сообщения перестанут приходить в CRM (переписка сохранится). Устройство «Chrome» удалите в MAX: Профиль → Устройства.')) return;
       const r=await ibApi('saveChannel',{ch:'maxu',cfg:{enabled:false},clear:true}); toast(r.ok?'Вышли из MAX':'Не получилось'); bindChan(); });
   }

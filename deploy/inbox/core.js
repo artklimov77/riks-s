@@ -90,6 +90,7 @@ async function addMessage(m) {
   const isNew = !t;
   if (!t) t = { id, ch: m.ch, peer: String(m.peer), name: '', last: '', ts: now(), unread: 0, meta: {} };
   if (m.name) t.name = clip(m.name, 120);
+  if (m.kind !== undefined) t.kind = m.kind || undefined; // беседа MAX: 'supplier' | 'team'
   t.meta = Object.assign({}, t.meta, m.meta || {});
   if (m.phone && !t.meta.phone) t.meta.phone = clip(m.phone, 40);
   const msg = { id: genId(), dir: m.dir || 'in', text: clip(m.text, 4000), att: (m.att || []).filter(Boolean), ts: m.ts || now(), who: m.who || '', extId: m.extId ? String(m.extId) : '' };

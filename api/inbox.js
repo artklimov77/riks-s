@@ -122,6 +122,25 @@ module.exports = async (req, res) => {
       const v = act === 'start' ? await Q.qrStart() : act === 'password' ? await Q.qrPassword(b.password) : act === 'cancel' ? Q.qrCancel() : Q.qrView();
       return res.status(200).json(Object.assign({ ok: true }, v));
     }
+    if (b.op === 'maxuGroups') { // беседы рабочего номера MAX и какие из них берём в CRM
+      return res.status(200).json({ ok: true, items: C.J(await C.getState('maxu.chats'), []) || [], map: C.J(await C.getState('maxu.groups'), {}) || {} });
+    }
+    if (b.op === 'maxuGroupSet') { // { chatId, kind: 'supplier' | 'team' | '' }
+      const id = String(b.chatId || '').replace(/[^0-9-]/g, '').slice(0, 30);
+      if (!id) return res.status(400).json({ ok: false });
+      const kind = b.kind === 'supplier' || b.kind === 'team' ? b.kind : '';
+      const map = C.J(await C.getState('maxu.groups'), {}) || {};
+      if (kind) map[id] = kind;
+      else {
+        delete map[id];
+        // беседу больше не берём: убираем её из CRM (в самом MAX всё остаётся)
+        await C.cmd(['HDEL', C.K.threads, 'maxu:' + id]);
+        await C.cmd(['DEL', C.K.msgs('maxu:' + id)]);
+        await C.cmd(['HDEL', C.K.state, 'maxu.gimp.' + id]);
+      }
+      await C.setState('maxu.groups', JSON.stringify(map));
+      return res.status(200).json({ ok: true, map });
+    }
     if (b.op === 'saveChannel') {
       const ch = String(b.ch || '');
       if (!DEF[ch]) return res.status(400).json({ ok: false, error: 'bad channel' });
