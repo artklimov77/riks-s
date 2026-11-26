@@ -790,6 +790,7 @@
 
   /* ---------- СООБЩЕНИЯ (единый ящик: Telegram, ВК, почта, Авито, MAX) ---------- */
   const IBCH={team:{t:'Команда',c:'#1a1513',s:'#'},tg:{t:'Telegram',c:'#29a9eb',s:'TG'},vk:{t:'ВКонтакте',c:'#2787f5',s:'VK'},mail:{t:'Почта',c:'#9a6b3c',s:'@'},avito:{t:'Авито',c:'#0a8f3c',s:'A'},max:{t:'MAX',c:'#6b4de6',s:'M'},maxu:{t:'MAX · номер',c:'#6b4de6',s:'M'}};
+  const IBHIDE=['tg','avito']; // фильтр не показываем, пока канал не подключён (в них только демо-диалоги)
   const IB_QUICK=[
     ['👋 Приветствие','Здравствуйте! Это «Рикс+С». Подскажите, пожалуйста, что нужно сделать — и, если есть, пришлите фото места или эскиз.'],
     ['📐 Размеры','Пришлите, пожалуйста, размеры и фото места установки — посчитаем стоимость точно.'],
@@ -875,7 +876,7 @@
   function ibDrawList(force){
     const th=$('#ibTh'); if(!th) return;
     const q=IB.q.trim().toLowerCase(), inSec=IB.threads.filter(t=>ibSecOf(t)===IB.sec), nUn=inSec.filter(x=>ibUn(x)).length;
-    const chips=IB.sec==='team'?[]:[['all','Все'],['unread','Непрочитанные']].concat(Object.keys(IBCH).filter(k=>k!=='team'&&(IB.on[k]||inSec.some(t=>t.ch===k))).map(k=>[k,IBCH[k].t]));
+    const chips=IB.sec==='team'?[]:[['all','Все'],['unread','Непрочитанные']].concat(Object.keys(IBCH).filter(k=>k!=='team'&&(IB.on[k]||IB.filter===k||(!IBHIDE.includes(k)&&inSec.some(t=>t.ch===k)))).map(k=>[k,IBCH[k].t]));
     const list=inSec.filter(t=>(IB.filter==='all'||(IB.filter==='unread'?ibUn(t):t.ch===IB.filter))&&(!q||JSON.stringify([t.name,t.last,t.peer,t.meta]).toLowerCase().includes(q)));
     const sig=JSON.stringify([IB.sec,IB.filter,q,IB.cur,nUn,chips,list.map(t=>[t.id,t.ts,ibUn(t),t.last,t.name])]);
     if(!force&&sig===IB.listSig) return; IB.listSig=sig;
