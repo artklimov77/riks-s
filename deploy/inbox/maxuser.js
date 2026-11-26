@@ -92,7 +92,7 @@ function channel(cfg) {
   // прочитали в MAX на телефоне → в CRM снимаем «непрочитано». Отметки собеседника («он прочитал наше») не трогаем.
   let markLogged = false;
   async function markedElsewhere(p) {
-    if (!markLogged) { markLogged = true; console.log(new Date().toISOString(), 'inbox maxu mark', JSON.stringify(p, (k, v) => typeof v === 'bigint' ? String(v) : v).slice(0, 300)); }
+    if (!markLogged) { markLogged = true; C.setState('maxu.lastMark', JSON.stringify(p, (k, v) => typeof v === 'bigint' ? String(v) : v).slice(0, 300)).catch(() => {}); }
     const uid = p.userId != null ? p.userId : p.contactId;
     if (p.chatId == null || uid == null || String(uid) !== String(me)) return;
     const t = await C.getThread('maxu:' + String(p.chatId));
@@ -160,8 +160,13 @@ function channel(cfg) {
       if (!conn || conn.closed) return;
       const list = await C.listMessages(t.id, 50);
       const last = list.filter((m) => m.dir === 'in' && m.extId).pop();
-      if (!last) return;
-      await conn.request(OP.CHAT_MARK, { type: 'READ_MESSAGE', chatId: idOut(t.peer), messageId: String(last.extId), mark: Date.now() });
+      if (!last || (t.meta && t.meta.readExt === last.extId)) return; // уже отмечали
+      const ask = (mid) => conn.request(OP.CHAT_MARK, { type: 'READ_MESSAGE', chatId: idOut(t.peer), messageId: mid, mark: Date.now() });
+      let r, how = 'str';
+      try { r = await ask(String(last.extId)); } catch (e) { how = 'num'; r = await ask(idOut(last.extId)); } // формат id у MAX: пробуем оба
+      const t2 = await C.getThread(t.id);
+      if (t2) { t2.meta = Object.assign({}, t2.meta, { readExt: last.extId }); await C.putThread(t2); }
+      await C.setState('maxu.lastRead', JSON.stringify({ at: C.now(), tid: t.id, how, r: JSON.stringify(r || {}, (k, v) => typeof v === 'bigint' ? String(v) : v).slice(0, 200) }));
     },
     async send(t, text) {
       if (!conn || conn.closed) throw new Error('MAX: нет соединения, попробуйте через минуту');

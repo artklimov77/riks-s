@@ -89,7 +89,8 @@ async function send(tid, text, who) {
 async function markRead(t) {
   const w = workers[t.ch];
   if (!w || !w.api.read || t.mock) return;
-  try { await w.api.read(t); } catch (e) { console.error(new Date().toISOString(), 'inbox read', t.ch, e.message); }
+  try { await w.api.read(t); }
+  catch (e) { console.error(new Date().toISOString(), 'inbox read', t.ch, e.message); await C.setState(t.ch + '.lastRead', JSON.stringify({ at: C.now(), tid: t.id, err: String(e.message || e).slice(0, 300) })).catch(() => {}); }
 }
 
 module.exports = { boot, sync, send, markRead, workers };

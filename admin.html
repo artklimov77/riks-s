@@ -799,7 +799,7 @@
     ['💳 Счёт','Выставили счёт, отправили вам. После оплаты запускаем в работу.'],
     ['✅ Готово','Ваш заказ готов! Забрать можно по адресу: ул. Комсомольская, 134, офис 115 (пн–пт 9:00–17:00).'],
     ['⭐ Отзыв','{hi} Большое спасибо, что воспользовались нашими услугами! Могли бы вы рассказать про свой опыт? Для нас это очень ценно.\nОставить отзыв — 1 минута: https://www.riks-s.ru/otzyv.html\nРекомендуем прикрепить фото вашего заказа: для наших будущих заказчиков это повод нам доверять, а для вас — дополнительная реклама.']];
-  const IB={sec:'cl',threads:[],status:{},on:{},cur:null,thread:null,msgs:[],filter:'all',q:'',note:'',snap:null,drafts:{},listSig:'',msgSig:'',urls:{},unreadMark:0,info:ls.get('riks_ibinfo',true)};
+  const IB={sec:'cl',threads:[],status:{},on:{},cur:null,thread:null,msgs:[],filter:'all',q:'',note:'',snap:null,drafts:{},listSig:'',msgSig:'',urls:{},unreadMark:0,mxRead:{},info:ls.get('riks_ibinfo',true)};
   const IB_DEMO=(()=>{ const t=Date.now(), iso=m=>new Date(t-m*60000).toISOString();
     return {threads:[
       {id:'tg:1',ch:'tg',peer:'1',name:'Анна Смирнова',last:'Сколько будет стоить вывеска 3×0,6 м?',ts:iso(4),unread:2,lastDir:'in',meta:{username:'anna_s'}},
@@ -904,7 +904,8 @@
     if(switching||!$('#ibMsgs')) ibDrawChat(); else { ibDrawHead(); ibDrawMsgs(); }
     ibDrawInfo();
     if(j.thread&&j.thread.ch==='team'&&ibUn(j.thread)&&!document.hidden){ ibApi('read',{tid,who:ME}); const t=IB.threads.find(x=>x.id===tid); if(t) t.readBy=Object.assign({},t.readBy,{[ME]:t.seq||0}); ibDrawList(); ibCounter(); }
-    else if(j.thread&&j.thread.unread&&!document.hidden){ ibApi('read',{tid}); const t=IB.threads.find(x=>x.id===tid); if(t) t.unread=0; ibDrawList(); ibCounter(); }
+    else if(j.thread&&j.thread.ch==='maxu'&&!j.thread.unread&&j.thread.lastDir!=='out'&&IB.mxRead[tid]!==j.thread.ts&&!document.hidden){ IB.mxRead[tid]=j.thread.ts; ibApi('read',{tid}); } // MAX · номер: и старые диалоги отмечаем прочитанными в самом MAX
+    else if(j.thread&&j.thread.unread&&!document.hidden){ if(j.thread.ch==='maxu') IB.mxRead[tid]=j.thread.ts; ibApi('read',{tid}); const t=IB.threads.find(x=>x.id===tid); if(t) t.unread=0; ibDrawList(); ibCounter(); }
   }
   function ibDrawChat(){
     const t=IB.thread, c=IBCH[t.ch]||{t:t.ch}; const box=$('#ibChat'); if(!box) return;
