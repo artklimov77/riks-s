@@ -89,6 +89,15 @@ function channel(cfg) {
       meta: { uid: String(peer) }, noLead: !!(opt && opt.history), silent: !!(opt && opt.history)
     });
   }
+  // прочитали в MAX на телефоне → в CRM снимаем «непрочитано». Отметки собеседника («он прочитал наше») не трогаем.
+  let markLogged = false;
+  async function markedElsewhere(p) {
+    if (!markLogged) { markLogged = true; console.log(new Date().toISOString(), 'inbox maxu mark', JSON.stringify(p, (k, v) => typeof v === 'bigint' ? String(v) : v).slice(0, 300)); }
+    const uid = p.userId != null ? p.userId : p.contactId;
+    if (p.chatId == null || uid == null || String(uid) !== String(me)) return;
+    const t = await C.getThread('maxu:' + String(p.chatId));
+    if (t && t.unread) { t.unread = 0; await C.putThread(t); }
+  }
   async function importHistory(list) {
     const dialogs = list.filter((c) => c.type === 'DIALOG').slice(0, 30);
     for (const c of dialogs) {
@@ -110,6 +119,7 @@ function channel(cfg) {
         deviceId: cfg.deviceId, signal,
         onClose: (why) => closed(why),
         onPush: (f, c) => {
+          if (f.opcode === OP.NOTIF_MARK && f.payload) { queue = queue.then(() => markedElsewhere(f.payload)).catch(() => {}); return; }
           if (f.opcode !== OP.NOTIF_MESSAGE || !f.payload) return;
           const p = f.payload, m = p.message || p, chatId = p.chatId != null ? p.chatId : m.chatId;
           if (chatId != null && m.id != null) c.reply(f, { chatId, messageId: m.id }); // подтверждение доставки, как у веб-клиента
@@ -144,6 +154,14 @@ function channel(cfg) {
       const why = await Promise.race([gone, new Promise((res) => signal.addEventListener('abort', () => res(''), { once: true }))]);
       conn.close();
       if (!signal.aborted) throw new Error('MAX: ' + why);
+    },
+    // открыли диалог в CRM → в MAX он тоже становится прочитанным
+    async read(t) {
+      if (!conn || conn.closed) return;
+      const list = await C.listMessages(t.id, 50);
+      const last = list.filter((m) => m.dir === 'in' && m.extId).pop();
+      if (!last) return;
+      await conn.request(OP.CHAT_MARK, { type: 'READ_MESSAGE', chatId: idOut(t.peer), messageId: String(last.extId), mark: Date.now() });
     },
     async send(t, text) {
       if (!conn || conn.closed) throw new Error('MAX: нет соединения, попробуйте через минуту');

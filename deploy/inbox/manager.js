@@ -85,4 +85,11 @@ async function send(tid, text, who) {
   return msg;
 }
 
-module.exports = { boot, sync, send, workers };
+// диалог прочитан в CRM → отметить прочитанным и в самом мессенджере (где канал это умеет)
+async function markRead(t) {
+  const w = workers[t.ch];
+  if (!w || !w.api.read || t.mock) return;
+  try { await w.api.read(t); } catch (e) { console.error(new Date().toISOString(), 'inbox read', t.ch, e.message); }
+}
+
+module.exports = { boot, sync, send, markRead, workers };

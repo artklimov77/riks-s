@@ -62,7 +62,7 @@ module.exports = async (req, res) => {
     if (b.op === 'read') {
       const t = await C.getThread(String(b.tid || ''));
       if (t && t.ch === 'team') { const w = String(b.who || '').slice(0, 60); if (w) { t.readBy = Object.assign({}, t.readBy, { [w]: t.seq || 0 }); await C.putThread(t); } }
-      else if (t && t.unread) { t.unread = 0; await C.putThread(t); }
+      else if (t && t.unread) { t.unread = 0; await C.putThread(t); M.markRead(t); }
       return res.status(200).json({ ok: true });
     }
     if (b.op === 'send') {

@@ -13,7 +13,7 @@ const URL_WS = 'wss://api.oneme.ru/websocket';
 const ORIGIN = 'https://web.max.ru';
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36';
 const APP_VERSION = process.env.MAX_WEB_APP_VERSION || '26.11.9';
-const OP = { PING: 1, SESSION_INIT: 6, LOGIN: 19, CONTACT_INFO: 32, CHAT_INFO: 48, CHAT_HISTORY: 49, FILE_DOWNLOAD: 88, CHAT_MARK: 50, MSG_SEND: 64, PASSWORD: 115, NOTIF_MESSAGE: 128, GET_QR: 288, QR_STATUS: 289, LOGIN_BY_QR: 291 };
+const OP = { PING: 1, SESSION_INIT: 6, LOGIN: 19, CONTACT_INFO: 32, CHAT_INFO: 48, CHAT_HISTORY: 49, FILE_DOWNLOAD: 88, CHAT_MARK: 50, MSG_SEND: 64, PASSWORD: 115, NOTIF_MESSAGE: 128, NOTIF_MARK: 130, GET_QR: 288, QR_STATUS: 289, LOGIN_BY_QR: 291 };
 
 /* ---------------- msgpack ---------------- */
 const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
